@@ -1,0 +1,23 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Dependency directories
+/lib
+/vendor
+/pnpm
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
+
+# Compiled binary addons (usually /build/Release or /out)
+/build/
+/out/
+
+# Local development files
+.DS_Store
+Thumbs.db
