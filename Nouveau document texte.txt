@@ -76,6 +76,11 @@ const getAllCourse = async (req, res) => {
 const getCourseById = async (req, res) => {
   const CourseId = req.params.CourseId;
   try {
+    const course = await Course.findById(CourseId);
+    if (!course) {
+      return res.status(404).json({ message: "Cours non trouvé" });
+    }
+    res.status(200).json(course);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });
@@ -84,10 +89,10 @@ const getCourseById = async (req, res) => {
 
 // inscription a un seul cour
 const registerSingleCourse = async (req, res) => {
-  const { courseId } = req.body;
+  const { CourseId } = req.body;
   const userId = req.user._id;
   try {
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(CourseId);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
@@ -104,10 +109,10 @@ const registerSingleCourse = async (req, res) => {
 };
 // inscription a plusieurs cours
 const registerMultipleCourses = async (req, res) => {
-  const { coursesId } = req.body;
+  const { CourseId } = req.body;
   const userId = req.user._id;
   try {
-    const courses = await Course.find({ _id: { $in: coursesId } });
+    const courses = await Course.find({ _id: { $in: CourseId } });
     const inscrits = [];
 
     for (const course of courses) {
@@ -128,10 +133,10 @@ const registerMultipleCourses = async (req, res) => {
 
 // Desincription d'un cours
 const unregisterCourse = async (req, res) => {
-  const { courseId } = req.body;
+  const { CourseId } = req.body;
   const userId = req.user._id;
   try {
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(CourseId);
     if (!course) {
       return res.status(404).json({ message: "Cours non trouvé" });
     }
@@ -174,9 +179,9 @@ const registredCourses = async (req, res) => {
 
 // consulter les apprenants inscrits a un cours
 const consulterEtudiantsInscrits = async (req, res) => {
-  const courseId = req.params.courseId;
+  const CourseId = req.params.courseId;
   try {
-    const course = await Course.findById(courseId).populate(etudiantsInscrits);
+    const course = await Course.findById(CourseId).populate(etudiantsInscrits);
     if (!course) {
       return res.status(404).json({ message: "le cours est introuvable" });
     }
@@ -198,4 +203,6 @@ module.exports = {
   deleteCourse,
   getCourseById,
   getAllCourse,
+  unregisterCourse,
+  consulterEtudiantsInscrits,
 };
