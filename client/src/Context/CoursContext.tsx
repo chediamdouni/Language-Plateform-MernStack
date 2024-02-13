@@ -29,7 +29,9 @@ export const CoursContext = createContext<ICoursContext>({
   registerCourse: () => {},
   unregisterCourse: () => {},
 });
-export const CoursProvider: FC = ({children}: ProviderInterface): JSX.Element => {
+export const CoursProvider: FC = ({
+  children,
+}: ProviderInterface): JSX.Element => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [cookies] = useCookies();
