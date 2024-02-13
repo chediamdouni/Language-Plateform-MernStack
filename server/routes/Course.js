@@ -14,9 +14,9 @@ const {
 var router = express.Router();
 
 router.get("/all", getAllCourse);
-router.get("/course/:CourseId", getCourseById);
+router.get("/:CourseId", getCourseById);
 router.post("/add", AddCourse);
-router.put("/:CourseId", updateCourse);
+router.put("/edit/:CourseId", updateCourse);
 router.delete("/:CourseId", deleteCourse);
 router.post("/inscription", registerSingleCourse);
 router.post("/inscription-multiple", registerMultipleCourses);
