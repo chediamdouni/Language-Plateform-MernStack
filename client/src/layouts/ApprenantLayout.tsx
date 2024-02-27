@@ -24,6 +24,7 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import { useCookies } from "react-cookie";
+import background from "../assets/images/background.jpg";
 
 const navListMenuItems = [
   {
@@ -151,7 +152,7 @@ function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies<string>([]);
-  
+
   const handleLogout = () => {
     removeCookie("jwt");
     navigate("/");
@@ -162,7 +163,7 @@ function ProfileMenu() {
         handleLogout();
         break;
       case "My Profile":
-        navigate("/profile-apprenant");
+        navigate("/apprenant/profile");
         break;
       default:
         closeMenu();
@@ -180,7 +181,7 @@ function ProfileMenu() {
         >
           <Avatar
             variant="circular"
-            size= "md"
+            size="md"
             alt="tania andrew"
             className="border border-gray-900 p-0.5 rounded-full"
             src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
@@ -199,7 +200,7 @@ function ProfileMenu() {
           return (
             <MenuItem
               key={label}
-              onClick={()=>handleClick(label)}
+              onClick={() => handleClick(label)}
               className={`flex items-center gap-2 rounded ${
                 isLastItem
                   ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
@@ -240,7 +241,7 @@ const menuitems = [
   },
   {
     title: "Become tutor",
-    path: "/tuteur-signup",
+    path: "/tuteur/inscription",
   },
   {
     title: "Cours",
@@ -260,9 +261,9 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <>
+    <div>
       <header
-        className="flex flex-col lg:flex-row justify-between items-center my-5"
+        className="flex flex-col lg:flex-row justify-between items-center my-5 border-b-8 "
         data-open={open}
         onClick={() => setOpen(false)}
       >
@@ -323,7 +324,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
         <div id="page-content-wrapper">{props.children}</div>
       </div>
       <FooterWithLogo />
-    </>
+    </div>
   );
 };
 export default ApprenantLayout;

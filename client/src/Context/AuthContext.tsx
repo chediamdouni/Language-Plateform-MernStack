@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   FC,
   useState,
@@ -9,9 +9,8 @@ import {
 } from "react";
 
 import history from "../utils/history";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
 
 export interface User {
   _id: string;
@@ -58,7 +57,6 @@ export const AuthProvider: FC = (props: ProviderInterface): JSX.Element => {
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   const handleSignout = () => {
     removeCookie("jwt");

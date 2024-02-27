@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: Date,
-      default : null 
+      default: null,
     },
     gender: {
       type: String,
@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
       default: false,
+    },
+    accountStatus: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
     },
   },
   {

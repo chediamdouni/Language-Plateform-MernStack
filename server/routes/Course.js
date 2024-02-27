@@ -18,7 +18,7 @@ router.get("/:CourseId", getCourseById);
 router.post("/add", AddCourse);
 router.put("/edit/:CourseId", updateCourse);
 router.delete("/:CourseId", deleteCourse);
-router.post("/inscription", registerSingleCourse);
+router.post("/inscription");
 router.post("/inscription-multiple", registerMultipleCourses);
 router.delete("/desinscription", unregisterCourse);
 router.post("/cours-inscrits/:userId", registredCourses);

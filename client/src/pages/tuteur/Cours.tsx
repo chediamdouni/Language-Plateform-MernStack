@@ -1,13 +1,14 @@
 import React from "react";
+import TuteurLayout from "src/layouts/TuteurLayout";
 
-const Cours = () => {
+const CoursTuteur = () => {
   return (
-    <div>
+    <TuteurLayout>
       <div className="text-center">Cours</div>
       <div>liste des cours</div>
       <div>ajouter un cours</div>
       <div>liste des etudiants inscrits dans le cours</div>
-    </div>
+    </TuteurLayout>
   );
 };
-export default Cours;
+export default CoursTuteur;

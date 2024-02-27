@@ -1,5 +1,78 @@
 import React from "react";
 
-export function aside() {
-  return <></>;
-}
+const Aside = () => {
+  return (
+    <>
+      <aside
+        id="separator-sidebar"
+        className="fixed left-0 z-40 w-80 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        aria-label="Sidebar"
+      >
+        <div className="h-full px-3 py-4 overflow-y-auto  dark:bg-gray-800">
+          <ul className="space-y-2 font-medium">
+            <li>
+              <div className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white group">
+                <span className="ms-3 text-2xl">Become a Tutor </span>
+              </div>
+            </li>
+          </ul>
+          <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+            <li>
+              <a
+                href="/tuteur/step/welcome"
+                className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
+              >
+                <span className="ms-3 text-xl">Welcome to Our Learn Up!</span>
+              </a>
+            </li>
+          </ul>
+          <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+            <li>
+              <a
+                href="/tuteur/step/signup-checklist"
+                className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
+              >
+                <span className="ms-3 text-xl">Signup Checklist</span>
+              </a>
+              <div className="flex flex-col mt-4 ml-4 font-korto font-sans font-base text-xl space-y-8">
+                <div className="flex justify-between">
+                  <div className="ms-2 text-gray-900 ">Learn Up profile</div>
+                  <input
+                    id="default-radio-1"
+                    type="radio"
+                    value=""
+                    name="default-radio"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <div className="ms-2 text-gray-900 ">
+                    Supplemental questions
+                  </div>
+                  <input
+                    id="default-radio-1"
+                    type="radio"
+                    value=""
+                    name="default-radio"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <div className="ms-2 text-gray-900">Connection Test</div>
+                  <input
+                    id="default-radio-1"
+                    type="radio"
+                    value=""
+                    name="default-radio"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </>
+  );
+};
+export default Aside;

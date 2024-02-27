@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   Card,
   CardHeader,
@@ -8,14 +8,11 @@ import {
   Tooltip,
   Avatar,
 } from "@material-tailwind/react";
-import { RatingWithComment } from "../components/RatingCard";
-import Hero from "../components/hero";
-import Reveal from "../utils/Reveal";
-import aa from "../assets/images/aa.jpg";
-import bb from "../assets/images/bb.jpg";
-
-import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { RatingWithComment } from "../../components/RatingCard";
+import Hero from "../../components/hero";
+import Reveal from "../../utils/Reveal";
+import aa from "../../assets/images/aa.jpg";
+import bb from "../../assets/images/bb.jpg";
 import ApprenantLayout from "src/layouts/ApprenantLayout";
 import { AuthContext } from "src/Context/AuthContext";
 
@@ -41,10 +38,7 @@ const data = [
 ];
 
 const DashboardApprenant: React.FC = () => {
-  const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies<string>([]);
-  const [username, setUsername] = useState("");
-  const { user, getLoggedInUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   return (
     <ApprenantLayout>
@@ -329,7 +323,7 @@ const DashboardApprenant: React.FC = () => {
           <div className="relative w-2/5 m-0 overflow-hidden text-gray-700 bg-white rounded-r-none bg-clip-border rounded-xl shrink-0">
             <img
               src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
-              alt="card-image"
+              alt="card"
               className="object-cover w-full h-full"
             />
           </div>
@@ -341,7 +335,7 @@ const DashboardApprenant: React.FC = () => {
               Discover our free resources! Tools, books and videos to help you
               learn English. Available without subscription.
             </p>
-            <a href="#" className="inline-block">
+            <a href="/#" className="inline-block">
               <button
                 className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none hover:bg-gray-900/10 active:bg-gray-900/20"
                 type="button"

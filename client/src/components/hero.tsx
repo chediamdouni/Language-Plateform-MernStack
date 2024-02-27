@@ -3,10 +3,11 @@ import aa from "../assets/images/aa.jpg";
 import bb from "../assets/images/bb.jpg";
 import cc from "../assets/images/cc.jpg";
 import Reveal from "../utils/Reveal";
+
 const Hero: React.FC = () => {
   return (
     <Reveal>
-      <div className="bg-white dark:bg-gray-800 overflow-hidden relative lg:flex lg:items-center">
+      <div className="bg-white dark:bg-gray-800 overflow-hidden relative lg:flex lg:items-center ">
         <div className="w-full py-12 px-4 sm:px-6 lg:py-16 lg:px-8 z-20 ">
           <div className="text-6xl tracking-tight text-orange-300 font-korto font-extrabold  ">
             Libérez votre potentiel avec les meilleurs professeurs de langues.

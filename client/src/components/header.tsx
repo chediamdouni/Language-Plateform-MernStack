@@ -1,5 +1,4 @@
-import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Dropdown from './dropdown'
 import {
@@ -154,7 +153,7 @@ const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
   return (
     <header
-      className="flex flex-col lg:flex-row justify-between items-center my-5"
+      className="flex flex-col lg:flex-row justify-between items-center my-5 border-b-8"
       data-open={open}
       onClick={() => setOpen(false)}
     >
@@ -220,8 +219,8 @@ const Header: React.FC = () => {
       </nav>
       <div>
         <div className="hidden lg:flex items-center gap-4 text-sm font-semibold leading-6 text-gray-900">
-          <Link to="/login-apprenant">Log in</Link>
-          <Link to="/Signup" className="md">
+          <Link to="/apprenant/connexion">Log in</Link>
+          <Link to="/apprenant/inscription" className="md">
           <button className="bg-orange-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Sign Up
         </button>

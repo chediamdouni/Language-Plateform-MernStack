@@ -29,7 +29,7 @@ const signupUser = async (req, res, next) => {
       withCredentials: true,
       httpOnly: false,
     });
-    res.status(201).json({ message: "User has been added successfully", user });
+    res.status(201).json({ success: true, message: "User has been added successfully", user });
     next();
   } catch (error) {
     console.error("Error in signup:", error);
