@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Dropdown from './dropdown'
+import Dropdown from "./dropdown";
 import {
   Typography,
   Button,
@@ -22,6 +22,7 @@ import {
   UserGroupIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
+import logo from "../assets/images/logo.jpg";
 
 const navListMenuItems = [
   {
@@ -39,7 +40,6 @@ const navListMenuItems = [
     description: "Learn how we can help you achieve your goals.",
     icon: PowerIcon,
   },
- 
 ];
 const menuitems = [
   {
@@ -52,19 +52,19 @@ const menuitems = [
     ],
   },
   {
-    title: "Become tutor",
-    path: "/tuteur-signup",
+    title: "Devenir Tuteur",
+    path: "/tuteur/inscription",
   },
   {
     title: "Cours",
     path: "/cour",
   },
   {
-    title: "Pricing",
+    title: "Abonnement",
     path: "/pricing",
   },
   {
-    title: "About",
+    title: "Contact",
     path: "/about",
   },
 ];
@@ -153,14 +153,16 @@ const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
   return (
     <header
-      className="flex flex-col lg:flex-row justify-between items-center my-5 border-b-8"
+      className="flex flex-col lg:flex-row justify-between items-center px-6 bg-sky-400 "
       data-open={open}
       onClick={() => setOpen(false)}
     >
       <div className="flex w-full lg:w-auto items-center justify-between p-5">
-        <a href="/" className="text-lg">
-          <span className="font-bold text-slate-800">Elearning</span>
-          <span className="text-slate-500">App</span>
+        <a href="/#" className="flex items-center text-lg gap-2">
+          <img src={logo} alt="" className="h-12 rounded-full" />
+          <span className="font-semibold font-korto font-sans text-slate-800">
+            LearnUp
+          </span>
         </a>
         <div className="block lg:hidden">
           <button onClick={() => setOpen(!open)} className="text-gray-800">
@@ -183,29 +185,28 @@ const Header: React.FC = () => {
         }`}
         data-transition=""
       >
-        <ul className="flex flex-col lg:flex-row lg:gap-3 text-sm font-semibold leading-6 text-gray-900">
+        <ul className="flex flex-col lg:flex-row lg:gap-3 text-base font-semibold leading-6 text-gray-900">
           {menuitems.map((item, index) => (
-              <React.Fragment key={index}>
-                {item.children && (
+            <React.Fragment key={index}>
+              {item.children && (
                   <Dropdown
                     title={item.title}
                     children={item.children}
                     lastItem={index === menuitems.length - 1}
-                  />) &&
-                 <NavListMenu />
-                }
-                {!item.children && (
-                  <li>
-                    <a
-                      href={item.path}
-                      className="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900"
-                    >
-                      {item.title}
-                    </a>
-                  </li>
-                )}
-              </React.Fragment>
-            ))}
+                  />
+                ) && <NavListMenu />}
+              {!item.children && (
+                <li>
+                  <a
+                    href={item.path}
+                    className="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900"
+                  >
+                    {item.title}
+                  </a>
+                </li>
+              )}
+            </React.Fragment>
+          ))}
         </ul>
         {/* mobile */}
         <div className="lg:hidden flex items-center mt-3 gap-4 ">
@@ -221,9 +222,9 @@ const Header: React.FC = () => {
         <div className="hidden lg:flex items-center gap-4 text-sm font-semibold leading-6 text-gray-900">
           <Link to="/apprenant/connexion">Log in</Link>
           <Link to="/apprenant/inscription" className="md">
-          <button className="bg-orange-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Sign Up
-        </button>
+            <button className="bg-orange-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Sign Up
+            </button>
           </Link>
         </div>
       </div>

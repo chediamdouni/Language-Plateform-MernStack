@@ -1,42 +1,39 @@
 import React from "react";
+import photo from "../assets/images/dashboard1.jpg";
 import aa from "../assets/images/aa.jpg";
 import bb from "../assets/images/bb.jpg";
 import cc from "../assets/images/cc.jpg";
+import photo1 from "../assets/images/hero.png";
 import Reveal from "../utils/Reveal";
 
 const Hero: React.FC = () => {
   return (
-    <Reveal>
-      <div className="bg-white dark:bg-gray-800 overflow-hidden relative lg:flex lg:items-center ">
-        <div className="w-full py-12 px-4 sm:px-6 lg:py-16 lg:px-8 z-20 ">
-          <div className="text-6xl tracking-tight text-orange-300 font-korto font-extrabold  ">
-            Libérez votre potentiel avec les meilleurs professeurs de langues.
-          </div>
-          <p className="text-md mt-4 text-gray-400 font-nunito">
-            The state of Utah in the united states is home to lots of beautiful
-            National parks, Bryce national canion park ranks as three of the
-            most magnificient &amp; awe inspiring.
-          </p>
-          <div className="lg:mt-0 lg:flex-shrink-0">
-            <div className="mt-12 inline-flex rounded-md shadow">
-              <button
-                type="button"
-                className="py-2 px-4  bg-blue-500 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-              >
-                Get started
-              </button>
+      <div className="h-screen w-screen flex items-center bg-sky-400 ">
+        <div className="px-4 mx-auto mb-10 max-w-7xl sm:mt-24">
+          <div className="text-center">
+            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl font-title">
+              <span className="block">Libérez votre potentiel</span>
+              <span className="block pt-2">
+                avec les meilleurs professeurs de langues.
+              </span>
+            </h1>
+            <p className="max-w-md mx-auto mt-3 text-base text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+              Bénéficie de cours particuliers sur mesure, validés par des
+              millions d'utilisateurs satisfaits, Intègre une communauté internationale d'apprenants de langues passionnés.
+            </p>
+            <div className="max-w-md mx-auto mt-5 sm:flex sm:justify-center md:mt-8">
+              <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
+                <a
+                  href="/"
+                  className="block shadow-lg w-full px-8 py-3 text-base font-medium text-gray-200 hover:text-gray-100 bg-orange-400 rounded-md md:py-4 md:text-lg md:px-10"
+                >
+                  Get started
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-8 lg:p-24">
-          <img src={aa} className="w-1/2 rounded-lg" alt="Tree" />
-          <div>
-            <img src={bb} className="mb-8 rounded-lg" alt="Tree" />
-            <img src={cc} className="rounded-lg" alt="Tree" />
-          </div>
-        </div>
       </div>
-    </Reveal>
   );
 };
 export default Hero;

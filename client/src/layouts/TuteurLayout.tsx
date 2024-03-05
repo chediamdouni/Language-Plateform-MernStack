@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import logo from "../assets/images/logo.jpg";
 import { useNavigate } from "react-router";
 import { useCookies } from "react-cookie";
-import Dropdown from "../components/dropdown";
 import {
   Avatar,
   Button,
@@ -42,7 +41,7 @@ const profileMenuItems = [
 
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const { user, getLoggedInUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies<string>([]);
 
@@ -128,14 +127,16 @@ const TuteurLayout: React.FC<Props> = (props: Props) => {
   return (
     <div>
       <header
-        className="flex flex-col lg:flex-row justify-between items-center my-5 border-b-8"
+        className="flex flex-col lg:flex-row justify-between items-center px-6 border-b-8"
         data-open={open}
         onClick={() => setOpen(false)}
       >
         <div className="flex w-full lg:w-auto items-center justify-between p-5">
-          <a href="/" className="text-lg">
-            <span className="font-bold text-slate-800">Elearning</span>
-            <span className="text-slate-500">App</span>
+          <a href="/#" className="flex items-center text-lg">
+            <img src={logo} alt="" className="h-12" />
+            <span className="font-semibold font-korto font-sans text-slate-800">
+              LearnUp
+            </span>
           </a>
           <div className="block lg:hidden">
             <ProfileMenu />

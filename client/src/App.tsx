@@ -18,7 +18,6 @@ import LoginMethods from "./pages/tuteur/LoginMethods";
 import Settings from "./pages/tuteur/Settings";
 import TuteurProfile from "./pages/tuteur/profile";
 import WelcomeComponent from "./pages/tuteur/welcome";
-import BecomeTutorComponent from "./pages/tuteur/BecomeTutorComponent";
 import SignupChecklistComponent from "./pages/tuteur/SignupChecklistComponent";
 import NotFound from "./pages/NotFound";
 

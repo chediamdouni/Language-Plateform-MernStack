@@ -24,7 +24,7 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import { useCookies } from "react-cookie";
-import background from "../assets/images/background.jpg";
+import logo from "../assets/images/logo.jpg";
 
 const navListMenuItems = [
   {
@@ -115,7 +115,7 @@ function NavListMenu() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <ListItem
-              className="flex items-center gap-2  pr-4 text-lg font-semibold text-gray-900"
+              className="flex items-center gap-2  pr-4 text-base font-base text-gray-900"
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
@@ -240,7 +240,7 @@ const menuitems = [
     ],
   },
   {
-    title: "Become tutor",
+    title: "Devenir Tuteur",
     path: "/tuteur/inscription",
   },
   {
@@ -248,11 +248,11 @@ const menuitems = [
     path: "/cour",
   },
   {
-    title: "Pricing",
+    title: "Abonnement",
     path: "/pricing",
   },
   {
-    title: "About",
+    title: "Contact",
     path: "/about",
   },
 ];
@@ -263,14 +263,16 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
   return (
     <div>
       <header
-        className="flex flex-col lg:flex-row justify-between items-center my-5 border-b-8 "
+        className="flex flex-col lg:flex-row justify-between items-center px-6 border-b-8  "
         data-open={open}
         onClick={() => setOpen(false)}
       >
         <div className="flex w-full lg:w-auto items-center justify-between p-5">
-          <a href="/" className="text-lg">
-            <span className="font-bold text-slate-800">Elearning</span>
-            <span className="text-slate-500">App</span>
+          <a href="/#" className="flex items-center text-lg">
+            <img src={logo} alt="" className="h-12" />
+            <span className="font-semibold font-korto font-sans text-slate-800">
+              LearnUp
+            </span>
           </a>
           <div className="block lg:hidden">
             <ProfileMenu />
@@ -282,7 +284,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
           }`}
           data-transition=""
         >
-          <ul className="flex flex-col lg:flex-row lg:gap-6 text-lg font-semibold leading-6 text-gray">
+          <ul className="flex flex-col lg:flex-row lg:gap-3 text-base font-semibold leading-6 text-gray-900">
             {menuitems.map((item, index) => (
               <React.Fragment key={index}>
                 {item.children && (
