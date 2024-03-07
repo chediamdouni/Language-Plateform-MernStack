@@ -15,64 +15,35 @@ import HalfGroupe from "./groupe0.5";
 import DefaultComponent from "./DefaultComponent";
 
 const Pricing = () => {
-  const [selectedHours, setSelectedHours] = useState("");
-  const [monthlyPrice, setMonthlyPrice] = useState<number>(0);
-  const [quarterlyPrice, setQuarterlyPrice] = useState<number>(0);
-  const [annualPrice, setAnnualPrice] = useState<number>(0);
+  const [totalPricePerMonth, setTotalPricePerMonth] = useState<number>(0);
+  const [totalPricePerQuarter, setTotalPricePerQuarter] = useState<number>(0);
+  const [totalPricePerYear, setTotalPricePerYear] = useState<number>(0);
   const [value, setValue] = useState<string>("");
   const [selectedCourses, setSelectedCourses] = useState("");
   const navigate = useNavigate();
-
-  const calculerPrix = (selectedValue: string) => {
-    let pricePerMonth = 0;
-    let pricePerQuarter = 0;
-    let pricePerYear = 0;
-    switch (selectedValue) {
-      case "30 minutes/semaine":
-        pricePerMonth = 50;
-        pricePerQuarter = pricePerMonth * 3 * 0.9;
-        pricePerYear = pricePerMonth * 12 * 0.8;
-        break;
-      case "1 heure/semaine":
-        pricePerMonth = 80;
-        pricePerQuarter = pricePerMonth * 3 * 0.9;
-        pricePerYear = pricePerMonth * 12 * 0.8;
-        break;
-      case "1.5 heures/semaine":
-        pricePerMonth = 100;
-        pricePerQuarter = pricePerMonth * 3 * 0.9;
-        pricePerYear = pricePerMonth * 12 * 0.8;
-        break;
-      case "2.5 heures/semaine":
-        pricePerMonth = 120;
-        pricePerQuarter = pricePerMonth * 3 * 0.9;
-        pricePerYear = pricePerMonth * 12 * 0.8;
-        break;
-      default:
-        break;
-    }
-
-    // Mettre à jour les états des prix
-    setMonthlyPrice(pricePerMonth);
-    setQuarterlyPrice(pricePerQuarter);
-    setAnnualPrice(pricePerYear);
-  };
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedValue = e.target.value;
     console.log(selectedValue);
     setSelectedCourses(selectedValue);
-    // setSelectedHours(selectedValue);
-    // calculerPrix(selectedValue);
     setValue(e.target.value);
   };
+
   const handleRadioGroupeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedValue = e.target.value;
     console.log(selectedValue);
     setSelectedCourses(selectedValue);
-    // setSelectedHours(selectedValue);
-    // calculerPrix(selectedValue);
-    // setValue(e.target.value);
+  };
+
+  const handleValuesChange = (
+    monthly: number,
+    quarter: number,
+    annual: number
+  ) => {
+    // Mettre à jour l'état avec les nouvelles valeurs
+    setTotalPricePerMonth(monthly);
+    setTotalPricePerQuarter(quarter);
+    setTotalPricePerYear(annual);
   };
 
   return (
@@ -355,23 +326,27 @@ const Pricing = () => {
               {/* individual components */}
               {selectedCourses ===
                 "Programmez des cours n'importe quel jour de la semaine, jusqu'à 30 minutes par jour" && (
-                <Halfhour />
+                <Halfhour onValuesChange={handleValuesChange} />
               )}
               {selectedCourses ===
                 "Programmez des cours n'importe quel jour de la semaine, jusqu'à 1 heure par jour" && (
-                <OneHour />
+                <OneHour onValuesChange={handleValuesChange} />
               )}
               {selectedCourses ===
                 "Programmez des cours n'importe quel jour de la semaine, jusqu'à 1,5 heure par jour" && (
-                <OneAndHalfHour />
+                <OneAndHalfHour onValuesChange={handleValuesChange} />
               )}
               {selectedCourses ===
                 "Programmez des cours n'importe quel jour de la semaine, jusqu'à 2 heure par jour" && (
-                <TwoHour />
+                <TwoHour onValuesChange={handleValuesChange} />
               )}
               {/* groupe components */}
-              {selectedCourses === "groupe1" && <HalfGroupe />}
-              {selectedCourses === "groupe2" && <OneGroupe />}
+              {selectedCourses === "groupe1" && (
+                <HalfGroupe onValuesChange={handleValuesChange} />
+              )}
+              {selectedCourses === "groupe2" && (
+                <OneGroupe onValuesChange={handleValuesChange} />
+              )}
               {/* Default component */}
               {selectedCourses !==
                 "Programmez des cours n'importe quel jour de la semaine, jusqu'à 30 minutes par jour" &&
@@ -394,7 +369,15 @@ const Pricing = () => {
                 </div>
                 <div className="flex justify-between">
                   <div className="font-bold ">Prix mensuel original (x 12)</div>
-                  <div>: la somme </div>
+                  {totalPricePerMonth > 0 && (
+                    <div>Prix mensuel: {totalPricePerMonth} $</div>
+                  )}
+                  {totalPricePerQuarter > 0 && (
+                    <div>Prix trimestriel: {totalPricePerQuarter} $</div>
+                  )}
+                  {totalPricePerYear > 0 && (
+                    <div>Prix annuel: {totalPricePerYear} $</div>
+                  )}
                 </div>
               </div>
               <div className="flex justify-between bg-sky-200 rounded-full p-1">

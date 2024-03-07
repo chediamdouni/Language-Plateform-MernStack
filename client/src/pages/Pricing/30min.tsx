@@ -1,5 +1,47 @@
-import React from "react";
-const Halfhour = () => {
+import React, { useState } from "react";
+
+interface HalfhourProps {
+  onValuesChange: (monthly: number, quarter: number, annual: number) => void;
+}
+
+const Halfhour: React.FC<HalfhourProps> = ({ onValuesChange }) => {
+  const [monthlyPrice, setMonthlyPrice] = useState<number>(0);
+  const [quaterPrice, setQuarterPrice] = useState<number>(0);
+  const [AnnualPrice, setAnnualPrice] = useState<number>(0);
+
+  const calculatePrice = (selectedValue: string) => {
+    let TotalpricePerMonth = 0;
+    let TotalpricePerQuarter = 0;
+    let TotalpricePerYear = 0;
+    switch (selectedValue) {
+      case "monthly":
+        TotalpricePerMonth = 49 * 12;
+        break;
+      case "quarter":
+        const reductionQ = 528 * 0.1;
+        TotalpricePerQuarter = parseInt((44 * 12 - reductionQ).toFixed(0));
+        break;
+      case "annual":
+        const reductionA = (444 * 25) / 100;
+        TotalpricePerYear = parseInt((37 * 12 - reductionA).toFixed(0));
+        break;
+      default:
+        break;
+    }
+
+    setMonthlyPrice(TotalpricePerMonth);
+    setQuarterPrice(TotalpricePerQuarter);
+    setAnnualPrice(TotalpricePerYear);
+
+    onValuesChange(TotalpricePerMonth, TotalpricePerQuarter, TotalpricePerYear);
+  };
+
+  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedValue = e.target.value;
+    console.log(selectedValue);
+    calculatePrice(selectedValue);
+  };
+
   return (
     <>
       {" "}
@@ -11,9 +53,10 @@ const Halfhour = () => {
             <input
               id="list-radio-license"
               type="radio"
-              value="30 minutes/semaine"
+              value="monthly"
               name="list-radio"
               className="w-10 h-10 text-blue-600 bg-gray-100 border-gray-300 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
+              onChange={handleRadioChange}
             />
             <label
               htmlFor="list-radio-license"
@@ -31,9 +74,10 @@ const Halfhour = () => {
             <input
               id="list-radio-id"
               type="radio"
-              value="Programmez des cours n'importe quel jour de la semaine, jusqu'à 1 heure par jour"
+              value="quarter"
               name="list-radio"
               className="w-10 h-10 text-blue-600 bg-gray-100 border-gray-300  dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
+              onChange={handleRadioChange}
             />
             <label
               htmlFor="list-radio-id"
@@ -56,9 +100,10 @@ const Halfhour = () => {
             <input
               id="list-radio-military"
               type="radio"
-              value="Programmez des cours n'importe quel jour de la semaine, jusqu'à 1,5 heure par jour"
+              value="annual"
               name="list-radio"
               className="w-10 h-10 text-blue-600 bg-gray-100 border-gray-300  dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
+              onChange={handleRadioChange}
             />
             <label
               htmlFor="list-radio-military"
