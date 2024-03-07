@@ -5,7 +5,7 @@ import {
   CardHeader,
   Typography,
 } from "@material-tailwind/react";
-import React from "react";
+import React, { useState } from "react";
 import ApprenantLayout from "src/layouts/ApprenantLayout";
 import Courses from "../assets/images/Courses.png";
 import cours1 from "../assets/images/cours1.png";
@@ -22,6 +22,7 @@ import cours11 from "../assets/images/cours11.png";
 import cours12 from "../assets/images/cours12.png";
 import person from "../assets/images/curriculum-banner-person.png";
 import book from "../assets/images/curriculum-banner-book.png";
+
 const anglais = [
   {
     imageSrc: cours1,
@@ -186,46 +187,61 @@ const Expression = [
     level: "Tous les niveaux 13 cours",
   },
 ];
+
 const Cours: React.FC = () => {
+  const [showBlock, setShowBlock] = useState(true);
+
+  const handleButtonClick = () => {
+    setShowBlock(false);
+  };
   return (
     <ApprenantLayout>
       <div className="p-9 w-full">
-        <div className=" rounded-lg bg-orange-300 p-6 mb-10">
-          <div className="text-orange-800 text-3xl font-meduim  ">
-            Nous vous accueillons dans notre espace dédié aux supports de cours
-          </div>
-          <div className="flex items-center justify-center gap-8 py-10">
-            <div className="flex gap-3">
+        {/* block introductif  */}
+        {showBlock && (
+          <div className=" rounded-lg bg-orange-300 p-6 mb-10 ">
+            <div className="text-orange-800 text-3xl font-meduim  ">
+              Nous vous accueillons dans notre espace dédié aux supports de
+              cours
+            </div>
+            <div className="flex items-center justify-center gap-8 py-10">
+              <div className="flex gap-3">
                 <img src={person} alt="person" className="h-14 w-14" />
-              <div className="flex-cols p-3">
-                <div className="text-orange-800 text-lg font-meduim ">
-                  Vous ne souhaitez pas utiliser de support
-                </div>
-                <div className="jomla 2">
-                  Vous et votre tuteur pouvez choisir vos propres sujets, ou
-                  discuter librement
+                <div className="flex-cols p-3">
+                  <div className="text-orange-800 text-lg font-meduim ">
+                    Vous ne souhaitez pas utiliser de support
+                  </div>
+                  <div className="jomla 2">
+                    Vous et votre tuteur pouvez choisir vos propres sujets, ou
+                    discuter librement
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex gap-3">
+              <div className="flex gap-3">
                 <img src={book} alt="book" className="h-14 w-14" />
-              <div className="flex-cols p-3">
-                <div className="text-orange-800 text-lg font-meduim  ">
-                  Vous cherchez des supports pour vous orienter dans vos cours ?
-                </div>
-                <div className="jomla 2">
-                  Faites votre choix parmi nos propositions de sujets
-                  ci-dessous.
+                <div className="flex-cols p-3">
+                  <div className="text-orange-800 text-lg font-meduim  ">
+                    Vous cherchez des supports pour vous orienter dans vos cours
+                    ?
+                  </div>
+                  <div className="jomla 2">
+                    Faites votre choix parmi nos propositions de sujets
+                    ci-dessous.
+                  </div>
                 </div>
               </div>
             </div>
+            <button
+              className="mx-auto items-center justify-center flex p-4 rounded-lg bg-orange-400 px-10 w-max hover:bg-orange-500"
+              onClick={handleButtonClick}
+            >
+              <div className="uppercase text-lg font-meduim text-white font-korto font-sans">
+                j'ai compris
+              </div>
+            </button>
           </div>
-          <button className="mx-auto items-center justify-center flex p-4 rounded-lg bg-orange-400 px-10 w-max hover:bg-orange-500">
-            <div className="uppercase text-lg font-meduim text-white font-korto font-sans">
-              j'ai compris
-            </div>
-          </button>
-        </div>
+        )}
+        {/* main courses  */}
         <div className="text-left font-korto font-sans w-2/3 ">
           <div className="font-semibold text-3xl mb-7 tracking-tight">
             Explorer les documents de cours{" "}

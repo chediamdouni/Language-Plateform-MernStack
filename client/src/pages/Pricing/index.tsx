@@ -368,7 +368,7 @@ const Pricing = () => {
                   Résumé de l'abonnement
                 </div>
                 <div className="flex justify-between">
-                  <div className="font-bold ">Prix mensuel original (x 12)</div>
+                  <div className="font-bold ">Total (en USD)</div>
                   {totalPricePerMonth > 0 && (
                     <div>Prix mensuel: {totalPricePerMonth} $</div>
                   )}

@@ -65,7 +65,7 @@ const menuitems = [
   },
   {
     title: "Contact",
-    path: "/about",
+    path: "/contact",
   },
 ];
 const renderIcon = (IconComponent: React.ElementType) => {

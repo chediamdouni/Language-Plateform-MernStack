@@ -253,7 +253,7 @@ const menuitems = [
   },
   {
     title: "Contact",
-    path: "/about",
+    path: "/contact",
   },
 ];
 
