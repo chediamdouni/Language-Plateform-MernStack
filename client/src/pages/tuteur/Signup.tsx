@@ -165,6 +165,11 @@ const SignupTuteur: React.FC = () => {
                   </svg>
                   <span className="ml-3">Sign Up</span>
                 </button>
+                <div className="mx-3 text-center mt-3">
+                🙂 Si vous avez un compte n'hésitez pas à se connecter 
+                  <Link to="/tuteur/connexion" className="ml-1 font-bold underline underline-offset-2 ">LogIn </Link>
+                </div>
+
                 <p className="mt-6 text-xs text-gray-600 text-center ">
                   I agree to
                   <Link

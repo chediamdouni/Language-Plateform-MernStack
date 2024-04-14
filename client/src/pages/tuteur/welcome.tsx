@@ -20,7 +20,7 @@ const WelcomeComponent = () => {
         </div>
         <img src={welcome} alt="marahbe" className="rounded-full w-64 mt-10 mx-60"/>
         <div className="flex justify-end items-end mr-60">
-          <Link to={""} className="border rounded-xl p-4 uppercase bg-blue-400 ">
+          <Link to={"/tuteur/step/signup-checklist"} className="border rounded-xl p-4 uppercase bg-blue-400 ">
             let's get started
           </Link>
         </div>

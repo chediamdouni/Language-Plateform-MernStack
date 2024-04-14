@@ -12,14 +12,17 @@ import Pricing from "./pages/Pricing";
 import SignupTuteur from "./pages/tuteur/Signup";
 import CoursTuteur from "./pages/tuteur/Cours";
 import AccountSettings from "./pages/tuteur/AccountSettings";
-import TuteurAccount from "./pages/tuteur/Account";
 import LoginMethods from "./pages/tuteur/LoginMethods";
 import Settings from "./pages/tuteur/Settings";
 import TuteurProfile from "./pages/tuteur/profile";
 import WelcomeComponent from "./pages/tuteur/welcome";
-import SignupChecklistComponent from "./pages/tuteur/SignupChecklistComponent";
+import SignupChecklistComponent from "./pages/tuteur/CheckoutProfile/SignupChecklistComponent";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
+import Step1 from "./pages/tuteur/CheckoutProfile/step1";
+import Step2 from "./pages/tuteur/CheckoutProfile/step2";
+import Step3 from "./pages/tuteur/CheckoutProfile/step3";
+import TuteurSettingsAccount from "./pages/tuteur/Account";
 
 const App = () => {
   return (
@@ -35,21 +38,18 @@ const App = () => {
         <Route index element={<TuteurProfile />} />
         <Route path="inscription" element={<SignupTuteur />} />
         <Route path="connexion" element={<LoginTuteur />} />
-        <Route path="account" element={<TuteurAccount />} />
         <Route path="profile" element={<TuteurProfile />} />
+        
         <Route path="step/welcome" element={<WelcomeComponent />} />
-        {/* <Route path="step/become-tutor" element={<BecomeTutorComponent />} /> */}
-        <Route
-          path="step/signup-checklist"
-          element={<SignupChecklistComponent />}
-        />
-        <Route path="step/profile" element={<SignupChecklistComponent />} />
-        <Route
-          path="step/supplemental"
-          element={<SignupChecklistComponent />}
-        />
-        <Route path="step/connection" element={<SignupChecklistComponent />} />
+        <Route path="step/signup-checklist">
+          <Route index element={<SignupChecklistComponent />} />
+          <Route path="step-1" element={<Step1 />} />
+          <Route path="step-2" element={<Step2 />} />
+          <Route path="step-3" element={<Step3 />} />
+        </Route>
+
         <Route path="Account-settings" element={<AccountSettings />} />
+        <Route path="account" element={<TuteurSettingsAccount />} />
         <Route path="multiple-connexion" element={<LoginMethods />} />
         <Route path="settings" element={<Settings />} />
         <Route path="cours" element={<CoursTuteur />} />

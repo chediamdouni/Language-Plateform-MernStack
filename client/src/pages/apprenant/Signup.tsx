@@ -29,9 +29,6 @@ const Signup: React.FC = () => {
       position: "bottom-right",
     });
 
-  // const isStrongPassword = (value: string): boolean => {
-  //   return value.length >= 8;
-  // };
 
   const onSubmit = async (data: formData) => {
     const checkbox = document.getElementById("remember") as HTMLInputElement;

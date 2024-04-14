@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const { type } = require("express/lib/response");
 
 const userSchema = new mongoose.Schema(
   {
@@ -42,6 +43,26 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["active", "inactive"],
       default: "active",
+    },
+    aboutMe: {
+      type: String,
+      default: "",
+    },
+    experience: {
+      type: Number,
+      default: "1",
+    },
+    certificate: {
+      type: String,
+      default: "images/default.png",
+    },
+    language: {
+      type: String,
+      default: "English",
+    },
+    country: {
+      type: String,
+      default: "English",
     },
   },
   {

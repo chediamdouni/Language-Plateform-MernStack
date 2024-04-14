@@ -4,7 +4,7 @@ import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { AuthContext } from "src/Context/AuthContext";
 import TuteurLayout from "src/layouts/TuteurLayout";
 
-const TuteurAccount = () => {
+const TuteurSettingsAccount = () => {
   const [IsPasswordVisible, SetIsPasswordVisible] = useState(false);
   const { user, updateUser } = useContext(AuthContext);
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -295,4 +295,4 @@ console.log(formData);
     </TuteurLayout>
   );
 };
-export default TuteurAccount;
+export default TuteurSettingsAccount;
