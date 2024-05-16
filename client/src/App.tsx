@@ -23,6 +23,9 @@ import Step1 from "./pages/tuteur/CheckoutProfile/step1";
 import Step2 from "./pages/tuteur/CheckoutProfile/step2";
 import Step3 from "./pages/tuteur/CheckoutProfile/step3";
 import TuteurSettingsAccount from "./pages/tuteur/Account";
+import Video from "./pages/react-stream/video";
+import MeetingRoom from "./pages/react-stream/MeetingRoom";
+import TestingRoom from "./pages/react-stream/TestingRoom";
 
 const App = () => {
   return (
@@ -54,6 +57,7 @@ const App = () => {
         <Route path="settings" element={<Settings />} />
         <Route path="cours" element={<CoursTuteur />} />
       </Route>
+      <Route path="/video-conference" element={<TestingRoom />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/cour" element={<Cours />} />
       <Route path="/pricing" element={<Pricing />} />

@@ -97,7 +97,7 @@ const AddDatePickerEventModal = ({
             onChange={onChange}
           />
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <Box mb={2} mt={5}>
+            {/* <Box mb={2} mt={5}>
               <DateTimePicker
                 label="Start date"
                 value={start}
@@ -111,7 +111,7 @@ const AddDatePickerEventModal = ({
                 }
                 renderInput={(params) => <TextField {...params} />}
               />
-            </Box>
+            </Box> */}
 
             <Box>
               <Typography variant="caption" color="text" component={"span"}>
@@ -120,7 +120,7 @@ const AddDatePickerEventModal = ({
               <Checkbox onChange={handleCheckboxChange} value={allDay} />
             </Box>
 
-            <DateTimePicker
+            {/* <DateTimePicker
               label="End date"
               disabled={allDay}
               minDate={start}
@@ -134,7 +134,7 @@ const AddDatePickerEventModal = ({
                 }))
               }
               renderInput={(params) => <TextField {...params} />}
-            />
+            /> */}
           </LocalizationProvider>
           <Autocomplete
             onChange={handleTodoChange}

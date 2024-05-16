@@ -190,7 +190,7 @@ const consulterEtudiantsInscrits = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Erreur consulter les apprenants inscrits a un cours ",
+      message: "Erreur consulter les apprenants inscrits a un cours",
     });
   }
 };

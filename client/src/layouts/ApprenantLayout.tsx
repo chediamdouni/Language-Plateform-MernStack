@@ -10,8 +10,6 @@ import {
   MenuList,
   MenuItem,
   Avatar,
-  Collapse,
-  ListItem,
 } from "@material-tailwind/react";
 import {
   UserCircleIcon,
@@ -19,8 +17,6 @@ import {
   InboxArrowDownIcon,
   LifebuoyIcon,
   PowerIcon,
-  Bars4Icon,
-  UserGroupIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import { useCookies } from "react-cookie";
