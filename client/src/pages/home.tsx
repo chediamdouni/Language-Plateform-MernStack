@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import {
   Card,
@@ -13,7 +13,8 @@ import Reveal from "../utils/Reveal";
 import bb from "../assets/images/bb.jpg";
 import tuteurImage from "../assets/images/tuteur.png";
 import { FaArrowRight } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "src/Context/AuthContext";
 const data = [
   {
     imageSrc:
@@ -46,6 +47,8 @@ const data = [
 ];
 
 const Home: React.FC = () => {
+  
+
   return (
     <DashboardLayout>
       <Hero />
@@ -386,7 +389,8 @@ const Home: React.FC = () => {
             avec des personnes du monde entier
           </div>
           <button className="flex gap-4 max-w-xs select-none rounded-lg bg-gradient-to-tr from-orange-400 to-orange-300 py-3 px-10 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-10">
-            <Link to={"/tuteur/inscription"}>C'est Parti </Link><FaArrowRight />
+            <Link to={"/tuteur/inscription"}>C'est Parti </Link>
+            <FaArrowRight />
           </button>
         </div>
       </div>

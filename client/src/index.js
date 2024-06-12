@@ -7,6 +7,9 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
 import { AuthProvider } from "./Context/AuthContext";
+import "@stream-io/video-react-sdk/dist/css/styles.css";
+import StreamVideoProvider from "./providers/StreamClientProvider";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

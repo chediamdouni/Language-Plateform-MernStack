@@ -1,11 +1,14 @@
 import { Button, Spinner } from "@material-tailwind/react";
 import React, { useContext, useEffect } from "react";
 import ApprenantLayout from "src/layouts/ApprenantLayout";
-import { IoArrowForwardCircleOutline } from "react-icons/io5";
+import {
+  IoArrowForwardCircleOutline,
+  IoCheckmarkDoneOutline,
+} from "react-icons/io5";
 import { CiCalendar } from "react-icons/ci";
 import { MdEmojiFlags } from "react-icons/md";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import courses from "../../assets/images/Courses.png";
 import trial from "../../assets/images/Trial.png";
 import subscribe from "../../assets/images/Subscribe.png";
@@ -14,54 +17,66 @@ import tutors from "../../assets/images/Tutors.png";
 import image1 from "../../assets/images/image1.png";
 import image2 from "../../assets/images/image2.png";
 import image3 from "../../assets/images/image3.png";
+import light from "../../assets/images/lightbulb.png";
+import schedule from "../../assets/images/reschedule_trial_checklist.png";
 import { AuthContext } from "src/Context/AuthContext";
 
-const ProfileApprenant: React.FC = () => {
-  const { user, getLoggedInUser } = useContext(AuthContext);
-
-  useEffect(() => {
-    getLoggedInUser();
-  }, []);
-  console.log("Valeur de user:", user);
-
+const ProfileApprenant = () => {
+  const { user, isSignedIn, loading } = useContext(AuthContext);
+  const navigate = useNavigate();
   return (
     <div>
-      {user ? (
+      {isSignedIn ? (
         <ApprenantLayout>
           <div className="container mx-auto px-7 py-7 ">
             <div className="md:flex no-wrap md:-mx-2 ">
               <div className="md:w-4/12 md:mx-2 gap-2 space-y-4 font-korto font-sans">
                 <div className="bg-white border rounded-3xl p-5">
-                  <img src={user.profileImageUrl} alt=""></img>
+                  <img src={user?.profileImageUrl} alt=""></img>
                   <p className="text-3xl font-bold ">
-                    Bienvenue sur Our Plateform, {user?.username} !
+                    Bienvenue sur Notre Plateform, {user?.username} !
                   </p>
                 </div>
-                <div className=" border rounded-3xl p-5 flex justify-between">
-                  <p className="font-semibold">
+                <div className=" border rounded-3xl p-5 flex justify-between cursor-pointer">
+                  <p className="font-semibold ">
                     Cours en groupe maintenant disponibles
                   </p>
                   <IoArrowForwardCircleOutline size="30px" />
                 </div>
 
-                <div className=" border rounded-3xl p-5  flex justify-between">
+                <div className=" border rounded-3xl p-5  flex justify-between cursor-pointer">
                   <p className="font-semibold">Parrainer un ami</p>
                   <IoArrowForwardCircleOutline size="30px" />
                 </div>
                 <div className=" border rounded-3xl p-5 space-y-3">
                   <img className="mx-auto block p-4" src={newsBanner} alt="" />
                   <p className="font-bold pr-10 text-2xl tracking-tight">
-                    Lire les actualités en fonction de votre niveau
+                    Comment fonctionne LearnUp
                   </p>
-                  <p>
-                    Sélectionnez un article d'actualité, choisissez votre niveau
-                    et pratiquez l'anglais, titre après titre.
-                  </p>
+                  <div className="p-2 space-y-2">
+                    <p className="flex gap-2 ">
+                      <IoCheckmarkDoneOutline size={30} />
+                      Discutez en direct avec des tuteurs natifs dans chaque
+                      leçon
+                    </p>
+                    <p className="flex gap-2 ">
+                      <IoCheckmarkDoneOutline size={30} />
+                      Planifiez des leçons à l'avance ou discutez quand vous
+                      êtes libre, 24 heures sur 24 et 7 jours sur 7
+                    </p>
+                    <p className="flex gap-2 ">
+                      <IoCheckmarkDoneOutline size={30} />
+                      Tous les tuteurs, cours et outils sont inclus dans chaque
+                      abonnement.
+                    </p>
+                  </div>
                   <Button
                     className="mx-auto block mt-6 align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
                     type="button"
+                    onClick={() => {
+                      navigate("/apprenant");
+                    }}
                   >
-                    {" "}
                     Pratiquer maintenant
                   </Button>
                 </div>
@@ -71,7 +86,12 @@ const ProfileApprenant: React.FC = () => {
                   <div className="font-semibold font-sans text-2xl  mb-5">
                     C'est parti !
                   </div>
-                  <div className="mt-5 flex items-center justify-between p-5">
+                  <div
+                    className="mt-5 flex items-center justify-between p-5 cursor-pointer"
+                    onClick={() => {
+                      navigate("/apprenant");
+                    }}
+                  >
                     <div className="flex align-items gap-4 mt-4">
                       <img
                         className="relative w-22 h-22 flex-shrink-0"
@@ -79,7 +99,7 @@ const ProfileApprenant: React.FC = () => {
                         alt="aaaa"
                       ></img>
                       <div className="flex flex-col">
-                        <div className="font-semibold font-sans">
+                        <div className="font-semibold font-sans ">
                           Discutez avec un tuteur pour seulement 1,00 $US
                         </div>
                         <div className="text-xs">
@@ -89,7 +109,7 @@ const ProfileApprenant: React.FC = () => {
                     </div>
                     <IoArrowForwardCircleOutline size="30px" />
                   </div>
-                  <div className="mt-5 flex items-center justify-between p-5">
+                  <div className="mt-5 flex items-center justify-between p-5 cursor-pointer">
                     <div className="flex align-items gap-4 mt-4">
                       <img
                         className="relative w-22 h-22 flex-shrink-0"
@@ -108,7 +128,7 @@ const ProfileApprenant: React.FC = () => {
                     </div>
                     <IoArrowForwardCircleOutline size="30px" />
                   </div>
-                  <div className="mt-5 flex items-center justify-between p-5">
+                  <div className="mt-5 flex items-center justify-between p-5 cursor-pointer">
                     <div className="flex align-items gap-4 mt-4">
                       <img
                         className="relative w-22 h-22 flex-shrink-0"
@@ -127,7 +147,12 @@ const ProfileApprenant: React.FC = () => {
                     </div>
                     <IoArrowForwardCircleOutline size="30px" />
                   </div>
-                  <div className="mt-5 flex items-center justify-between p-5">
+                  <div
+                    className="mt-5 flex items-center justify-between p-5 cursor-pointer"
+                    onClick={() => {
+                      navigate("/cour");
+                    }}
+                  >
                     <div className="flex align-items gap-4 mt-4">
                       <img
                         className="relative w-22 h-22 flex-shrink-0"
@@ -135,7 +160,7 @@ const ProfileApprenant: React.FC = () => {
                         alt="aaaa"
                       ></img>
                       <div className="flex flex-col">
-                        <div className="font-semibold font-sans">
+                        <div className="font-semibold font-sans ">
                           Voir nos cours
                         </div>
                         <div className="text-xs">
@@ -147,9 +172,18 @@ const ProfileApprenant: React.FC = () => {
                     <IoArrowForwardCircleOutline size="30px" />
                   </div>
                 </div>
-                <div className=" border  rounded-3xl p-5 divide-y divide-solid">
-                  <div className="font-semibold mb-5 text-2xl tracking-tight">
-                    Tuteurs pour Vous : Sport
+                <div className=" border  rounded-3xl p-5 ">
+                  <div className="flex gap-2 mb-5">
+                    <img src={light} alt="" />
+                    <div className="flex flex-col">
+                      <p className="font-semibold text-2xl tracking-tight">
+                        Trouvez des tuteurs qui vous font parler
+                      </p>
+                      <p>
+                        Des tuteur pour chaque style d'apprentissage et chaque
+                        intérêt.
+                      </p>
+                    </div>
                   </div>
                   <div className="flex flex-row gap-4 p-5">
                     <div className="flex justify-center">
@@ -187,7 +221,7 @@ const ProfileApprenant: React.FC = () => {
                           </div>
 
                           <Link
-                            to="#"
+                            to="/apprenant"
                             type="button"
                             className="flex items-center justify-between mt-10 inline-block px-6 py-2.5 bg-orange-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-orange-700 hover:shadow-lg focus:bg-orange-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-orange-800 active:shadow-lg transition duration-150 ease-in-out"
                           >
@@ -232,7 +266,7 @@ const ProfileApprenant: React.FC = () => {
                           </div>
 
                           <Link
-                            to="#"
+                            to="/apprenant"
                             type="button"
                             className="flex items-center justify-between mt-10 inline-block px-6 py-2.5 bg-orange-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-orange-700 hover:shadow-lg focus:bg-orange-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-orange-800 active:shadow-lg transition duration-150 ease-in-out"
                           >
@@ -277,7 +311,7 @@ const ProfileApprenant: React.FC = () => {
                           </div>
 
                           <Link
-                            to="#"
+                            to="/apprenant"
                             type="button"
                             className="flex items-center justify-between mt-10 inline-block px-6 py-2.5 bg-orange-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-orange-700 hover:shadow-lg focus:bg-orange-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-orange-800 active:shadow-lg transition duration-150 ease-in-out"
                           >
@@ -289,9 +323,18 @@ const ProfileApprenant: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className=" border  rounded-3xl p-5 divide-y divide-solid ">
-                  <div className="font-semibold mb-5 text-2xl tracking-tight">
-                    Essayez un cours (ils sont gratuits)
+                <div className=" border  rounded-3xl p-5 ">
+                  <div className="flex gap-3 mb-5">
+                    <img src={schedule} alt="" className="w-24"/>
+                    <div className="flex flex-col">
+                      <p className="font-semibold text-2xl tracking-tight">
+                        Découvrez nos formations guidées
+                      </p>
+                      <p>
+                        Ajoutez plus de structure aux leçons avec des cours.
+                        Inclus dans chaque abonnement LearnUp.
+                      </p>
+                    </div>
                   </div>
                   <div className="flex flex-row gap-4 p-5">
                     <div className="flex justify-center">

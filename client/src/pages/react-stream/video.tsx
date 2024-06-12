@@ -6,11 +6,12 @@ import {
   StreamTheme,
   StreamVideo,
   SpeakerLayout,
-  StreamVideoClient
+  StreamVideoClient,
 } from "@stream-io/video-react-sdk";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import "./styles.css";
 import React from "react";
+import Meeting from "./Meet";
 
 // NOTE: This will generate a new call on every reload
 // Fork this CodeSandbox and set your own CallID if
@@ -25,7 +26,7 @@ const tokenProvider = async () => {
     "https://pronto.getstream.io/api/auth/create-token?" +
       new URLSearchParams({
         api_key: apiKey,
-        user_id: user_id
+        user_id: user_id,
       })
   ).then((res) => res.json());
   return token as string;
@@ -65,12 +66,13 @@ export default function Video() {
 
   return (
     <StreamVideo client={client}>
-      <StreamTheme className="my-theme-overrides">
+      {/* <StreamTheme className="my-theme-overrides">
         <StreamCall call={call}>
           <SpeakerLayout />
           <CallControls />
         </StreamCall>
-      </StreamTheme>
+      </StreamTheme> */}
+      <Meeting />
     </StreamVideo>
   );
 }

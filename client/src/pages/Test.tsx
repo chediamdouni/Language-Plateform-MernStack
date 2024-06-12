@@ -4,7 +4,7 @@ import TuteurLayout from "src/layouts/TuteurLayout";
 import { IoIosSchool } from "react-icons/io";
 import { BsFillPersonFill } from "react-icons/bs";
 import { AiOutlineSlack } from "react-icons/ai";
-import { ReviewCard } from "../../components/ReviewCard";
+import { ReviewCard } from "../components/ReviewCard";
 import { Button } from "@material-tailwind/react";
 import { Call, StreamVideoClient } from "@stream-io/video-react-sdk";
 import TextField from "@mui/material/TextField";
@@ -15,12 +15,11 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { AuthContext } from "src/Context/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useGetCalls } from "src/hooks/useGetCalls";
-import UpcomingCallList from "../../components/UpcomingCallList";
 interface AvailabilitySlot {
   day: string;
   startTime: string;
@@ -56,7 +55,7 @@ const tokenProvider = async () => {
   return token as string;
 };
 
-const TuteurProfile = () => {
+const Test = () => {
   const [open, setOpen] = React.useState(false);
   const [client, setClient] = useState<StreamVideoClient>();
   const [values, setValues] = useState(initialValues);
@@ -113,7 +112,6 @@ const TuteurProfile = () => {
   }, []);
   // Modal
   const handleClickOpen = () => {
-    console.log("handleClickOpen triggered");
     setOpen(true);
     setMeetingState("isScheduleMeeting");
   };
@@ -148,14 +146,14 @@ const TuteurProfile = () => {
   };
   const createMeeting = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!client) return console.log("y'apas de client ");
+    if (!client) return;
     try {
       if (!values.dateTime) {
         console.log("Success Notification !");
         return;
       }
-      const id = crypto.randomUUID();
-      const call = client.call("default", id);
+      const callId = crypto.randomUUID();
+      const call = client.call("default", callId);
       if (!call) throw new Error("Votre call n'est pas créer");
 
       const startsAt =
@@ -176,7 +174,7 @@ const TuteurProfile = () => {
       if (upcomingCalls) {
         upcomingCalls.forEach((call) => {
           console.log("Prcossing call", call);
-          const upcoming_meeting_id = call.id;
+          const upcoming_meeting_id = callId;
           const user_id = call.currentUserId || "";
           const meeting_time = startsAt;
           const meeting_description = description;
@@ -555,8 +553,6 @@ const TuteurProfile = () => {
           </section>
           <section id="Specialite" className="p-4">
             <p className="text-2xl font-bold my-4">Specialité</p>
-
-            <UpcomingCallList />
             <div className="p-4">
               <div className="text-xl font-semibold mb-3">
                 Conversational English
@@ -783,4 +779,4 @@ const TuteurProfile = () => {
     </>
   );
 };
-export default TuteurProfile;
+export default Test;

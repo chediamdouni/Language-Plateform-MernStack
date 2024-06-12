@@ -10,6 +10,9 @@ import {
   MenuList,
   MenuItem,
   Avatar,
+  Popover,
+  PopoverHandler,
+  PopoverContent,
 } from "@material-tailwind/react";
 import {
   UserCircleIcon,
@@ -21,7 +24,12 @@ import {
 } from "@heroicons/react/24/solid";
 import { useCookies } from "react-cookie";
 import logo from "../assets/images/logo.jpg";
-
+import { AuthContext } from "src/Context/AuthContext";
+import { BsCalendar3Event } from "react-icons/bs";
+import { MdMessage } from "react-icons/md";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import { Loader } from "lucide-react";
+import UpcomingCallList from "../components/UpcomingCallList";
 
 // profile menu component
 const profileMenuItems = [
@@ -53,20 +61,20 @@ const renderIcon = (IconComponent: React.ElementType) => {
   });
 };
 
-
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
+  const { handleSignout } = React.useContext(AuthContext);
   const [cookies, setCookie, removeCookie] = useCookies<string>([]);
 
-  const handleLogout = () => {
-    removeCookie("jwt");
-    navigate("/");
-  };
+  // const handleLogout = () => {
+  //   removeCookie("jwt");
+  //   navigate("/");
+  // };
   const handleClick = (label: string) => {
     switch (label) {
       case "Sign Out":
-        handleLogout();
+        handleSignout();
         break;
       case "My Profile":
         navigate("/apprenant/profile");
@@ -137,13 +145,8 @@ interface Props {
 }
 const menuitems = [
   {
-    title: "Features",
-    path: "#",
-    children: [
-      { title: "Action", path: "#" },
-      { title: "Another action", path: "#" },
-      { title: "Dropdown Submenu", path: "#" },
-    ],
+    title: "Tuteur",
+    path: "/apprenant",
   },
   {
     title: "Cours",
@@ -158,9 +161,36 @@ const menuitems = [
     path: "/contact",
   },
 ];
+interface User {
+  _id: string;
+  username?: string;
+  gender?: string;
+  dateOfBirth: Date;
+  password: string;
+  email: string;
+  roles: string;
+  profileImageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface UpcomingMeeting {
+  account: User;
+  upcoming_meeting_id: string;
+  user_id: string;
+  meeting_time: Date;
+  meeting_description?: string;
+  meeting_url: string;
+}
 
 const ApprenantLayout: React.FC<Props> = (props: Props) => {
   const [open, setOpen] = React.useState(false);
+  const { user } = React.useContext(AuthContext);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = React.useState<Boolean>(true);
+  const [upcomingMeeting, setUpcomingMeeting] = React.useState<
+    UpcomingMeeting[]
+  >([]);
 
   return (
     <div>
@@ -189,38 +219,80 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
           <ul className="flex flex-col lg:flex-row lg:gap-3 text-base font-semibold leading-6 text-gray-900">
             {menuitems.map((item, index) => (
               <React.Fragment key={index}>
-                {item.children && (
-                    <Dropdown
-                      title={item.title}
-                      children={item.children}
-                      lastItem={index === menuitems.length - 1}
-                    />
-                  ) }
-                {!item.children && (
-                  <li>
-                    <a
-                      href={item.path}
-                      className="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900"
-                    >
-                      {item.title}
-                    </a>
-                  </li>
-                )}
+                <li>
+                  <a
+                    href={item.path}
+                    className="flex lg:px-3 py-2 text-gray-600 hover:text-gray-900"
+                  >
+                    {item.title}
+                  </a>
+                </li>
               </React.Fragment>
             ))}
           </ul>
-          <div className="lg:hidden flex items-center mt-3 gap-4 ">
-            <Link to="#" className="muted md ">
-              Log in
-            </Link>
-            <Link to="#" className="md block">
-              Sign up
-            </Link>
-          </div>
         </nav>
         <div>
           <div className="hidden lg:flex items-center gap-4 text-sm font-semibold leading-6 text-gray-900">
-            <ProfileMenu />
+            <div className="mr-4 flex items-center gap-2 ">
+              <Popover placement="bottom">
+                <PopoverHandler>
+                  <Button variant="text" size="sm">
+                    <MdMessage size={30} />
+                  </Button>
+                </PopoverHandler>
+                <PopoverContent className="w-80">
+                  <Typography variant="h6" color="blue-gray" className="mb-6">
+                    Les conversations avec les tuteurs seront affichées ici.
+                  </Typography>
+                  <Button
+                    variant="gradient"
+                    className="flex-shrink-0 w-full text-blue-gray border"
+                  >
+                    Subscribe
+                  </Button>
+                </PopoverContent>
+              </Popover>
+              <Popover placement="bottom">
+                <PopoverHandler>
+                  <Button variant="text" size="sm">
+                    <BsCalendar3Event size={25} />
+                  </Button>
+                </PopoverHandler>
+                <PopoverContent className="w-80">
+                  <Typography variant="h6" color="blue-gray" className="mb-6">
+                    Upcoming Lesson
+                  </Typography>
+                  <UpcomingCallList />
+                  <Button
+                    variant="gradient"
+                    className="flex-shrink-0 w-full text-blue-gray border"
+                  >
+                    + Schedule Lesson
+                  </Button>
+                </PopoverContent>
+              </Popover>
+              <Popover placement="bottom">
+                <PopoverHandler>
+                  <Button variant="text" size="sm">
+                    <IoMdNotificationsOutline size={30} />
+                  </Button>
+                </PopoverHandler>
+                <PopoverContent className="w-80">
+                  <Typography variant="h6" color="blue-gray" className="mb-6">
+                    Notification
+                  </Typography>
+                  <Button
+                    variant="gradient"
+                    className="flex-shrink-0 w-full text-blue-gray border"
+                  >
+                    View All
+                  </Button>
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div>
+              <ProfileMenu />
+            </div>
           </div>
         </div>
       </header>

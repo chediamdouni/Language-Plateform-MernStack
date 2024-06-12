@@ -200,10 +200,11 @@ export const LoginTuteur = () => {
         setIsSignedIn(true);
         setLoading(false);
         setTimeout(() => {
-          navigate("tuteur/step/welcome");
+          navigate("/tuteur/step/welcome");
         }, 1000);
       } else {
         handleError(message);
+        setLoading(false);
       }
     } catch (e: any) {
       setLoading(false);

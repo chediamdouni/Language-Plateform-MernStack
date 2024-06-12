@@ -1,4 +1,5 @@
 const TutorAvailability = require("../models/TutorAvailability");
+const User = require("../models/User");
 
 const setAvailability = async (req, res) => {
   const { tutorId, availability } = req.body;
@@ -54,4 +55,16 @@ const getAvailability = async (req, res) => {
   }
 };
 
-module.exports = { setAvailability, getAvailability };
+const getAllTutors = async (req, res) => {
+  try {
+    const tutors = await User.find({ roles: "tuteur" }).select("-password");
+    res.status(200).json(tutors);
+  } catch (error) {
+    console.log("il y a un probleme lors d'extraction des tuteurs !", error);
+    res
+      .status(500)
+      .json({ message: "il y a un probleme lors d'extraction des tuteurs !" });
+  }
+};
+
+module.exports = { setAvailability, getAvailability, getAllTutors };

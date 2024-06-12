@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
-  FC,
   useState,
   createContext,
   SetStateAction,
@@ -8,9 +7,9 @@ import {
   ReactNode,
 } from "react";
 
-import history from "../utils/history";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 export interface User {
   _id: string;
@@ -19,6 +18,7 @@ export interface User {
   dateOfBirth: Date;
   password: string;
   email: string;
+  roles: string;
   profileImageUrl: string;
   createdAt: string;
   updatedAt: string;
@@ -31,6 +31,7 @@ export interface ProviderInterface {
 interface IAuthContext {
   isSignedIn: boolean;
   user: User | null;
+  tutors: User[] | null;
   loading: boolean;
   handleSignout: () => void;
   setLoading: (value: SetStateAction<boolean>) => void;
@@ -42,6 +43,7 @@ interface IAuthContext {
 export const AuthContext = createContext<IAuthContext>({
   isSignedIn: false,
   user: null,
+  tutors: null,
   loading: false,
   handleSignout: () => {},
   setLoading: (value: SetStateAction<boolean>) => {},
@@ -51,17 +53,19 @@ export const AuthContext = createContext<IAuthContext>({
   setIsSignedIn: () => {},
 });
 
-export const AuthProvider: FC = (props: ProviderInterface): JSX.Element => {
-  const { children } = props;
-  const [cookies, setCookie, removeCookie] = useCookies();
+export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
+  const [cookies, setCookie, removeCookie] = useCookies(["jwt"]);
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [tutors, setTutors] = useState<User[] | null>(null);
+  const navigate = useNavigate();
 
   const handleSignout = () => {
-    removeCookie("jwt");
+    removeCookie("jwt", { path: "/" });
     setIsSignedIn(false);
-    history.push("/");
+    setUser(null);
+    navigate("/");
   };
 
   const getLoggedInUser = async () => {
@@ -73,16 +77,54 @@ export const AuthProvider: FC = (props: ProviderInterface): JSX.Element => {
           withCredentials: true,
         }
       );
-      console.log(response.data.user);
-      setIsSignedIn(true);
-      setUser(response.data.user);
-      setLoading(false);
+      console.log("User Data", response.data.user);
+      if (response.data.user) {
+        setIsSignedIn(true);
+        setUser(response.data.user);
+      } else {
+        setIsSignedIn(false);
+        setUser(null);
+        // navigate("/apprenant/connexion");
+      }
     } catch (e) {
+      console.log("Error fetching logged in user:", e);
+      setIsSignedIn(false);
+      setUser(null);
+      // navigate("/apprenant/connexion");
+    } finally {
       setLoading(false);
-      alert("Something went wrong !! ");
-      console.log(e);
     }
   };
+  const fetchTutors = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/tuteur/getAlltutors"
+      );
+      setTutors(response.data.tutors);
+    } catch (error) {
+      console.error("Error fetching tutors:", error);
+    }
+  };
+
+  useEffect(() => {
+    getLoggedInUser();
+    fetchTutors();
+  }, []);
+  //  useEffect(() => {
+  //   console.log("Cookies:", cookies);
+  //   if (!cookies.jwt) {
+  //     setLoading(false);
+  //     setIsSignedIn(false);
+  //     setUser(null);
+  //     console.log("JWT token is missing");
+  //     navigate("/");
+  //     return;
+  //   }
+
+  //   console.log("JWT token is present");
+
+  //   getLoggedInUser();
+  // }, [cookies.jwt]);
 
   const updateUser = async (data: FormData) => {
     try {
@@ -92,16 +134,17 @@ export const AuthProvider: FC = (props: ProviderInterface): JSX.Element => {
         data
       );
       setUser(res.data);
-      setLoading(false);
     } catch (e) {
-      setLoading(false);
       console.log(e);
       alert("Something went wrong !! ");
+    } finally {
+      setLoading(false);
     }
   };
   const contextValue: IAuthContext = {
     isSignedIn,
     user,
+    tutors,
     loading,
     handleSignout,
     setLoading,

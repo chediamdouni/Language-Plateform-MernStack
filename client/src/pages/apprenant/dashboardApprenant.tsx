@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -15,6 +15,8 @@ import ApprenantLayout from "src/layouts/ApprenantLayout";
 import { AuthContext } from "src/Context/AuthContext";
 import { PiStudentDuotone } from "react-icons/pi";
 import { FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { Bounce, toast } from "react-toastify";
 
 interface Tutor {
   id: number;
@@ -64,7 +66,8 @@ const tutors: Tutor[] = [
 ];
 
 const DashboardApprenant: React.FC = () => {
-  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { user, isSignedIn } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Tutor[]>([]);
 
@@ -74,6 +77,28 @@ const DashboardApprenant: React.FC = () => {
     const results = searchTutors(query);
     setSearchResults(results);
   };
+
+  useEffect(() => {
+    if (!isSignedIn && !user) {
+      console.log("Not Authorized");
+      toast("🦄 Not Authorized!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      navigate("/");
+    }
+  }, [isSignedIn, user, navigate]);
+
+  useEffect(() => {
+    setSearchResults(tutors);
+  }, []);
 
   const searchTutors = (query: string): Tutor[] => {
     const normalizedQuery = query.toLowerCase().trim();
@@ -91,7 +116,7 @@ const DashboardApprenant: React.FC = () => {
     <ApprenantLayout>
       <div className="mt-4 mx-10 p-5 font-korto font-sans">
         <div className="font-bold text-xl">
-          Professeurs d'anglais en ligne pour des cours particuliers
+          Trouver des professeurs en ligne pour des cours particuliers
         </div>
         <div>
           <form className="max-w-full mt-5">
@@ -242,7 +267,12 @@ const DashboardApprenant: React.FC = () => {
                     <div>{tutor.aboutMe}</div>
                     <div className="space-y-2">
                       {" "}
-                      <button className="border-2 w-64 rounded-xl p-3 text-center hover:bg-sky-300 font-semibold ">
+                      <button
+                        className="border-2 w-64 rounded-xl p-3 text-center hover:bg-sky-300 font-semibold "
+                        onClick={() => {
+                          navigate("/apprenant/tuteur");
+                        }}
+                      >
                         Leçon d'essaie
                       </button>
                       <button className="border-2 w-64 rounded-xl p-3 text-center hover:bg-sky-300 font-semibold ">
