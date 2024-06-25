@@ -4,23 +4,19 @@ const deleteFile = require("../utils/imageDelete")
 // UPDATE USER  ///
 const editUserProfile  = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({ message: errors.array() });
-    }
     const user = await User.findById(req.params.userId);
     if (!user) return res.status(404).json({ message: "User not found" });
     user.username = req.body.username?.toLocaleLowerCase();
     user.email = req.body.email?.toLocaleLowerCase();
-    user.dateOfBirth = new Date(req.body.dateOfBirth);
+    // user.dateOfBirth = new Date(req.body.dateOfBirth);
 
-    if (req.file) {
-      if (user.profileImageUrl !== "images/default.png") {
-        deleteFile(user.profileImage);
-      }
+    // if (req.file) {
+    //   if (user.profileImageUrl !== "images/default.png") {
+    //     deleteFile(user.profileImage);
+    //   }
 
-      user.profileImageUrl = req.file.path;
-    }
+    //   user.profileImageUrl = req.file.path;
+    // }
 
     await user.save();
     res.status(200).json(user);

@@ -3,10 +3,12 @@ const {
   getAvailability,
   setAvailability,
   getAllTutors,
+  getTutorById,
 } = require("../controllers/TuteurController");
 var router = express.Router();
 
-router.get("/getAlltutors", getAllTutors);
+router.get("/", getAllTutors);
+router.get("/:id", getTutorById);
 router.post("/availability", setAvailability);
 router.get("/availability/:tutorId", getAvailability);
 

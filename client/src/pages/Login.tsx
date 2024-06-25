@@ -200,7 +200,7 @@ export const LoginTuteur = () => {
         setIsSignedIn(true);
         setLoading(false);
         setTimeout(() => {
-          navigate("/tuteur/step/welcome");
+          navigate("/tuteur/welcome");
         }, 1000);
       } else {
         handleError(message);

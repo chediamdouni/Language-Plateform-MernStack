@@ -55,7 +55,7 @@ function ProfileMenu() {
         handleLogout();
         break;
       case "Your Profile":
-        navigate("/tuteur/profile");
+        navigate("/tuteur/welcome");
         break;
       case "Account Settings":
         navigate("/tuteur/Account-settings");

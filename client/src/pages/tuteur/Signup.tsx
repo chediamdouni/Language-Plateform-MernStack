@@ -46,7 +46,7 @@ const SignupTuteur: React.FC = () => {
       if (success) {
         handleSuccess(message);
         setTimeout(() => {
-          navigate("/tuteur/profile");
+          navigate("/tuteur/welcome");
         }, 1000);
       } else {
         setLoading(false);
@@ -166,8 +166,13 @@ const SignupTuteur: React.FC = () => {
                   <span className="ml-3">Sign Up</span>
                 </button>
                 <div className="mx-3 text-center mt-3">
-                🙂 Si vous avez un compte n'hésitez pas à se connecter 
-                  <Link to="/tuteur/connexion" className="ml-1 font-bold underline underline-offset-2 ">LogIn </Link>
+                  🙂 Si vous avez un compte n'hésitez pas à se connecter
+                  <Link
+                    to="/tuteur/connexion"
+                    className="ml-1 font-bold underline underline-offset-2 "
+                  >
+                    LogIn{" "}
+                  </Link>
                 </div>
 
                 <p className="mt-6 text-xs text-gray-600 text-center ">

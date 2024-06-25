@@ -6,7 +6,11 @@ import { BsFillPersonFill } from "react-icons/bs";
 import { AiOutlineSlack } from "react-icons/ai";
 import { ReviewCard } from "../../components/ReviewCard";
 import { Button } from "@material-tailwind/react";
-import { Call, StreamVideoClient } from "@stream-io/video-react-sdk";
+import {
+  Call,
+  StreamVideoClient,
+  useStreamVideoClient,
+} from "@stream-io/video-react-sdk";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -15,12 +19,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import LoadingSpinner from "../../components/LoadingSpinner";
-import { AuthContext } from "src/Context/AuthContext";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useAlert } from "react-alert";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetCalls } from "src/hooks/useGetCalls";
 import UpcomingCallList from "../../components/UpcomingCallList";
+import ApprenantLayout from "src/layouts/ApprenantLayout";
+import { AuthContext } from "src/Context/AuthContext";
 interface AvailabilitySlot {
   day: string;
   startTime: string;
@@ -42,37 +46,47 @@ interface UpcomingCall {
 }
 
 /// video-Conference Props
-const user_id = "csb-user";
-const user = { id: user_id };
-const apiKey = "mmhfdzb5evj2";
-const tokenProvider = async () => {
-  const { token } = await fetch(
-    "https://pronto.getstream.io/api/auth/create-token?" +
-      new URLSearchParams({
-        api_key: apiKey,
-        user_id: user_id,
-      })
-  ).then((res) => res.json());
-  return token as string;
-};
+// const user_id = "csb-user";
+// const user = { id: user_id };
+// const apiKey = "mmhfdzb5evj2";
+// const tokenProvider = async () => {
+//   const { token } = await fetch(
+//     "https://pronto.getstream.io/api/auth/create-token?" +
+//       new URLSearchParams({
+//         api_key: apiKey,
+//         user_id: user_id,
+//       })
+//   ).then((res) => res.json());
+//   return token as string;
+// };
+
+interface Tutor {
+  _id: string;
+  username: string;
+  profileImageUrl: string;
+  aboutMe: string;
+  experience: number;
+  language: string;
+  country: string;
+  gender: string;
+}
 
 const TuteurProfile = () => {
+  const { id } = useParams<{ id: string }>();
+  const { user } = useContext(AuthContext);
+  const [tutor, setTutor] = useState<Tutor | null>(null);
   const [open, setOpen] = React.useState(false);
-  const [client, setClient] = useState<StreamVideoClient>();
+  // const [client, setClient] = useState<StreamVideoClient>();
+  const alert = useAlert();
   const [values, setValues] = useState(initialValues);
-  const [loading, setLoading] = useState(false);
-  const [callDetails, setCallDetails] = useState<Call>();
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
   const [reviewToShow, setReviewToShow] = useState(3);
-  const navigate = useNavigate();
   const ReviewRef = useRef<HTMLDivElement | null>(null);
-  const { upcomingCalls } = useGetCalls();
-  const [meetingState, setMeetingState] = useState<
-    "isScheduleMeeting" | "isMeetingCreated" | undefined
-  >(undefined);
+
+ 
 
   const days: string[] = [
     "sunday",
@@ -83,6 +97,7 @@ const TuteurProfile = () => {
     "Friday",
     "saturday",
   ];
+
   // Fetching availability from BackSide
   useEffect(() => {
     const fetchData = async () => {
@@ -102,21 +117,62 @@ const TuteurProfile = () => {
     };
     fetchData();
   }, []);
-  // For Video-Feature from Api Get-Stream
+
+  //fetch tutor
   useEffect(() => {
-    const myClient = new StreamVideoClient({ apiKey, user, tokenProvider });
-    setClient(myClient);
-    return () => {
-      myClient.disconnectUser();
-      setClient(undefined);
+    const fetchTutor = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/tuteur/${id}`
+        );
+        setTutor(response.data.tuteur);
+      } catch (err) {
+        console.error("Error fetching tutor:", err);
+      }
     };
-  }, []);
+    fetchTutor();
+  }, [id]);
+
+  useEffect(() => {
+    if (values.dateTime) {
+      handleReserve();
+    }
+  }, [values.dateTime]);
+
+  const handleReserve = async () => {
+    if (!values.dateTime || !user) {
+      alert.show("Please select a date");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/request/add",
+        {
+          user_id: user?._id,
+          tutor_id: tutor?._id,
+          tutor_name: tutor?.username,
+          meeting_time: values.dateTime,
+        }
+      );
+
+      if (response.status === 201) {
+        alert.show("Reservation successful");
+      } else {
+        alert.show("Failed to make a reservation");
+      }
+    } catch (error) {
+      console.error("Error making reservation:", error);
+      // alert.show("An error occurred. Please try again.");
+    }
+  };
+
   // Modal
   const handleClickOpen = () => {
     console.log("handleClickOpen triggered");
     setOpen(true);
-    setMeetingState("isScheduleMeeting");
   };
+
   // Handle time in the schedule
   const HandleClickTime = (timeString: string, day: string) => {
     const currentDate = new Date();
@@ -137,122 +193,11 @@ const TuteurProfile = () => {
 
     setValues({ ...values, dateTime: targetDate });
 
-    console.log("Formatted Date:", targetDate);
-    handleClickOpen();
+    // console.log("Formatted Date:", targetDate);
+    // handleReserve();
+     handleClickOpen();
   };
-  // Modal
-  const handleClose = () => {
-    console.log("close");
-    setOpen(false);
-    setMeetingState(undefined);
-  };
-  const createMeeting = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!client) return console.log("y'apas de client ");
-    try {
-      if (!values.dateTime) {
-        console.log("Success Notification !");
-        return;
-      }
-      const id = crypto.randomUUID();
-      const call = client.call("default", id);
-      if (!call) throw new Error("Votre call n'est pas créer");
 
-      const startsAt =
-        values.dateTime.toISOString() || new Date(Date.now()).toISOString();
-      const description = values.description || "Instant Meeting";
-
-      await call.getOrCreate({
-        data: {
-          starts_at: startsAt,
-          custom: {
-            description,
-          },
-        },
-      });
-      console.log(call);
-      let UpcomingCalls: UpcomingCall[] = [];
-
-      if (upcomingCalls) {
-        upcomingCalls.forEach((call) => {
-          console.log("Prcossing call", call);
-          const upcoming_meeting_id = call.id;
-          const user_id = call.currentUserId || "";
-          const meeting_time = startsAt;
-          const meeting_description = description;
-          const meeting_url = `http://localhost:3000/meeting/${call.id}`;
-
-          UpcomingCalls.push({
-            upcoming_meeting_id,
-            user_id,
-            meeting_time,
-            meeting_description,
-            meeting_url,
-          });
-        });
-      }
-
-      // console.log("Upcoming calls data:", UpcomingCalls);
-
-      // if (UpcomingCalls.length === 0) {
-      //   console.error("UpcomingCalls est vide");
-      //   return;
-      // }
-      try {
-        setLoading(true);
-        console.log("Sending request to server with data:", UpcomingCalls);
-        const response = await axios.post(
-          "http://localhost:5000/api/meet/upcoming",
-          UpcomingCalls
-        );
-
-        console.log("Server response:", response);
-
-        if (!response) {
-          throw new Error("Failed to create new meeting");
-        }
-
-        setCallDetails(call);
-
-        if (!values.description) {
-          navigate(`/meeting/${call.id}`);
-        }
-        toast("🦄 Meeting Created", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error("Error creating meeting:", error);
-      }
-    } catch (error) {
-      console.log("erreur lors du creation", error);
-      toast("🦄 Failed to create a meeting", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  };
-  // Description input
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    const value = e.target.value;
-    setValues({ ...values, description: value });
-  };
-  const meetingLink = `http://localhost:3000/meeting/${callDetails?.id}`;
   // Scroll To an Element
   const ToggleShowAllReviews = () => {
     setShow(!show);
@@ -327,84 +272,6 @@ const TuteurProfile = () => {
             ))}
           </tbody>
         </table>
-        {!callDetails ? (
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            fullWidth
-            sx={{ height: "100vh" }}
-          >
-            <form onSubmit={createMeeting}>
-              <DialogTitle>Subscribe</DialogTitle>
-              <DialogContent>
-                <div className="flex flex-col gap-6">
-                  <div className="flex flex-col gap-2.5">
-                    <label className="text-base font-normal leading-[22.4px] text-sky-2">
-                      Add a description
-                    </label>
-                    <TextField
-                      className="border-none bg-cyan-700 focus-visible:ring-0 focus-visible:ring-offset-0"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="flex w-full flex-col gap-2.5">
-                    <label className="text-base font-normal leading-[22.4px]">
-                      Time
-                    </label>
-                    <ReactDatePicker
-                      selected={values.dateTime}
-                      onChange={(date: Date) =>
-                        setValues({ ...values, dateTime: date! })
-                      }
-                      showTimeSelect
-                      timeFormat="HH:mm"
-                      timeIntervals={15}
-                      timeCaption="time"
-                      dateFormat="MMMM d, yyyy h:mm aa"
-                      className="w-full rounded p-2 focus:outline-none text-black"
-                    />
-                    {/* <TextField
-                      className="w-full rounded p-2 focus:outline-none text-black"
-                      // value={values.dateTime?.toLocaleString()} // Display the selected date and time
-                    /> */}
-                  </div>
-                </div>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button type="submit">Subscribe</Button>
-              </DialogActions>
-            </form>
-          </Dialog>
-        ) : (
-          <Dialog
-            open={meetingState === "isScheduleMeeting"}
-            onClose={() => {
-              handleClose();
-            }}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle>Meeting Link</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Meeting created successfully
-                <p>Meeting Link: {meetingLink}</p>
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  navigator.clipboard.writeText(meetingLink);
-                  setCallDetails(undefined);
-                  setMeetingState(undefined);
-                }}
-              >
-                Copy Meeting Link
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
       </div>
     );
   };
@@ -414,8 +281,10 @@ const TuteurProfile = () => {
     return Array.from(timeSet).sort();
   };
 
+  if (!tutor) return <div>Loading...</div>;
+
   return (
-    <>
+    <ApprenantLayout>
       <div className="flex justify-center mt-6 p-6 font-korto font-sans">
         <div className="w-2/3 mr-2 ">
           <section id="section-1">
@@ -426,7 +295,7 @@ const TuteurProfile = () => {
                 className="w-64 mx-3 rounded-lg"
               />
               <div>
-                <div className="text-3xl font-bold">Theodora D.</div>
+                <div className="text-3xl font-bold">{tutor.username}</div>
                 <div className="text-base my-2">
                   Build your Future: I will make you fluent in English with
                   customized classes. * IELTS Examiner for 5 years and 8 years
@@ -555,8 +424,6 @@ const TuteurProfile = () => {
           </section>
           <section id="Specialite" className="p-4">
             <p className="text-2xl font-bold my-4">Specialité</p>
-
-            <UpcomingCallList />
             <div className="p-4">
               <div className="text-xl font-semibold mb-3">
                 Conversational English
@@ -780,7 +647,7 @@ const TuteurProfile = () => {
           </div>
         </div>
       </div>
-    </>
+    </ApprenantLayout>
   );
 };
 export default TuteurProfile;

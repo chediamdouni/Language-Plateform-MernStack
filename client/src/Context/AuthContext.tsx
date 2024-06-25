@@ -95,43 +95,21 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
       setLoading(false);
     }
   };
-  const fetchTutors = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/tuteur/getAlltutors"
-      );
-      setTutors(response.data.tutors);
-    } catch (error) {
-      console.error("Error fetching tutors:", error);
-    }
-  };
 
   useEffect(() => {
     getLoggedInUser();
-    fetchTutors();
   }, []);
-  //  useEffect(() => {
-  //   console.log("Cookies:", cookies);
-  //   if (!cookies.jwt) {
-  //     setLoading(false);
-  //     setIsSignedIn(false);
-  //     setUser(null);
-  //     console.log("JWT token is missing");
-  //     navigate("/");
-  //     return;
-  //   }
-
-  //   console.log("JWT token is present");
-
-  //   getLoggedInUser();
-  // }, [cookies.jwt]);
 
   const updateUser = async (data: FormData) => {
     try {
       setLoading(true);
+      console.log(data);
       const res = await axios.put(
         `http://localhost:5000/api/users/editUserProfile/${user?._id || ""}`,
-        data
+        data,
+        {
+          withCredentials: true,
+        }
       );
       setUser(res.data);
     } catch (e) {

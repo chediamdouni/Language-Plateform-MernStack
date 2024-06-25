@@ -14,20 +14,13 @@ import CoursTuteur from "./pages/tuteur/Cours";
 import AccountSettings from "./pages/tuteur/AccountSettings";
 import LoginMethods from "./pages/tuteur/LoginMethods";
 import Settings from "./pages/tuteur/Settings";
-import TuteurProfile from "./pages/tuteur/profile";
+import TuteurProfile from "./pages/tuteur/tuteurProfile";
 import WelcomeComponent from "./pages/tuteur/welcome";
-import SignupChecklistComponent from "./pages/tuteur/CheckoutProfile/SignupChecklistComponent";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
-import Step1 from "./pages/tuteur/CheckoutProfile/step1";
-import Step2 from "./pages/tuteur/CheckoutProfile/step2";
-import Step3 from "./pages/tuteur/CheckoutProfile/step3";
 import TuteurSettingsAccount from "./pages/tuteur/Account";
-import Video from "./pages/react-stream/video";
-import MeetingRoom from "./pages/react-stream/MeetingRoom";
 import TestingRoom from "./pages/react-stream/TestingRoom";
 import Meeting from "./pages/react-stream/Meet";
-import { AuthProvider } from "./Context/AuthContext";
 import StreamVideoProvider from "./providers/StreamClientProvider";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -40,32 +33,24 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/apprenant">
           <Route index element={<DashboardApprenant />} />
-          <Route
-            path="profile"
-            element={
-              <StreamVideoProvider>
-                <ProfileApprenant />
-              </StreamVideoProvider>
-            }
-          />
+          <Route path="profile" element={<ProfileApprenant />} />
           <Route path="connexion" element={<LoginApprenant />} />
           <Route path="inscription" element={<Signup />} />
-          <Route path="tuteur" element={<TuteurProfile />} />
+          {/* <Route path="tuteur" element={<TuteurProfile />} /> */}
         </Route>
         <Route path="/tuteur">
           <Route index element={<TuteurProfile />} />
           <Route path="inscription" element={<SignupTuteur />} />
           <Route path="connexion" element={<LoginTuteur />} />
-          <Route path="profile" element={<TuteurProfile />} />
-
-          <Route path="step/welcome" element={<WelcomeComponent />} />
-          <Route path="step/signup-checklist">
-            <Route index element={<SignupChecklistComponent />} />
-            <Route path="step-1" element={<Step1 />} />
-            <Route path="step-2" element={<Step2 />} />
-            <Route path="step-3" element={<Step3 />} />
-          </Route>
-
+          {/* <Route path="profile" element={<TuteurProfile />} /> */}
+          <Route
+            path="welcome"
+            element={
+              <StreamVideoProvider>
+                <WelcomeComponent />
+              </StreamVideoProvider>
+            }
+          />
           <Route path="Account-settings" element={<AccountSettings />} />
           <Route path="account" element={<TuteurSettingsAccount />} />
           <Route path="multiple-connexion" element={<LoginMethods />} />
@@ -89,13 +74,21 @@ const App = () => {
             </StreamVideoProvider>
           }
         />
-        <Route 
-        path="/test"
-        element={
-          <StreamVideoProvider>
+        <Route
+          path="/apprenant/tuteur/:id"
+          element={
+            <StreamVideoProvider>
+              <TuteurProfile />
+            </StreamVideoProvider>
+          }
+        />
+        <Route
+          path="/test"
+          element={
+            <StreamVideoProvider>
               <Test />
             </StreamVideoProvider>
-        }
+          }
         />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cour" element={<Cours />} />

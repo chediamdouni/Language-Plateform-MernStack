@@ -1,9 +1,11 @@
 import React from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useContext, useEffect, useState } from "react";
-
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import { Loader } from "lucide-react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface UpcomingMeeting {
   _id: string;
@@ -18,7 +20,7 @@ interface UpcomingMeeting {
 const fetchUpcoming = async (userId: string): Promise<UpcomingMeeting[]> => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/meet/GetUpcoming/${userId}`
+      `http://localhost:5000/api/meet/GetAllUpcoming/${userId}`
     );
 
     console.log("Réponse de l'API:", response);
@@ -35,10 +37,22 @@ const fetchUpcoming = async (userId: string): Promise<UpcomingMeeting[]> => {
     throw error;
   }
 };
+const deleteUpcomingMeeting = async (upcomingMeetingId: string) => {
+  try {
+    await axios.delete(
+      `http://localhost:5000/api/meet/DelUpcoming/${upcomingMeetingId}`
+    );
+    console.log("Meeting deleted successfully");
+  } catch (error) {
+    console.error("Error deleting meeting:", error);
+    throw error;
+  }
+};
 
-const UpcomingCallList = () => {
+const AllUpcomingCall = () => {
   const { user } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
   const [upcomingMeetings, setUpcomingMeetings] = useState<UpcomingMeeting[]>(
     []
   );
@@ -66,12 +80,46 @@ const UpcomingCallList = () => {
 
   const noCallsMessage = "No Upcoming Calls";
 
+  const handleDelete = async (upcomingMeetingId: string) => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Are you sure you want to delete this meeting?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            try {
+              console.log(
+                "Attempting to delete meeting with ID:",
+                upcomingMeetingId
+              );
+              await deleteUpcomingMeeting(upcomingMeetingId);
+              setUpcomingMeetings(
+                upcomingMeetings.filter(
+                  (meeting) => meeting.upcoming_meeting_id !== upcomingMeetingId
+                )
+              );
+            } catch (error) {
+              console.error("Error deleting meeting:", error);
+            }
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {},
+        },
+      ],
+    });
+  };
   return (
     <>
       {upcomingMeetings.length !== 0 ? (
-        <ul>
+        <ul className="flex gap-4 flex-wrap">
           {upcomingMeetings.map((meeting) => (
-            <li key={meeting.upcoming_meeting_id} className="mb-4">
+            <li
+              key={meeting.upcoming_meeting_id}
+              className="mb-4 border drop-shadow-md p-2 w-auto"
+            >
               <p>
                 <strong>Description:</strong>
                 {meeting.meeting_description || "No description"}
@@ -87,9 +135,15 @@ const UpcomingCallList = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Join Meeting
+                  {meeting.meeting_url}
                 </a>
               </p>
+              <button
+                onClick={() => handleDelete(meeting.upcoming_meeting_id)}
+                className="bg-red-500 text-white px-2 py-1 rounded mt-3"
+              >
+                Supprimer
+              </button>
             </li>
           ))}
         </ul>
@@ -100,4 +154,4 @@ const UpcomingCallList = () => {
   );
 };
 
-export default UpcomingCallList;
+export default AllUpcomingCall;
