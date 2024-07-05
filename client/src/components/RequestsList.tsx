@@ -27,7 +27,7 @@ const RequestsList = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/request/user/${user?._id}`
+          `http://localhost:5000/api/request/user/${user?.id}`
         );
         setRequests(response.data);
         setIsLoading(false);

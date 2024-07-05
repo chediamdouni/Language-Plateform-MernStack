@@ -20,6 +20,7 @@ import { AuthContext } from "src/Context/AuthContext";
 import VerticalBarChart from "../../components/chart";
 import { CiEdit } from "react-icons/ci";
 import AllUpcomingCall from "../../components/AllUpcomingCall";
+import TuteurRequest from "../../components/TuteurRequest";
 interface AvailabilitySlot {
   day: string;
   startTime: string;
@@ -41,13 +42,14 @@ interface UpcomingCall {
 }
 
 const WelcomeComponent = () => {
-  const { user } = useContext(AuthContext);
+  const { user, getLoggedInUser } = useContext(AuthContext);
   const [open, setOpen] = React.useState(false);
   const client = useStreamVideoClient();
   const [values, setValues] = useState(initialValues);
   const [loading, setLoading] = useState(false);
   const [callDetails, setCallDetails] = useState<Call>();
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
+  const [requests, setRequests] = useState<Request[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
@@ -78,6 +80,7 @@ const WelcomeComponent = () => {
   const formatDate = (date?: Date): string => {
     return date ? date.toLocaleDateString() : "";
   };
+
   // Fetching availability from BackSide
   useEffect(() => {
     const fetchData = async () => {
@@ -97,6 +100,7 @@ const WelcomeComponent = () => {
     };
     fetchData();
   }, []);
+
   // Modal
   const handleClickOpen = () => {
     console.log("handleClickOpen triggered");
@@ -196,13 +200,6 @@ const WelcomeComponent = () => {
           });
         });
       }
-
-      // console.log("Upcoming calls data:", UpcomingCalls);
-
-      // if (UpcomingCalls.length === 0) {
-      //   console.error("UpcomingCalls est vide");
-      //   return;
-      // }
       try {
         setLoading(true);
         console.log("Sending request to server with data:", UpcomingCalls);
@@ -668,6 +665,11 @@ const WelcomeComponent = () => {
               </div>
             </div>
           </section>
+
+          <section id="Specialite" className="bg-white shadow-xl p-8 mt-5">
+            <TuteurRequest />
+          </section>
+
           <div className="flex-1 bg-white rounded-lg shadow-xl mt-4 p-8">
             <h4 className="text-xl text-gray-900 font-bold">Statistics</h4>
 

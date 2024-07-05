@@ -9,14 +9,23 @@ import { BiSolidMessageSquareDetail } from "react-icons/bi";
 import { FaCalendarDays } from "react-icons/fa6";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import TuteurLayout from "src/layouts/TuteurLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AccountSettings = () => {
   const { user, getLoggedInUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getLoggedInUser();
-  }, []);
+    const checkUserLoggedIn = async () => {
+      await getLoggedInUser();
+      if (!user) {
+        navigate("/tuteur/connexion");
+      }
+    };
+
+    checkUserLoggedIn();
+  }, [user, getLoggedInUser, navigate]);
+
 
   return (
     <TuteurLayout>
@@ -118,7 +127,7 @@ const AccountSettings = () => {
                 </div>
               </div>
             </Link>
-            <Link to="/tuteur/notifications">
+            <Link to="/inbox">
               <div className="w-80 h-48 border rounded-xl drop-shadow-lg hover:bg-sky-100 p-4">
                 <div className="space-y-2">
                   <svg

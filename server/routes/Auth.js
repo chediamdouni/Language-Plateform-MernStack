@@ -3,11 +3,11 @@ const {
   login,
   signupUser,
   getLoggedInUser,
+  logout,
 } = require("../controllers/AuthController");
 const { userVerification, checkRoles } = require("../utils/Auth");
 
 var router = express.Router();
-
 
 router.get("/", userVerification);
 // login Routes
@@ -26,5 +26,8 @@ router.post("/signup/admin", (req, res, next) => {
 router.post("/signup/tuteur", (req, res, next) => {
   (req.body.roles = "tuteur"), signupUser(req, res, next, "tuteur");
 });
+
+// logout
+router.get("/logout", userVerification, logout);
 
 module.exports = router;

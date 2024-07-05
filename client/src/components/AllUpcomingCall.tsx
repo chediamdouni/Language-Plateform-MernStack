@@ -59,10 +59,10 @@ const AllUpcomingCall = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (user && user._id) {
+      if (user && user.id) {
         setIsLoading(true);
         try {
-          const meetings = await fetchUpcoming(user._id);
+          const meetings = await fetchUpcoming(user.id);
           console.log("Réunions récupérées:", meetings);
           setUpcomingMeetings(meetings);
         } catch (error) {

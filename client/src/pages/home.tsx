@@ -15,6 +15,8 @@ import tuteurImage from "../assets/images/tuteur.png";
 import { FaArrowRight } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "src/Context/AuthContext";
+import axios from "axios";
+import Person from "../assets/images/person1.jpg";
 const data = [
   {
     imageSrc:
@@ -45,9 +47,38 @@ const data = [
     budget: "USD 5$",
   },
 ];
-
+interface Tutor {
+  _id: string;
+  username: string;
+  verified: string;
+  language: string;
+  aboutMe: string;
+  country: string;
+  email: string;
+  experience: number;
+  certificate: string;
+  createdAt: Date;
+}
 const Home: React.FC = () => {
-  
+  const [tutors, setTutors] = useState<Tutor[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTutors = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/tuteur/");
+        console.log(response);
+        setTutors(response.data.tuteurs);
+      } catch (err) {
+        console.error("Error fetching tutors:", err);
+      }
+    };
+    fetchTutors();
+  }, []);
+
+  const handleSelectTutor = (tutorId: string) => {
+    navigate(`/apprenant/tuteur/${tutorId}`);
+  };
 
   return (
     <DashboardLayout>
@@ -69,38 +100,58 @@ const Home: React.FC = () => {
           connaissons l'apprentissage des langues.
         </Typography>
         <div className="flex gap-9 m-10 p-1 md:flex-row sm:flex-col lg:flex-row">
-          {data.map((item, index) => (
-            <Card className="max-w-[20rem] overflow-hidden hover:bg-sky-100">
+          {tutors.map((tutor) => (
+            <Card
+              key={tutor._id}
+              className="max-w-[20rem] overflow-hidden hover:bg-sky-100"
+              onClick={() => handleSelectTutor(tutor._id)}
+            >
               <CardHeader
                 floated={false}
                 shadow={false}
                 color="transparent"
                 className="m-0 rounded-none"
               >
-                <img src={item.imageSrc} alt="ui/ux review check" />
+                <img src={Person} alt="ui/ux review check" />
               </CardHeader>
               <CardBody>
                 <Typography variant="h4" className=" text-orange-600">
-                  {item.title}
+                  {tutor.username}
                 </Typography>
                 <Typography
                   variant="lead"
                   color="gray"
                   className="mt-3 font-normal text-sm"
                 >
-                  {item.description}
+                  Contact : {tutor.email}
+                </Typography>
+                <Typography
+                  variant="lead"
+                  color="gray"
+                  className="mt-3 font-normal text-sm"
+                >
+                  Pays Natale : {tutor.country}
+                </Typography>
+                <Typography
+                  variant="lead"
+                  color="gray"
+                  className="mt-3 font-normal text-sm"
+                >
+                  Expérience : {tutor.experience} ans
                 </Typography>
                 <Typography
                   variant="lead"
                   color="gray"
                   className="mt-3 font-bold text-base"
                 >
-                  {item.budget}
+                  <p>50 dinars</p>
                 </Typography>
               </CardBody>
               <CardFooter className="flex items-center justify-between">
                 <div className="flex items-center -space-x-3"></div>
-                <Typography className="font-normal">January 10</Typography>
+                <Typography className="font-normal">
+                  {new Date(tutor.createdAt).toLocaleDateString()}
+                </Typography>
               </CardFooter>
             </Card>
           ))}
@@ -181,6 +232,9 @@ const Home: React.FC = () => {
               <button
                 className="select-none rounded-lg bg-gradient-to-tr from-orange-400 to-orange-300 py-3 px-10 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
+                onClick={() => {
+                  navigate("/pricing");
+                }}
               >
                 S'inscrire
               </button>
@@ -250,6 +304,9 @@ const Home: React.FC = () => {
               <button
                 className="select-none rounded-lg bg-gradient-to-tr from-orange-400 to-orange-300 py-3 px-10 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
+                onClick={() => {
+                  navigate("/pricing");
+                }}
               >
                 S'inscrire
               </button>
@@ -319,6 +376,9 @@ const Home: React.FC = () => {
               <button
                 className="select-none rounded-lg bg-gradient-to-tr from-orange-400 to-orange-300 py-3 px-10 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 type="button"
+                onClick={() => {
+                  navigate("/pricing");
+                }}
               >
                 S'inscrire
               </button>
@@ -343,7 +403,7 @@ const Home: React.FC = () => {
               Découvrez nos ressources gratuites ! Outils, livres et vidéos pour
               vous aider à apprendre l'anglais. Disponibles sans abonnement.
             </p>
-            <a href="/#" className="inline-block">
+            <a href="/cour" className="inline-block">
               <button
                 className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none hover:bg-gray-900/10 active:bg-gray-900/20"
                 type="button"
@@ -389,7 +449,7 @@ const Home: React.FC = () => {
             avec des personnes du monde entier
           </div>
           <button className="flex gap-4 max-w-xs select-none rounded-lg bg-gradient-to-tr from-orange-400 to-orange-300 py-3 px-10 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-10">
-            <Link to={"/tuteur/inscription"}>C'est Parti </Link>
+            <Link to="/tuteur/inscription">C'est Parti </Link>
             <FaArrowRight />
           </button>
         </div>
@@ -411,13 +471,16 @@ const Home: React.FC = () => {
       </div>
       <div className="flex flex-col text-center p-20 justify-center items-center">
         <p className="text-blue-500 text-3xl  font-extrabold px-80">
-          Achieve your goals by learning English with Elearning App
+          Atteignez vos objectifs en apprenant l'anglais avec Elearning App
         </p>
         <button
           className="max-w-xs select-none rounded-lg bg-gradient-to-tr from-orange-400 to-orange-300 py-3 px-10 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-10"
           type="button"
+          onClick={()=>{
+            navigate("/")
+          }}
         >
-          Start learning
+          Commencer l'apprentissage
         </button>
       </div>
     </DashboardLayout>

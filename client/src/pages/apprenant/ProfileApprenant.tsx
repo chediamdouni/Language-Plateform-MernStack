@@ -22,7 +22,7 @@ import schedule from "../../assets/images/reschedule_trial_checklist.png";
 import { AuthContext } from "src/Context/AuthContext";
 
 const ProfileApprenant = () => {
-  const { user, isSignedIn, loading } = useContext(AuthContext);
+  const { user, isSignedIn } = useContext(AuthContext);
   const navigate = useNavigate();
   return (
     <div>

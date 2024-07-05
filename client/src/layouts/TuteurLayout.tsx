@@ -41,18 +41,15 @@ const profileMenuItems = [
 
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const { user } = useContext(AuthContext);
+  const { user, handleSignout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies<string>([]);
 
-  const handleLogout = () => {
-    removeCookie("jwt");
-    navigate("/");
-  };
   const handleClick = (label: string) => {
     switch (label) {
       case "Sign Out":
-        handleLogout();
+        handleSignout();
+        navigate("/tuteur/connexion");
         break;
       case "Your Profile":
         navigate("/tuteur/welcome");

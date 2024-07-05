@@ -4,12 +4,14 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var cors = require('cors');
+var cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 
-var mainRouter =require("./routes/index");
+var mainRouter = require("./routes/index");
+const { syncUsers } = require("./utils/stream");
+const User = require("./models/User");
 
 mongoose.set("strictQuery", false);
 
@@ -18,8 +20,9 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
+  .then(async () => {
     console.log("DB Connected");
+    syncUsers(await User.find({}));
   })
   .catch((error) => {
     console.log(`Error ${error.message}`);
@@ -40,8 +43,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-
-app.use("/api",mainRouter);
+app.use("/api", mainRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

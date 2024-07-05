@@ -49,7 +49,7 @@ const TuteurSettingsAccount = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/users/editUserProfile/${user?._id || ""}`,
+        `http://localhost:5000/api/users/editUserProfile/${user?.id || ""}`,
         data
       );
       console.log("Form Data:", data);

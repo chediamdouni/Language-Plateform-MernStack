@@ -6,13 +6,16 @@ import {
   Dispatch,
   ReactNode,
 } from "react";
-
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { StreamChat } from "stream-chat";
+import { jwtDecode } from "jwt-decode";
 
+const apiKey = "mmhfdzb5evj2";
+// const client = StreamChat.getInstance(apiKey);
 export interface User {
-  _id: string;
+  id: string;
   username?: string;
   gender?: string;
   dateOfBirth: Date;
@@ -33,39 +36,72 @@ interface IAuthContext {
   user: User | null;
   tutors: User[] | null;
   loading: boolean;
+  streamToken: string | null;
   handleSignout: () => void;
   setLoading: (value: SetStateAction<boolean>) => void;
   getLoggedInUser: () => void;
   updateUser: (data: FormData) => void;
   setUser: Dispatch<SetStateAction<User | null>>;
   setIsSignedIn: Dispatch<SetStateAction<boolean>>;
+  setStreamToken: Dispatch<SetStateAction<string | null>>;
 }
+
 export const AuthContext = createContext<IAuthContext>({
   isSignedIn: false,
   user: null,
   tutors: null,
   loading: false,
+  streamToken: null,
   handleSignout: () => {},
   setLoading: (value: SetStateAction<boolean>) => {},
   getLoggedInUser: () => {},
   updateUser: (data: FormData) => {},
   setUser: () => {},
   setIsSignedIn: () => {},
+  setStreamToken: () => {},
 });
 
 export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["jwt"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["bearerToken"]);
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [tutors, setTutors] = useState<User[] | null>(null);
+  const [streamToken, setStreamToken] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSignout = () => {
-    removeCookie("jwt", { path: "/" });
-    setIsSignedIn(false);
-    setUser(null);
-    navigate("/");
+  const handleSignout = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/logout",
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Successfully logged out from backend");
+
+        // Supprimer le cookie côté client
+        removeCookie("bearerToken", { path: "/" });
+
+        const checkCookie = cookies.bearerToken;
+        if (!checkCookie) {
+          console.log("Cookie bearerToken supprimé avec succès");
+        } else {
+          console.log("Échec de la suppression du cookie bearerToken");
+        }
+
+        // Réinitialiser l'état
+        setIsSignedIn(false);
+        setUser(null);
+        setStreamToken(null);
+      } else {
+        console.error("Erreur lors de la déconnexion backend");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'appel à l'API de déconnexion :", error);
+    }
   };
 
   const getLoggedInUser = async () => {
@@ -81,16 +117,16 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
       if (response.data.user) {
         setIsSignedIn(true);
         setUser(response.data.user);
+        setStreamToken(response.data.streamToken);
       } else {
         setIsSignedIn(false);
         setUser(null);
-        // navigate("/apprenant/connexion");
+        setStreamToken(null);
       }
     } catch (e) {
       console.log("Error fetching logged in user:", e);
       setIsSignedIn(false);
       setUser(null);
-      // navigate("/apprenant/connexion");
     } finally {
       setLoading(false);
     }
@@ -105,7 +141,7 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
       setLoading(true);
       console.log(data);
       const res = await axios.put(
-        `http://localhost:5000/api/users/editUserProfile/${user?._id || ""}`,
+        `http://localhost:5000/api/users/editUserProfile/${user?.id || ""}`,
         data,
         {
           withCredentials: true,
@@ -124,12 +160,14 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
     user,
     tutors,
     loading,
+    streamToken,
     handleSignout,
     setLoading,
     getLoggedInUser,
     updateUser,
     setUser,
     setIsSignedIn,
+    setStreamToken,
   };
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

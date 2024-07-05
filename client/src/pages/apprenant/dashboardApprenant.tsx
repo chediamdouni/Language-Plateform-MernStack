@@ -1,24 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Typography,
-  CardFooter,
-  Tooltip,
-  Avatar,
-} from "@material-tailwind/react";
 import { MdPerson } from "react-icons/md";
-import { IoMdHeartEmpty } from "react-icons/io";
-import person from "../../assets/images/default.png";
 import ApprenantLayout from "src/layouts/ApprenantLayout";
 import { AuthContext } from "src/Context/AuthContext";
 import { PiStudentDuotone } from "react-icons/pi";
-import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
 import axios from "axios";
-
+import { useClient } from "src/hooks/useStreamClient";
+import {
+  ChannelHeader,
+  Chat,
+  MessageInput,
+  MessageList,
+  Channel,
+  Thread,
+  Window,
+} from "stream-chat-react";
+import "stream-chat-react/dist/css/v2/index.css";
+import { StreamChat, Channel as StreamChannel } from "stream-chat";
+import { Box, Modal } from "@mui/material";
+import person from "../../assets/images/person1.jpg";
 interface Tutor {
   _id: string;
   username: string;
@@ -33,10 +34,17 @@ interface Tutor {
 
 const DashboardApprenant: React.FC = () => {
   const navigate = useNavigate();
-  const { user, isSignedIn } = useContext(AuthContext);
+  const { user, isSignedIn, streamToken } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Tutor[]>([]);
+  const [showChat, setShowChat] = useState(false);
+  const [channel, setChannel] = useState<StreamChannel | null>(null);
+  const chatClient = useClient({ user, streamToken });
   const [tutors, setTutors] = useState<Tutor[]>([]);
+  const [selectedTutor, setSelectedTutor] = useState<{
+    _id: string;
+    username: string;
+  } | null>(null);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
@@ -44,24 +52,34 @@ const DashboardApprenant: React.FC = () => {
     const results = searchTutors(query);
     setSearchResults(results);
   };
+  const handleClose = () => {
+    setShowChat(false);
+    setSelectedTutor(null);
+  };
 
-  useEffect(() => {
-    if (!isSignedIn && !user) {
-      console.log("Not Authorized");
-      toast("🦄 Not Authorized!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
-      navigate("/");
-    }
-  }, [isSignedIn, user, navigate]);
+  const handleSelectTutor = (tutorId: string) => {
+    navigate(`/apprenant/tuteur/${tutorId}`);
+  };
+
+  const handleSelectTutorChat = (tutorId: string, tutorName: string) => {
+    // console.log("handleSelectTutorChat called", tutorId, tutorName);
+    setSelectedTutor({ _id: tutorId, username: tutorName });
+    setShowChat(true);
+    // navigate("/inbox", {
+    //   state: { selectedTutor: { _id: tutorId, username: tutorName } },
+    // });
+  };
+
+  const searchTutors = (query: string): Tutor[] => {
+    const normalizedQuery = query.toLowerCase().trim();
+    return tutors.filter(
+      (tutor) =>
+        tutor.username.toLowerCase().includes(normalizedQuery) ||
+        tutor.language.toLowerCase().includes(normalizedQuery) ||
+        tutor.country.toLowerCase().includes(normalizedQuery)
+    );
+  };
+
   // Display tutors
   useEffect(() => {
     const fetchTutors = async () => {
@@ -77,19 +95,20 @@ const DashboardApprenant: React.FC = () => {
     fetchTutors();
   }, []);
 
-  const searchTutors = (query: string): Tutor[] => {
-    const normalizedQuery = query.toLowerCase().trim();
-    return tutors.filter(
-      (tutor) =>
-        tutor.username.toLowerCase().includes(normalizedQuery) ||
-        tutor.language.toLowerCase().includes(normalizedQuery) ||
-        tutor.country.toLowerCase().includes(normalizedQuery)
-    );
-  };
-
-  const handleSelectTutor = (tutorId: string) => {
-    navigate(`/apprenant/tuteur/${tutorId}`);
-  };
+  useEffect(() => {
+    if (user && chatClient && selectedTutor) {
+      console.log("Channel users ", user.id, selectedTutor._id);
+      const channel = chatClient.channel(
+        "messaging",
+        `${user.id}_${selectedTutor._id}`,
+        {
+          name: user.username,
+          members: [user.id, selectedTutor._id],
+        }
+      );
+      setChannel(channel);
+    }
+  }, [user, chatClient, selectedTutor]);
 
   return (
     <ApprenantLayout>
@@ -158,22 +177,22 @@ const DashboardApprenant: React.FC = () => {
             {searchResults.map((tutor) => (
               <div
                 key={tutor._id}
-                className="bg-white rounded-lg border-2 overflow-hidden flex flex-col shadow-md "
+                className="bg-white rounded-lg border overflow-hidden flex flex-col shadow-lg "
               >
-                <div>
+                <div className="flex items-center">
                   <img
-                    src="https://picsum.photos/id/646/200/200"
+                    src={person}
                     alt="tuteur Profile"
-                    className="w-20 h-20 mx-3 rounded-lg"
+                    className="w-30 h-20 mr-3 rounded-br-lg"
                   />
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                    {tutor.username}
+                  </h3>
                 </div>
 
                 <div className="w-full p-4">
-                  <div className="flex  flex-col">
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                        {tutor.username}
-                      </h3>
+                  <div className="flex flex-col">
+                    <div className="space-y-2 py-5">
                       <div className="flex gap-1 items-center">
                         <PiStudentDuotone />
                         <div className="text-base font-thin capitalize">
@@ -224,26 +243,49 @@ const DashboardApprenant: React.FC = () => {
                       <div className="flex gap-1 items-center">
                         <PiStudentDuotone />
                         <div className="text-base font-thin">
-                          {tutor.aboutMe}
+                          {tutor.aboutMe} About me Description
                         </div>
                       </div>
                       <div className="flex gap-1 items-center">
-                        <PiStudentDuotone />
                         <div className="text-gray-500 dark:text-gray-400 mb-4">
                           <p>Matieres: {tutor.country}</p>
                         </div>
                       </div>
                     </div>
-                    <div className="gap-4 ">
+                    <div className="gap-4 flex items-center">
                       {" "}
                       <button
-                        className="border-2 w-24 rounded-xl p-3 text-center hover:bg-sky-300 font-semibold "
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                         onClick={() => handleSelectTutor(tutor._id)}
                       >
                         Leçon d'essaie
                       </button>
-                      <button className="border-2 w-24 rounded-xl p-3 text-center hover:bg-sky-300 font-semibold ">
-                        Send Message
+                      <button
+                        className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                        onClick={() =>
+                          handleSelectTutorChat(tutor._id, tutor.username)
+                        }
+                      >
+                        <svg
+                          width="20px"
+                          height="20px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            opacity="0.15"
+                            d="M3.00003 11.5C2.99659 12.8199 3.30496 14.1219 3.90003 15.3C4.6056 16.7118 5.69028 17.8992 7.03258 18.7293C8.37488 19.5594 9.92179 19.9994 11.5 20C12.8199 20.0035 14.1219 19.6951 15.3 19.1L21 21L19.1 15.3C19.6951 14.1219 20.0035 12.8199 20 11.5C19.9994 9.92179 19.5594 8.37488 18.7293 7.03258C17.8992 5.69028 16.7118 4.6056 15.3 3.90003C14.1219 3.30496 12.8199 2.99659 11.5 3.00003H11C8.91568 3.11502 6.94699 3.99479 5.47089 5.47089C3.99479 6.94699 3.11502 8.91568 3.00003 11V11.5Z"
+                            fill="#000000"
+                          />
+                          <path
+                            d="M8 9.5H15M8 13.5H13M15.3 19.1L21 21L19.1 15.3C19.1 15.3 20 14 20 11.5C20 6.80558 16.1944 3 11.5 3C6.80558 3 3 6.80558 3 11.5C3 16.1944 6.80558 20 11.5 20C14.0847 20 15.3 19.1 15.3 19.1Z"
+                            stroke="#000000"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
                       </button>
                     </div>
                   </div>
@@ -251,6 +293,42 @@ const DashboardApprenant: React.FC = () => {
               </div>
             ))}
           </div>
+
+          <Modal
+            open={showChat}
+            onClose={handleClose}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 600, // width of the modal
+                minHeight: 400, // minimum height of the modal
+                maxHeight: "90vh", // maximum height of the modal
+                bgcolor: "background.paper",
+                boxShadow: 24,
+                p: 4,
+                overflowY: "auto", // allow modal content to scroll
+              }}
+            >
+              {showChat && chatClient && channel && (
+                <Chat client={chatClient} theme="str-chat__theme-light">
+                  <Channel channel={channel}>
+                    <Window>
+                      <ChannelHeader />
+                      <MessageList />
+                      <MessageInput />
+                    </Window>
+                    <Thread />
+                  </Channel>
+                </Chat>
+              )}
+            </Box>
+          </Modal>
         </div>
       </div>
     </ApprenantLayout>

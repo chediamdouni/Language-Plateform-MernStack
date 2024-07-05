@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FooterWithLogo from "../components/footer";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "../components/dropdown";
@@ -68,17 +68,17 @@ function ProfileMenu() {
   const { handleSignout } = React.useContext(AuthContext);
   const [cookies, setCookie, removeCookie] = useCookies<string>([]);
 
-  // const handleLogout = () => {
-  //   removeCookie("jwt");
-  //   navigate("/");
-  // };
   const handleClick = (label: string) => {
     switch (label) {
       case "Sign Out":
         handleSignout();
+        navigate("/apprenant/connexion");
         break;
       case "My Profile":
         navigate("/apprenant/profile");
+        break;
+      case "Inbox":
+        navigate("/inbox");
         break;
       default:
         closeMenu();
@@ -129,7 +129,7 @@ function ProfileMenu() {
               <Typography
                 as="span"
                 variant="small"
-                className="font-korto font-semibold font-sans text-md py-2 px-2"
+                className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                 color={isLastItem ? "red" : "inherit"}
               >
                 {label}
@@ -185,13 +185,18 @@ interface UpcomingMeeting {
 }
 
 const ApprenantLayout: React.FC<Props> = (props: Props) => {
-  const [open, setOpen] = React.useState(false);
-  const { user } = React.useContext(AuthContext);
+  const [open, setOpen] = useState(false);
+  const { user, isSignedIn } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = React.useState<Boolean>(true);
-  const [upcomingMeeting, setUpcomingMeeting] = React.useState<
-    UpcomingMeeting[]
-  >([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [upcomingMeeting, setUpcomingMeeting] = useState<UpcomingMeeting[]>([]);
+
+  useEffect(() => {
+    console.log("connection", user);
+    if (!user) {
+      navigate("/apprenant/connexion");
+    }
+  }, [user, navigate]);
 
   return (
     <div>

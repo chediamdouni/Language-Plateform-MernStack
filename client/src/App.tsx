@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/home";
 import { LoginApprenant, LoginTuteur } from "./pages/Login";
 import Signup from "./pages/apprenant/Signup";
-import DashboardApprenant from "./pages/apprenant/dashboardApprenant";
 import ProfileApprenant from "./pages/apprenant/ProfileApprenant";
 import Cours from "./pages/Cours";
 import Pricing from "./pages/Pricing";
@@ -17,14 +16,17 @@ import Settings from "./pages/tuteur/Settings";
 import TuteurProfile from "./pages/tuteur/tuteurProfile";
 import WelcomeComponent from "./pages/tuteur/welcome";
 import NotFound from "./pages/NotFound";
-import Contact from "./pages/Contact";
 import TuteurSettingsAccount from "./pages/tuteur/Account";
 import TestingRoom from "./pages/react-stream/TestingRoom";
 import Meeting from "./pages/react-stream/Meet";
 import StreamVideoProvider from "./providers/StreamClientProvider";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import Test from "./pages/Test";
+import Contact from "./pages/Contact";
+import Contactdefault from "./pages/Contactdefault";
+import DashboardApprenant from "./pages/apprenant/dashboardApprenant";
+import Inbox from "./pages/Inbox";
+// import { NewChannel } from "./pages/newChannel";
 
 const App = () => {
   return (
@@ -82,14 +84,8 @@ const App = () => {
             </StreamVideoProvider>
           }
         />
-        <Route
-          path="/test"
-          element={
-            <StreamVideoProvider>
-              <Test />
-            </StreamVideoProvider>
-          }
-        />
+        <Route path="/inbox" element={<Inbox />} />
+        <Route path="/contact/default" element={<Contactdefault />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cour" element={<Cours />} />
         <Route path="/pricing" element={<Pricing />} />

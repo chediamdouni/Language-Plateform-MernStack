@@ -86,8 +86,6 @@ const TuteurProfile = () => {
   const [reviewToShow, setReviewToShow] = useState(3);
   const ReviewRef = useRef<HTMLDivElement | null>(null);
 
- 
-
   const days: string[] = [
     "sunday",
     "Monday",
@@ -149,13 +147,14 @@ const TuteurProfile = () => {
       const response = await axios.post(
         "http://localhost:5000/api/request/add",
         {
-          user_id: user?._id,
+          user_id: user?.id,
+          user_name: user?.username,
           tutor_id: tutor?._id,
           tutor_name: tutor?.username,
           meeting_time: values.dateTime,
         }
       );
-
+      
       if (response.status === 201) {
         alert.show("Reservation successful");
       } else {
@@ -195,7 +194,7 @@ const TuteurProfile = () => {
 
     // console.log("Formatted Date:", targetDate);
     // handleReserve();
-     handleClickOpen();
+    handleClickOpen();
   };
 
   // Scroll To an Element

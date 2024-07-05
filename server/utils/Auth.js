@@ -2,30 +2,35 @@ const User = require("../models/User");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-const userVerification = (req, res, next) => {
-  const token = req.cookies.jwt;
+const userVerification = async (req, res, next) => {
+  const token = req.cookies.bearerToken;
+
   if (!token) {
     console.error("Token not found in cookies");
     return res.status(401).json({ message: "Unauthorized, no token provided" });
   }
-  jwt.verify(token, process.env.TOKEN_KEY, async (error, data) => {
-    if (error) {
-      console.error("Error verifying token:", error);
-      return res.status(401).json({ message: "Unauthorized, invalid token" });
+
+  try {
+    const data = jwt.verify(token, process.env.JWT_SIGNING_KEY);
+
+    const user = await User.findById(data.id);
+    // extraction de l'utilisateur via jwt payload
+    if (!user) {
+      console.error("User not found with id:", data.id);
+      return res.status(404).json({ message: "User not found" });
     }
-    try {
-      const user = await User.findById(data.userId);
-      if (user) {
-        req.user = user; // Attach user to request object
-        return next(); // Pass the request to the next middleware/function
-      } else {
-        return res.status(404).json({ message: "User not found" });
-      }
-    } catch (err) {
-      console.error("Error finding user:", err);
+
+    req.user = user;
+    next();
+  } catch (error) {
+    if (error.name === "JsonWebTokenError") {
+      console.error("Invalid token:", error);
+      return res.status(401).json({ message: "Unauthorized, invalid token" });
+    } else {
+      console.error("Error verifying token:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
-  });
+  }
 };
 
 const checkRoles = (roles) => async (req, res, next) => {
@@ -39,4 +44,4 @@ const checkRoles = (roles) => async (req, res, next) => {
 module.exports = {
   userVerification,
   checkRoles,
-};
+}; 

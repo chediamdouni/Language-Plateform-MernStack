@@ -8,8 +8,10 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
 import { AuthProvider } from "./Context/AuthContext";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
-import StreamVideoProvider from "./providers/StreamClientProvider";
-import AlertProviderWrapper from "./providers/AlertProviderWrapper";
+import "stream-chat-react/dist/css/index.css";
+import AlertProviderWrapper from "./providers/AlertProvider";
+import { CookiesProvider } from "react-cookie";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
@@ -17,7 +19,9 @@ root.render(
       <BrowserRouter>
         <AuthProvider>
           <AlertProviderWrapper>
-            <App />
+            <CookiesProvider>
+              <App />
+            </CookiesProvider>
           </AlertProviderWrapper>
         </AuthProvider>
       </BrowserRouter>

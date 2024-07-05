@@ -40,13 +40,11 @@ const SignupTuteur: React.FC = () => {
         },
         { withCredentials: true }
       );
-      console.log(response);
-      const { success, message } = response.data;
-      console.log(success);
-      if (success) {
+      const { message } = response.data.message;
+      if (response) {
         handleSuccess(message);
         setTimeout(() => {
-          navigate("/tuteur/welcome");
+          navigate("/tuteur/connexion");
         }, 1000);
       } else {
         setLoading(false);

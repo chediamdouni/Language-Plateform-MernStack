@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import person from "../../assets/images/default.png";
 import exclamation from "../../assets/images/exclamation.png";
 import logo from "../../assets/images/logo.jpg";
@@ -13,6 +13,7 @@ import TwoHour from "./2heure";
 import OneGroupe from "./groupe1";
 import HalfGroupe from "./groupe0.5";
 import DefaultComponent from "./DefaultComponent";
+import { AuthContext } from "src/Context/AuthContext";
 
 const Pricing = () => {
   const [totalPricePerMonth, setTotalPricePerMonth] = useState<number>(0);
@@ -21,6 +22,14 @@ const Pricing = () => {
   const [value, setValue] = useState<string>("");
   const [selectedCourses, setSelectedCourses] = useState("");
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!user) {
+      console.log("utilisateur", user);
+      navigate("/apprenant/connexion");
+    }
+  });
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedValue = e.target.value;

@@ -181,12 +181,7 @@ function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const { handleSignout } = React.useContext(AuthContext);
-  const [cookies, setCookie, removeCookie] = useCookies<string>([]);
 
-  // const handleLogout = () => {
-  //   removeCookie("jwt");
-  //   navigate("/");
-  // };
   const handleClick = (label: string) => {
     switch (label) {
       case "Sign Out":
@@ -259,6 +254,7 @@ function ProfileMenu() {
 const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { user, isSignedIn, loading } = useContext(AuthContext);
+
   if (!isSignedIn) {
     return (
       <header
