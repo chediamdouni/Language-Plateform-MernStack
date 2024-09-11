@@ -26,6 +26,8 @@ interface MessageParserProps {
   actions: {
     handleCours: () => void;
     handleTuteur: () => void;
+    handleSubscription: () => void;
+    handlePopularSubscription: () => void;
     handleDefault: () => void;
   };
 }
@@ -37,14 +39,26 @@ interface ActionProviderProps {
 
 const MessageParser: React.FC<MessageParserProps> = ({ children, actions }) => {
   const parse = (message: string) => {
-    if (message.toLowerCase().includes("cours")) {
+    const lowerCaseMessage = message.toLowerCase();
+    if (lowerCaseMessage.includes("cours")) {
       actions.handleCours();
-    } else if (message.toLowerCase().includes("tuteur")) {
+    } else if (lowerCaseMessage.includes("tuteur")) {
       actions.handleTuteur();
+    } else if (
+      lowerCaseMessage.includes("abonnement") ||
+      lowerCaseMessage.includes("subscription")
+    ) {
+      actions.handleSubscription();
+    } else if (
+      lowerCaseMessage.includes("populaire") ||
+      lowerCaseMessage.includes("popular")
+    ) {
+      actions.handlePopularSubscription();
     } else {
       actions.handleDefault();
     }
   };
+
   return (
     <>
       {React.Children.map(children, (child) => {
@@ -81,7 +95,25 @@ const ActionProvider: React.FC<ActionProviderProps> = ({
       messages: [...prev.messages, botMessage],
     }));
   };
+  const handleSubscription = () => {
+    const botMessage = createChatBotMessage(
+      "Nous proposons plusieurs types d'abonnements : Basique, Premium, et Pro. Chaque abonnement offre différents niveaux d'accès aux cours et aux tuteurs. Quel type d'abonnement vous intéresse ?"
+    );
+    setState((prev: { messages: any[] }) => ({
+      ...prev,
+      messages: [...prev.messages, botMessage],
+    }));
+  };
 
+  const handlePopularSubscription = () => {
+    const botMessage = createChatBotMessage(
+      "Notre abonnement le plus populaire est le Premium. Il offre un excellent équilibre entre l'accès aux cours, le temps avec les tuteurs, et le prix. C'est le choix préféré de la plupart de nos apprenants."
+    );
+    setState((prev: { messages: any[] }) => ({
+      ...prev,
+      messages: [...prev.messages, botMessage],
+    }));
+  };
   const handleDefault = () => {
     const botMessage = createChatBotMessage(
       "Je suis désolé, je n'ai pas compris votre question. Pouvez-vous reformuler ou demander des informations sur les cours ou les tuteurs ?"
@@ -99,6 +131,8 @@ const ActionProvider: React.FC<ActionProviderProps> = ({
           actions: {
             handleCours,
             handleTuteur,
+            handleSubscription,
+            handlePopularSubscription,
             handleDefault,
           },
         });
