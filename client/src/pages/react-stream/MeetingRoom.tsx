@@ -1,7 +1,5 @@
 import React from "react";
-
 import { useEffect, useState } from "react";
-
 import {
   SpeakerLayout,
   useCallStateHooks,
@@ -11,7 +9,6 @@ import {
   CallControls,
   CallStatsButton,
 } from "@stream-io/video-react-sdk";
-
 import {
   Button,
   Menu,
@@ -20,14 +17,10 @@ import {
   MenuItem,
   Typography,
 } from "@material-tailwind/react";
-
 import { Layout, Loader, Users } from "lucide-react";
-
 import "@stream-io/video-react-sdk/dist/css/styles.css";
-
-import "./styles.css";
-
 import { useNavigate, useSearchParams } from "react-router-dom";
+import EndCallButton from "./EndCallButton";
 
 type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 
@@ -58,11 +51,11 @@ const MeetingRoom = () => {
   return (
     <section className="relative h-screen w-full overflow-hidden pt-4 text-white">
       <div className="relative flex size-full items-center justify-center">
-        <div className="flex size-full max-w-[1000px] items-center">
+        <div className="flex size-full max-w-[1000px] items-center ">
           <CallLayout />
         </div>
         <div
-          className={`h-[calc(100vh-86px)] ml-2 ${
+          className={`h-[calc(100vh-86px)] ml-4 ${
             showParticipants ? "block" : "hidden"
           }`}
         >
@@ -101,7 +94,7 @@ const MeetingRoom = () => {
             <Users size={20} className="text-white" />
           </div>
         </button>
-        {/* {!isPersonalRoom && <EndCallButton />} */}
+        <EndCallButton />
       </div>
     </section>
   );

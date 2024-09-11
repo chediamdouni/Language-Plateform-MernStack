@@ -21,16 +21,11 @@ const Meeting = () => {
     }
   }, [user, loading, getLoggedInUser]);
 
-  // useEffect(() => {
-  //   console.log("Meeting Component Rendered");
-  //   console.log({ isSignedIn, isSetupComplete, call });
-  // }, [isSignedIn, isSetupComplete, call]);
-
   if (isCallLoading) return <LoadingSpinner />;
   if (!call) return <div>Call not found</div>;
 
   return (
-    <main className="h-screen w-full">
+    <main className="h-screen w-full bg-slate-800">
       {isSignedIn ? (
         <StreamCall call={call}>
           <StreamTheme>

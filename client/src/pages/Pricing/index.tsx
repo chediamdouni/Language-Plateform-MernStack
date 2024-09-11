@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import person from "../../assets/images/default.png";
 import exclamation from "../../assets/images/exclamation.png";
-import logo from "../../assets/images/logo.jpg";
+import logo from "../../assets/images/logo.png";
 import group from "../../assets/images/group.png";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -24,24 +24,10 @@ const Pricing = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    if (!user) {
-      console.log("utilisateur", user);
-      navigate("/apprenant/connexion");
-    }
-  });
-
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedValue = e.target.value;
-    console.log(selectedValue);
     setSelectedCourses(selectedValue);
-    setValue(e.target.value);
-  };
-
-  const handleRadioGroupeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedValue = e.target.value;
-    console.log(selectedValue);
-    setSelectedCourses(selectedValue);
+    setValue(selectedValue);
   };
 
   const handleValuesChange = (
@@ -49,406 +35,213 @@ const Pricing = () => {
     quarter: number,
     annual: number
   ) => {
-    // Mettre à jour l'état avec les nouvelles valeurs
     setTotalPricePerMonth(monthly);
     setTotalPricePerQuarter(quarter);
     setTotalPricePerYear(annual);
   };
 
   return (
-    <div className="min-h-screen bg-sky-200 flex justify-center items-center font-korto font-sans ">
-      <div className="max-w-screen-xl w-full border bg-white rounded-lg m-10 p-5">
-        <button className="p-5 ml-4 " onClick={() => navigate(-1)}>
-          <FaArrowLeft size={32} />
-        </button>
-        <div className="flex flex-rows items-center justify-start m-4">
-          <img src={logo} alt="" className="h-20 w-20" />
-          <div className="font-semibold text-2xl tracking-tight ">
-            Créer votre abonnement personnalisé.
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex justify-center items-center font-sans p-4">
+      <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg">
+        <div className="p-6">
+          <button
+            className="mb-4 text-indigo-600 hover:text-indigo-800 transition-colors"
+            onClick={() => navigate(-1)}
+          >
+            <FaArrowLeft size={20} />
+          </button>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <img src={logo} alt="Logo" className="h-8 w-auto" />
+              <h1 className="text-2xl font-bold text-gray-800">
+                Créez votre abonnement personnalisé
+              </h1>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col">
-          <div className="md:flex no-wrap md:-mx-2 gap-5 m-5 p-5">
-            {/* Etape 1 */}
-            <div className="w-full md:w-6/12 md:mx-2 gap-2 space-y-6 ">
-              <div className="text-black text-3xl font-bold mb-5">
-                Etape 1 :
-              </div>
-              <div className="text-xl">Combien d'heures voulez-vous ?</div>
-              {/* individuals  */}
-              <div className="flex flex-col rounded-2xl border ">
-                <div className="flex items-center flex-rows gap-5 border rounded-t-2xl w-full bg-sky-200 p-5">
-                  <img src={person} alt="" className="h-14 w-14 " />
-                  <div className="block">
-                    <div className="font-bold text-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Étape 1 */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                Étape 1 : Choisissez votre formule
+              </h2>
+              {/* Cours particuliers et en groupe */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="bg-indigo-50 p-3 flex items-center space-x-3">
+                  <img src={person} alt="" className="h-10 w-10 rounded-full" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
                       Cours particuliers et en groupe
-                    </div>
-                    <div className="text-lg">
+                    </h3>
+                    <p className="text-xs text-gray-600">
                       Accès aux cours particuliers et aux cours en groupe
-                    </div>
+                    </p>
                   </div>
                 </div>
-                <div className="block">
-                  <ul className="text-xl text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div className="flex items-center ps-3">
+                <div className="p-3 space-y-2">
+                  {["30 minutes", "1 heure", "1.5 heures", "2 heures"].map(
+                    (duration, index) => (
+                      <label
+                        key={duration}
+                        className="flex items-center p-2 rounded-md hover:bg-gray-50 transition-colors"
+                      >
                         <input
-                          id="list-radio-license"
                           type="radio"
-                          value="Programmez des cours n'importe quel jour de la semaine, jusqu'à 30 minutes par jour"
-                          name="list-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
+                          name="duration"
+                          value={duration}
                           onChange={handleRadioChange}
+                          className="form-radio text-indigo-600 h-4 w-4"
                         />
-                        <label
-                          htmlFor="list-radio-license"
-                          className="w-full py-3 ms-2 text-xl  text-gray-900 dark:text-gray-300"
-                        >
-                          <span className="font-bold">30 minutes</span>
-                          /semaine
-                        </label>
-                      </div>
-                    </li>
-                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div className="flex items-center ps-3">
-                        <input
-                          id="list-radio-id"
-                          type="radio"
-                          value="Programmez des cours n'importe quel jour de la semaine, jusqu'à 1 heure par jour"
-                          name="list-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
-                          onChange={handleRadioChange}
-                        />
-                        <label
-                          htmlFor="list-radio-id"
-                          className="flex justify-between w-full py-3 ms-2 text-xl  text-gray-900 dark:text-gray-300"
-                        >
-                          <div>
-                            <span className="font-bold">1 heure</span>/semaine
-                          </div>
-                          <div className="rounded-full border bg-sky-200 mr-4 text-xs p-2 font-bold w-32 text-center">
-                            Le plus populaire{" "}
-                          </div>
-                        </label>
-                      </div>
-                    </li>
-                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div className="flex items-center ps-3">
-                        <input
-                          id="list-radio-military"
-                          type="radio"
-                          value="Programmez des cours n'importe quel jour de la semaine, jusqu'à 1,5 heure par jour"
-                          name="list-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
-                          onChange={handleRadioChange}
-                        />
-                        <label
-                          htmlFor="list-radio-military"
-                          className="w-full py-3 ms-2 text-xl  text-gray-900 dark:text-gray-300"
-                        >
-                          <span className="font-bold">1.5 heures</span>
-                          /semaine
-                        </label>
-                      </div>
-                    </li>
-                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div className="flex items-center ps-3">
-                        <input
-                          id="list-radio-passport"
-                          type="radio"
-                          value="Programmez des cours n'importe quel jour de la semaine, jusqu'à 2 heure par jour"
-                          name="list-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
-                          onChange={handleRadioChange}
-                        />
-                        <label
-                          htmlFor="list-radio-passport"
-                          className="w-full py-3 ms-2 text-xl text-gray-900 dark:text-gray-300"
-                        >
-                          <span className="font-bold">2.5 heures</span>
-                          /semaine
-                        </label>
-                      </div>
-                    </li>
-                  </ul>
+                        <span className="ml-2 text-sm text-gray-700">
+                          {duration}/semaine
+                        </span>
+                        {index === 1 && (
+                          <span className="ml-auto text-xs font-semibold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full">
+                            Le plus populaire
+                          </span>
+                        )}
+                      </label>
+                    )
+                  )}
                 </div>
-                <div className="flex flex-rows items-center gap-4 rounded-b-xl p-7 bg-sky-200">
-                  <img
-                    src={exclamation}
-                    alt=""
-                    className="h-10 w-10 rounded-full "
-                  />
-                  <div className="text-lg font-semibold flex-1">
-                    {value ||
-                      "Programmez des cours n'importe quel jour de la semaine, jusqu'à 30 minutes par jour"}
-                  </div>
+                <div className="bg-indigo-50 p-4 flex items-center space-x-3">
+                  <img src={exclamation} alt="" className="h-6 w-6" />
+                  <p className="text-sm text-gray-600">
+                    {value || "Choisissez une durée"}
+                  </p>
                 </div>
               </div>
-              {/* groupe */}
-              <div className="flex flex-col rounded-2xl border ">
-                <div className="flex items-center flex-rows gap-5 border w-full rounded-t-2xl bg-sky-200 p-5">
-                  <img src={group} alt="" className="h-14 w-14" />
-                  <div className="block">
-                    <div className="font-bold text-lg">Cours en groupe</div>
-                    <div className="text-lg">
+              {/* Cours en groupe */}
+              <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="bg-indigo-100 p-4 flex items-center space-x-4">
+                  <img src={group} alt="" className="h-12 w-12 rounded-full" />
+                  <div>
+                    <h3 className="font-bold text-lg text-gray-800">
+                      Cours en groupe
+                    </h3>
+                    <p className="text-sm text-gray-600">
                       Cours en groupe seulement (pour les plus de 21 ans)
-                    </div>
+                    </p>
                   </div>
                 </div>
-                <div className="block">
-                  <ul className="text-xl text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div className="flex items-center ps-3">
-                        <input
-                          id="list-radio-license"
-                          type="radio"
-                          value="groupe1"
-                          name="list-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
-                          onChange={handleRadioGroupeChange}
-                        />
-                        <label
-                          htmlFor="list-radio-license"
-                          className="w-full py-3 ms-2 text-xl  text-gray-900 dark:text-gray-300"
-                        >
-                          <span className="font-bold">30 minutes</span>
-                          /semaine
-                        </label>
-                      </div>
-                    </li>
-                    <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                      <div className="flex items-center ps-3">
-                        <input
-                          id="list-radio-id"
-                          type="radio"
-                          value="groupe2"
-                          name="list-radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
-                          onChange={handleRadioGroupeChange}
-                        />
-                        <label
-                          htmlFor="list-radio-id"
-                          className="flex justify-between w-full py-3 ms-2 text-xl  text-gray-900 dark:text-gray-300"
-                        >
-                          <div>
-                            <span className="font-bold">1 heure</span>/semaine
-                          </div>
-                          <div className="rounded-full border bg-green-500 mr-4 text-xs p-2 font-bold w-32 text-center">
-                            Meilleur Prix
-                          </div>
-                        </label>
-                      </div>
-                    </li>
-                  </ul>
+                <div className="p-4 space-y-2">
+                  {["30 minutes", "1 heure"].map((duration, index) => (
+                    <label
+                      key={duration}
+                      className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <input
+                        type="radio"
+                        name="group-duration"
+                        value={`groupe${index + 1}`}
+                        onChange={handleRadioChange}
+                        className="form-radio text-indigo-600 h-5 w-5"
+                      />
+                      <span className="ml-3 text-gray-700">
+                        {duration}/semaine
+                      </span>
+                      {index === 1 && (
+                        <span className="ml-auto text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                          Meilleur prix
+                        </span>
+                      )}
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>
-            {/* Etape 2 */}
-            <div className="w-full md:w-6/12 mx-2 space-y-4">
-              {/* <div className="text-black text-3xl font-bold mb-5">
-                Etape 2 :
-              </div>
-              <div className="text-xl">
-                Quel type d'abonnement préférez vous ?
-              </div>
-              <ul className="text-xl text-gray-900 bg-white space-y-5">
-                <li className="w-full border border-gray-200 rounded-lg p-5">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="list-radio-license"
-                      type="radio"
-                      value="30 minutes/semaine"
-                      name="list-radio"
-                      className="w-10 h-10 text-blue-600 bg-gray-100 border-gray-300 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
-                      onChange={handleRadioChange}
-                    />
-                    <label
-                      htmlFor="list-radio-license"
-                      className="w-full py-3 ms-2 text-xl  text-gray-900 dark:text-gray-300"
-                    >
-                      <div className="font-bold flex justify-between">
-                        <div>Mensuel</div>
-                        <div>79 $US/mois</div>
-                      </div>
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border border-gray-200 rounded-lg p-5">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="list-radio-id"
-                      type="radio"
-                      value="Programmez des cours n'importe quel jour de la semaine, jusqu'à 1 heure par jour"
-                      name="list-radio"
-                      className="w-10 h-10 text-blue-600 bg-gray-100 border-gray-300  dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
-                      onChange={handleRadioChange}
-                    />
-                    <label
-                      htmlFor="list-radio-id"
-                      className="w-full py-3 ms-2 text-xl  text-gray-900 dark:text-gray-300"
-                    >
-                      <div className="font-bold flex justify-between">
-                        <div>Tous les 3 mois </div>
-                        <div>71 $US/mois</div>
-                      </div>
-                    </label>
-                  </div>
-                </li>
-                <li className="w-full border border-gray-200 rounded-lg p-5">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="list-radio-military"
-                      type="radio"
-                      value="Programmez des cours n'importe quel jour de la semaine, jusqu'à 1,5 heure par jour"
-                      name="list-radio"
-                      className="w-10 h-10 text-blue-600 bg-gray-100 border-gray-300  dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700  dark:bg-gray-600 dark:border-gray-500"
-                      onChange={handleRadioChange}
-                    />
-                    <label
-                      htmlFor="list-radio-military"
-                      className="w-full py-3 ms-2 text-xl  text-gray-900 dark:text-gray-300"
-                    >
-                      <div className="font-bold flex justify-between">
-                        <div>Annuel</div>
-                        <div>59 $US/mois</div>
-                      </div>
-                    </label>
-                  </div>
-                </li>
-              </ul>
-              <div className="flex justify-end">
-                <button className="border rounded-lg text-white bg-blue-400 w-80 h-16 flex items-center p-4 font-bold">
-                  Etape suivante : mode de paiment
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    className="w-6 h-6 ml-2"
-                  >
-                    <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </button>
-              </div> */}
-              {/* individual components */}
-              {selectedCourses ===
-                "Programmez des cours n'importe quel jour de la semaine, jusqu'à 30 minutes par jour" && (
+            {/* Étape 2 */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                Étape 2 : Choisissez votre abonnement
+              </h2>
+              {selectedCourses === "30 minutes" && (
                 <Halfhour onValuesChange={handleValuesChange} />
               )}
-              {selectedCourses ===
-                "Programmez des cours n'importe quel jour de la semaine, jusqu'à 1 heure par jour" && (
+              {selectedCourses === "1 heure" && (
                 <OneHour onValuesChange={handleValuesChange} />
               )}
-              {selectedCourses ===
-                "Programmez des cours n'importe quel jour de la semaine, jusqu'à 1,5 heure par jour" && (
+              {selectedCourses === "1.5 heures" && (
                 <OneAndHalfHour onValuesChange={handleValuesChange} />
               )}
-              {selectedCourses ===
-                "Programmez des cours n'importe quel jour de la semaine, jusqu'à 2 heure par jour" && (
+              {selectedCourses === "2 heures" && (
                 <TwoHour onValuesChange={handleValuesChange} />
               )}
-              {/* groupe components */}
               {selectedCourses === "groupe1" && (
                 <HalfGroupe onValuesChange={handleValuesChange} />
               )}
               {selectedCourses === "groupe2" && (
                 <OneGroupe onValuesChange={handleValuesChange} />
               )}
-              {/* Default component */}
-              {selectedCourses !==
-                "Programmez des cours n'importe quel jour de la semaine, jusqu'à 30 minutes par jour" &&
-                selectedCourses !==
-                  "Programmez des cours n'importe quel jour de la semaine, jusqu'à 1 heure par jour" &&
-                selectedCourses !==
-                  "Programmez des cours n'importe quel jour de la semaine, jusqu'à 1,5 heure par jour" &&
-                selectedCourses !==
-                  "Programmez des cours n'importe quel jour de la semaine, jusqu'à 2 heure par jour" &&
-                selectedCourses !== "groupe1" &&
-                selectedCourses !== "groupe2" && <DefaultComponent />}
+              {!selectedCourses && <DefaultComponent />}
             </div>
           </div>
-          {/* la partie resumé de l'abonnement  */}
-          <div className="flex justify-center items-center font-korto font-sans">
-            <div className="w-1/2 p-3 space-y-4">
-              <div className="space-y-6 flex-col">
-                <div className="font-semibold text-xl text-center">
-                  Résumé de l'abonnement
-                </div>
-                <div className="flex justify-between">
-                  <div className="font-bold ">Total (en USD)</div>
-                  {totalPricePerMonth > 0 && (
-                    <div>Prix mensuel: {totalPricePerMonth} $</div>
-                  )}
-                  {totalPricePerQuarter > 0 && (
-                    <div>Prix trimestriel: {totalPricePerQuarter} $</div>
-                  )}
-                  {totalPricePerYear > 0 && (
-                    <div>Prix annuel: {totalPricePerYear} $</div>
-                  )}
-                </div>
-              </div>
-              <div className="flex justify-between bg-sky-200 rounded-full p-1">
-                <div className="flex gap-2 items-center ">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    x="0px"
-                    y="0px"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M 12 2 C 6.5 2 2 6.5 2 12 C 2 17.5 6.5 22 12 22 C 17.5 22 22 17.5 22 12 C 22 10.9 21.8 9.8007812 21.5 8.8007812 L 19.800781 10.400391 C 19.900781 10.900391 20 11.4 20 12 C 20 16.4 16.4 20 12 20 C 7.6 20 4 16.4 4 12 C 4 7.6 7.6 4 12 4 C 13.6 4 15.100391 4.5007812 16.400391 5.3007812 L 17.800781 3.9003906 C 16.200781 2.7003906 14.2 2 12 2 z M 21.300781 3.3007812 L 11 13.599609 L 7.6992188 10.300781 L 6.3007812 11.699219 L 11 16.400391 L 22.699219 4.6992188 L 21.300781 3.3007812 z"></path>
-                  </svg>
-                  <div className="flex gap-2">
-                    <div className="font-semibold">
-                      Achetez en toute confiance :
-                    </div>{" "}
-                    Annulez quand vous le souhaitez
+          {/* Résumé de l'abonnement */}
+          <div className="mt-8 bg-indigo-50 rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-gray-800 mb-3">
+              Résumé de l'abonnement
+            </h3>
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-gray-700">Total (en USD)</span>
+              <div className="space-y-1">
+                {totalPricePerMonth > 0 && (
+                  <div className="text-right">
+                    Prix mensuel: {totalPricePerMonth} $
                   </div>
-                </div>
-                <Tooltip
-                  placement="right"
-                  className="bg-black"
-                  content={
-                    <div className="w-80">
-                      <Typography
-                        variant="small"
-                        color="white"
-                        className="font-normal opacity-80"
-                      >
-                        Annuler quand vous souhaitez et payez le prix mensuel de
-                        base selon le nombre de mois que vous avez choisi
-                      </Typography>
-                    </div>
-                  }
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    className="h-5 w-5 cursor-pointer text-blue-gray-500"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                    />
-                  </svg>
-                </Tooltip>
-              </div>
-              <div className="font-thin text-slate-400 text-center text-sm">
-                L'abonnement est renouvelé tous les 12 mois. Résiliez à tout
-                moment.
+                )}
+                {totalPricePerQuarter > 0 && (
+                  <div className="text-right">
+                    Prix trimestriel: {totalPricePerQuarter} $
+                  </div>
+                )}
+                {totalPricePerYear > 0 && (
+                  <div className="text-right">
+                    Prix annuel: {totalPricePerYear} $
+                  </div>
+                )}
               </div>
             </div>
+            <div className="mt-4 flex items-center justify-between bg-white rounded-full p-3">
+              <div className="flex items-center space-x-2">
+                <svg
+                  className="h-5 w-5 text-green-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="text-sm font-medium text-gray-700">
+                  Achetez en toute confiance : Annulez quand vous le souhaitez
+                </span>
+              </div>
+              <Tooltip content="Annulez à tout moment et payez le prix mensuel de base selon le nombre de mois choisis">
+                <svg
+                  className="h-5 w-5 text-gray-400 cursor-help"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </Tooltip>
+            </div>
+            <p className="mt-4 text-sm text-gray-500 text-center">
+              L'abonnement est renouvelé tous les 12 mois. Résiliez à tout
+              moment.
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 export default Pricing;

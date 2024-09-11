@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "src/Context/AuthContext";
 import { useClient } from "src/hooks/useStreamClient";
@@ -14,19 +14,52 @@ import {
   Window,
 } from "stream-chat-react";
 import "stream-chat-react/dist/css/v2/index.css";
-import { StreamChat, Channel as StreamChannel } from "stream-chat";
-import { Box, Button, Modal } from "@mui/material";
+import styled from "styled-components";
+
+const ChatContainer = styled.div`
+  display: flex;
+  height: calc(100vh - 64px);
+  width: 100%;
+  background-color: #f5f7f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+`;
+
+const ChannelListContainer = styled.div`
+  width: 300px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+`;
+
+const ChannelContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const CustomChannelHeader = styled(ChannelHeader)`
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+`;
+
+const CustomMessageList = styled(MessageList)`
+  background-color: #f9f9f9;
+`;
+
+const CustomMessageInput = styled(MessageInput)`
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+`;
 
 const Inbox: React.FC = () => {
   const { user, streamToken } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
-  const [channel, setChannel] = useState<StreamChannel | null>(null);
 
   useEffect(() => {
     if (!user) {
-      //   navigate("/");
-      console.log("user not found ");
+      console.log("user not found");
+      // navigate("/");
     }
   }, [user, navigate]);
 
@@ -39,74 +72,24 @@ const Inbox: React.FC = () => {
     return <LoadingIndicator />;
   }
 
-  const 
-  const handleCreateNewChat = async () => {
-    
-    const memberIds = [user!.id, "other-user-id"]; 
-    const channel = chatClient.channel("messaging", {
-      members: memberIds,
-    });
-
-    await channel.create();
-    setChannel(channel);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setChannel(null);
-  };
-
   return (
-    <div className="flex w-5/6 justify-center ">
+    <ChatContainer>
       <Chat client={chatClient} theme="str-chat__theme-light">
-        <ChannelList filters={filters} sort={sort as any} />
-        <Channel>
-          <Window>
-            <ChannelHeader />
-            <MessageList />
-            <MessageInput />
-          </Window>
-          <Thread />
-        </Channel>
+        <ChannelListContainer>
+          <ChannelList filters={filters} sort={sort as any} />
+        </ChannelListContainer>
+        <ChannelContainer>
+          <Channel>
+            <Window>
+              <CustomChannelHeader />
+              <CustomMessageList />
+              <CustomMessageInput />
+            </Window>
+            <Thread />
+          </Channel>
+        </ChannelContainer>
       </Chat>
-      <Button onClick={handleCreateNewChat}>Create New Chat</Button>
-      <Modal
-        open={showModal}
-        onClose={handleCloseModal}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 600,
-            minHeight: 400,
-            maxHeight: "90vh",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            overflowY: "auto",
-          }}
-        >
-          {showModal && chatClient && channel && (
-            <Chat client={chatClient} theme="str-chat__theme-light">
-              <Channel channel={channel}>
-                <Window>
-                  <ChannelHeader />
-                  <MessageList />
-                  <MessageInput />
-                </Window>
-                <Thread />
-              </Channel>
-            </Chat>
-          )}
-        </Box>
-      </Modal>
-    </div>
+    </ChatContainer>
   );
 };
 

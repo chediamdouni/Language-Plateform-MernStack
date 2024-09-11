@@ -18,7 +18,7 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
     if (loading) return;
     if (!user) {
       console.log("y a pas d'utulisateur");
-      navigate("/apprenant/connexion");
+      /*navigate("/apprenant/connexion");*/
       return;
     }
     if (!apiKey) throw new Error("Stream API Key is Missing");
@@ -35,7 +35,7 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
       user: {
         id: user?.id,
         name: user?.username || user?.id,
-        image: user?.profileImageUrl,
+        image: user?.profileImage,
       },
       token: streamToken,
     });

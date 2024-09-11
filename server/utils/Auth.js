@@ -44,4 +44,4 @@ const checkRoles = (roles) => async (req, res, next) => {
 module.exports = {
   userVerification,
   checkRoles,
-}; 
+};

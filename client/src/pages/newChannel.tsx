@@ -1,113 +1,121 @@
-// import React, {
-//   FormEvent,
-//   useContext,
-//   useEffect,
-//   useRef,
-//   useState,
-// } from "react";
-// import Select, { SelectInstance } from "react-select";
-// import { Link, useNavigate } from "react-router-dom";
-// import { AuthContext } from "src/Context/AuthContext";
-// import {
-//   Button,
-//   Card,
-//   CardBody,
-//   CardFooter,
-//   Input,
-// } from "@material-tailwind/react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
+import Select, { SelectInstance } from "react-select";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "src/Context/AuthContext";
+import { useContext } from "react";
+import { useClient } from "src/hooks/useStreamClient";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Input,
+} from "@material-tailwind/react";
+import axios from "axios";
 
-// export function NewChannel() {
-//   const { streamChat, user, loading } = useContext(AuthContext);
-//   const [users, setUsers] = useState<{ id: string; name?: string }[]>([]);
-//   const [isCreating, setIsCreating] = useState<boolean>(false);
-//   const navigate = useNavigate();
+interface Request {
+  _id: string;
+  user_id: string;
+  user_name: string;
+  tutor_id: string;
+  tutor_name: string;
+}
+const fetchRequests = async (tutorId: string) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/request/tutor/${tutorId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch requests");
+  }
+};
 
-//   const nameRef = useRef<HTMLInputElement>(null);
-//   // const imageUrlRef = useRef<HTMLInputElement>(null);
-//   const memberIdsRef =
-//     useRef<SelectInstance<{ label: string; value: string }>>(null);
+export function NewChannel() {
+  const { streamToken, user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const chatClient = useClient({ user, streamToken });
+  const [requests, setRequests] = useState<Request[]>([]);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const memberIdsRef =
+    useRef<SelectInstance<{ label: string; value: string }>>(null);
+  
 
-//   useEffect(() => {
-//     if (!user || !streamChat) return;
+  useEffect(() => {
+    const getRequests = async () => {
+      if (user) {
+        try {
+          const requestsData = await fetchRequests(user.id);
+          console.log(requestsData);
+          setRequests(requestsData);
+        } catch (error: any) {
+          console.error(error.message);
+        }
+      }
+    };
+    getRequests();
+  }, [user]);
 
-//     const fetchUsers = async () => {
-//       try {
-//         const response = await streamChat.queryUsers(
-//           { roles: { $in: ["user"] } },
-//           { name: 1 }
-//         );
-//         console.log(response);
-//         setUsers(response.users);
-//       } catch (error) {
-//         console.error("Error fetching users from StreamChat:", error);
-//       }
-//     };
+  const createChannel = async (name: string, memberIds: string[]) => {
+    if (chatClient == null) throw Error("Not connected");
 
-//     fetchUsers();
-//   }, [streamChat, user]);
+    const channel = chatClient.channel("messaging", crypto.randomUUID(), {
+      name,
+      members: [user!.id, ...memberIds],
+    });
 
-//   const handleSubmit = async (e: FormEvent) => {
-//     console.log("heyy");
-//     e.preventDefault();
-//     console.log("nameRef.current:", nameRef.current); // Vérifiez si la référence est définie
-//     const name = nameRef.current?.value;
-//     // const imageUrl = imageUrlRef.current?.value;
-//     const selectOptions = memberIdsRef.current?.getValue();
-//     console.log("données récupérées  ", name, selectOptions);
-//     if (!name || !selectOptions || selectOptions.length === 0) return;
+    await channel.create();
+    navigate("/inbox/tuteur");
+  };
 
-//     setIsCreating(true);
-//     try {
-//       await streamChat
-//   //      ?.channel("messaging", crypto.randomUUID(), {
-//           name,
-//           // image: imageUrl,
-//           members: [user!._id, ...selectOptions.map((option) => option.value)],
-//         })
-//         .create();
-//       navigate("/contact");
-//     } catch (error) {
-//       console.error("Erreur lors de la création du canal:", error);
-//     } finally {
-//       setIsCreating(false);
-//     }
-//   };
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
 
-//   return (
-//     <Card>
-//       <CardBody>
-//         <h1 className="text-3xl font-bold mb-8 text-center">
-//           New Conversation
-//         </h1>
-//         <form
-//           onSubmit={handleSubmit}
-//           className="grid grid-cols-[auto,1fr] gap-x-3 gap-y-5 items-center justify-items-end"
-//         >
-//           <label htmlFor="name">Name</label>
-//           <input id="name" required ref={nameRef} />
-//           {/* <label htmlFor="imageUrl">Image Url</label> */}
-//           {/* <Input id="imageUrl" ref={imageUrlRef} /> */}
-//           <label htmlFor="members">Members</label>
-//           <Select
-//             ref={memberIdsRef}
-//             id="members"
-//             required
-//             isMulti
-//             classNames={{ container: () => "w-full" }}
-//             isLoading={loading || !streamChat}
-//             options={users.map((user) => ({
-//               value: user.id,
-//               label: user.name || user.id,
-//             }))}
-//           />
-//           <Button disabled={isCreating} type="submit" className="col-span-full">
-//             {isCreating ? "Creating..." : "Create"}
-//           </Button>
-//         </form>
-//       </CardBody>
-//       <CardFooter>
-//         <Link to="/">Back</Link>
-//       </CardFooter>
-//     </Card>
-//   );
-// }
+    const name = nameRef.current?.value;
+    const selectOptions = memberIdsRef.current?.getValue();
+    if (!name || !selectOptions || selectOptions.length === 0) {
+      return;
+    }
+
+    const memberIds = selectOptions.map((option) => option.value);
+    await createChannel(name, memberIds);
+  };
+
+  return (
+    <Card>
+      <CardBody>
+        <h1 className="text-3xl font-bold mb-8 text-center">
+          New Conversation
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-[auto,1fr] gap-x-3 gap-y-5 items-center justify-items-end"
+        >
+          <label htmlFor="name">Name</label>
+          <Input id="name" required ref={nameRef} />
+          {/* <label htmlFor="imageUrl">Image Url</label>
+          <Input id="imageUrl" ref={imageUrlRef} /> */}
+          <label htmlFor="members">Members</label>
+          <Select
+            ref={memberIdsRef}
+            id="members"
+            required
+            isMulti
+            classNames={{ container: () => "w-full" }}
+            isLoading={false}
+            options={requests.map((request) => ({
+              value: request.user_id,
+              label: request.user_name || request.user_id,
+            }))}
+          />
+          <Button type="submit" className="col-span-full">
+            Create
+          </Button>
+        </form>
+      </CardBody>
+      <CardFooter>
+        <Link to="/">Back</Link>
+      </CardFooter>
+    </Card>
+  );
+}

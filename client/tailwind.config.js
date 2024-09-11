@@ -18,9 +18,10 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        'nunito': ["nunito", "sans-serif"],
-        'Softers': ["Softers"],
-        'Korto-Medium': ["Korto-Medium"]
+        nunito: ["nunito", "sans-serif"],
+        Softers: ["Softers"],
+        "Korto-Medium": ["Korto-Medium", "sans-serif"],
+        comfortaa: ["comfortaa"],
       },
       colors: {
         border: "hsl(var(--border))",

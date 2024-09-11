@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import logo from "../assets/images/logo.jpg";
+import logo from "../assets/images/logo.png";
 import { useNavigate } from "react-router";
 import { useCookies } from "react-cookie";
 import {
@@ -14,6 +14,7 @@ import {
 import {
   ChevronDownIcon,
   Cog6ToothIcon,
+  InboxStackIcon,
   PowerIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
@@ -27,15 +28,29 @@ interface Props {
 const profileMenuItems = [
   {
     label: "Account Settings",
-    icon: UserCircleIcon,
+    icon: Cog6ToothIcon,
   },
   {
     label: "Your Profile",
-    icon: Cog6ToothIcon,
+    icon: UserCircleIcon,
+  },
+  {
+    label: "Inbox",
+    icon: InboxStackIcon,
   },
   {
     label: "Sign Out",
     icon: PowerIcon,
+  },
+];
+const menuitems = [
+  {
+    title: "Profile",
+    path: "/tuteur/welcome",
+  },
+  {
+    title: "Ressources",
+    path: "/tuteur/cours",
   },
 ];
 
@@ -43,13 +58,15 @@ function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { user, handleSignout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies<string>([]);
 
   const handleClick = (label: string) => {
     switch (label) {
       case "Sign Out":
         handleSignout();
         navigate("/tuteur/connexion");
+        break;
+      case "Inbox":
+        navigate("/inbox");
         break;
       case "Your Profile":
         navigate("/tuteur/welcome");
@@ -69,45 +86,50 @@ function ProfileMenu() {
         <Button
           variant="text"
           color="blue-gray"
-          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+          className="flex items-center gap-2 rounded-full py-2 px-4 transition-all duration-300 hover:bg-gray-700/50"
         >
           <Avatar
             variant="circular"
-            size="md"
+            size="xs"
             alt={user?.username}
-            className="border border-gray-900 p-0.5 rounded-full"
-            src={user?.profileImageUrl || "../assets/images/logo.jpg"}
+            className="border border-indigo-500 p-0.5 w-8 h-8"
+            src={`http://localhost:5000/${user?.profileImage}`}
           />
+          <Typography color="white" className="font-medium text-sm">
+            {user?.username}
+          </Typography>
           <ChevronDownIcon
             strokeWidth={2.5}
-            className={`h-3 w-3 transition-transform ${
+            className={`h-4 w-4 text-white transition-transform ${
               isMenuOpen ? "rotate-180" : ""
             }`}
           />
         </Button>
       </MenuHandler>
-      <MenuList className="p-1">
+      <MenuList className="p-2 bg-gray-800 border border-gray-700 rounded-xl shadow-xl">
         {profileMenuItems.map(({ label, icon }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
             <MenuItem
               key={label}
               onClick={() => handleClick(label)}
-              className={`flex items-center gap-2 rounded ${
+              className={`flex items-center gap-3 rounded-lg py-2 px-4 transition-all duration-200 ${
                 isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
+                  ? "hover:bg-red-500/20 focus:bg-red-500/20 active:bg-red-500/20"
+                  : "hover:bg-gray-700/50 focus:bg-gray-700/50 active:bg-gray-700/50"
               }`}
             >
               {React.createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
+                className: `h-5 w-5 ${
+                  isLastItem ? "text-red-400" : "text-indigo-400"
+                }`,
                 strokeWidth: 2,
               })}
               <Typography
                 as="span"
                 variant="small"
-                className="font-korto font-semibold font-sans text-md py-2 px-2"
-                color={isLastItem ? "red" : "inherit"}
+                className="font-medium"
+                color={isLastItem ? "red" : "white"}
               >
                 {label}
               </Typography>
@@ -120,50 +142,67 @@ function ProfileMenu() {
 }
 
 const TuteurLayout: React.FC<Props> = (props: Props) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <div>
-      <header
-        className="flex flex-col lg:flex-row justify-between items-center px-6 border-b-8"
-        data-open={open}
-        onClick={() => setOpen(false)}
-      >
-        <div className="flex w-full lg:w-auto items-center justify-between p-5">
-          <a href="/#" className="flex items-center text-lg">
-            <img src={logo} alt="" className="h-12" />
-            <span className="font-semibold font-korto font-sans text-slate-800">
-              LearnUp
-            </span>
-          </a>
-          <div className="block lg:hidden">
-            <ProfileMenu />
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-900 text-gray-500">
+      <header className="bg-gray-800 shadow-md">
         <nav
-          className={`hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0 ${
-            open ? "block" : "hidden"
-          }`}
-          data-transition=""
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+          aria-label="Top"
         >
-          <div className="lg:hidden flex items-center mt-3 gap-4 ">
-            <Link to="#" className="muted md ">
-              Log in
-            </Link>
-            <Link to="#" className="md block">
-              Sign up
-            </Link>
+          <div className="flex w-full items-center justify-between border-b border-gray-700 py-6 lg:border-none">
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center">
+                <img src={logo} alt="LearnUp" className="h-10 w-auto" />
+                <span className="ml-2 text-xl font-semibold text-gray-100">
+                  LearnUp
+                </span>
+              </Link>
+              <div className="ml-10 hidden space-x-8 lg:block">
+                {menuitems.map((item) => (
+                  <button
+                    key={item.title}
+                    onClick={() => handleNavigation(item.path)}
+                    className="text-base font-medium text-gray-300 hover:text-white transition-colors duration-200"
+                  >
+                    {item.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="ml-10 space-x-4">
+              <ProfileMenu />
+            </div>
+          </div>
+          <div className="flex flex-wrap justify-center gap-x-6 py-4 lg:hidden">
+            {menuitems.map((item) => (
+              <button
+                key={item.title}
+                onClick={() => handleNavigation(item.path)}
+                className="text-base font-medium text-gray-300 hover:text-white transition-colors duration-200"
+              >
+                {item.title}
+              </button>
+            ))}
           </div>
         </nav>
-        <div>
-          <div className="hidden lg:flex items-center gap-4 text-sm font-semibold leading-6 text-gray-900">
-            <ProfileMenu />
-          </div>
-        </div>
       </header>
-      <div className="d-flex" id="wrapper">
-        <div id="page-content-wrapper">{props.children}</div>
-      </div>
+
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        <div className="d-flex" id="wrapper">
+          <div id="page-content-wrapper">{props.children}</div>
+        </div>
+      </main>
     </div>
   );
 };
+
 export default TuteurLayout;

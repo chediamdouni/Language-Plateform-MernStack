@@ -87,45 +87,52 @@ const TuteurRequest = () => {
   };
 
   return (
-    <div id="Requests" className="bg-white shadow-xl p-8 mt-5">
-      <h2 className="text-2xl font-bold my-4">Les Demandes de Cours </h2>
+    <div id="Requests" className="bg-gray-800 rounded-lg shadow-2xl p-6 mt-5">
+      <h2 className="text-2xl font-bold mb-6 text-gray-100">
+        Demandes de Cours
+      </h2>
       {isLoading ? (
-        <p>Loading...</p>
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
       ) : error ? (
-        <p>Error loading requests: {error}</p>
+        <p className="text-red-400">
+          Erreur lors du chargement des demandes : {error}
+        </p>
       ) : (
-        <div className="relative overflow-x-auto p-3">
-          {requests ? (
-            <table className="w-full shadow-xl text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <div className="overflow-x-auto">
+          {requests && requests.length > 0 ? (
+            <table className="w-full text-sm text-left text-gray-300">
+              <thead className="text-xs uppercase bg-gray-700 text-gray-400">
                 <tr>
-                  <th className="px-6 py-3">Apprenant Name</th>
-                  <th className="px-6 py-3">Meeting Date</th>
-                  <th className="px-6 py-3">Meeting Time</th>
-                  <th className="px-6 py-3">Actions</th>
+                  <th className="px-6 py-3 rounded-tl-lg">
+                    Nom de l'Apprenant
+                  </th>
+                  <th className="px-6 py-3">Date du Rendez-vous</th>
+                  <th className="px-6 py-3">Heure du Rendez-vous</th>
+                  <th className="px-6 py-3 rounded-tr-lg">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {requests.map((request) => (
+                {requests.map((request, index) => (
                   <tr
                     key={request._id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    className="bg-gray-800 border-b border-gray-700 hover:bg-gray-700 transition-colors duration-200"
                   >
-                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      <strong>{request.user_name}</strong>
+                    <td className="px-6 py-4 font-medium whitespace-nowrap">
+                      {request.user_name}
                     </td>
                     <td className="px-6 py-4">
-                      <strong>
-                        {new Date(request.meeting_time).toLocaleDateString()}
-                      </strong>
+                      {new Date(request.meeting_time).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4">
-                      <strong>
-                        {new Date(request.meeting_time).toLocaleTimeString()}
-                      </strong>
+                      {new Date(request.meeting_time).toLocaleTimeString()}
                     </td>
                     <td className="px-6 py-4">
-                      <div onClick={() => handleDeleteClick(request._id)}>
+                      <button
+                        onClick={() => handleDeleteClick(request._id)}
+                        className="text-red-400 hover:text-red-600 transition-colors duration-200"
+                      >
                         <svg
                           width="20px"
                           height="20px"
@@ -134,31 +141,27 @@ const TuteurRequest = () => {
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            opacity="0.15"
-                            d="M8 16H12L18 10L14 6L8 12V16Z"
-                            fill="#000000"
-                          />
-                          <path
-                            d="M14 6L8 12V16H12L18 10M14 6L17 3L21 7L18 10M14 6L18 10M10 4L4 4L4 20L20 20V14"
-                            stroke="#000000"
-                            strokeWidth="1.5"
+                            d="M6 7V18C6 19.1046 6.89543 20 8 20H16C17.1046 20 18 19.1046 18 18V7M6 7H5M6 7H8M18 7H19M18 7H16M10 11V16M14 11V16M8 7V5C8 3.89543 8.89543 3 10 3H14C15.1046 3 16 3.89543 16 5V7M8 7H16"
+                            stroke="currentColor"
+                            strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                           />
                         </svg>
-                      </div>
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           ) : (
-            <p>No requests found.</p>
+            <p className="text-gray-400 text-center py-4">
+              Aucune demande trouvée.
+            </p>
           )}
         </div>
       )}
     </div>
   );
 };
-
 export default TuteurRequest;

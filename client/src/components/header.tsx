@@ -12,7 +12,6 @@ import {
   MenuList,
   MenuItem,
   Avatar,
-  Input,
   Collapse,
   ListItem,
 } from "@material-tailwind/react";
@@ -26,7 +25,7 @@ import {
   UserGroupIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
-import logo from "../assets/images/logo.jpg";
+import logo from "../assets/images/logo.png";
 import { AuthContext } from "src/Context/AuthContext";
 import { useCookies } from "react-cookie";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -180,7 +179,7 @@ const profileMenuItems = [
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
-  const { handleSignout } = React.useContext(AuthContext);
+  const { user, handleSignout } = React.useContext(AuthContext);
 
   const handleClick = (label: string) => {
     switch (label) {
@@ -209,7 +208,7 @@ function ProfileMenu() {
             size="md"
             alt="tania andrew"
             className="border border-gray-900 p-0.5 rounded-full"
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+            src={user?.profileImage}
           />
           <ChevronDownIcon
             strokeWidth={2.5}
@@ -264,7 +263,11 @@ const Header: React.FC = () => {
       >
         <div className="flex w-full lg:w-auto items-center justify-between p-5">
           <a href="/#" className="flex items-center text-lg gap-2">
-            <img src={logo} alt="" className="h-12 rounded-full" />
+            <img
+              src={user?.profileImage}
+              alt=""
+              className="h-12 rounded-full"
+            />
             <span className="font-semibold font-korto font-sans text-slate-800">
               LearnUp
             </span>

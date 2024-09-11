@@ -21,6 +21,7 @@ import VerticalBarChart from "../../components/chart";
 import { CiEdit } from "react-icons/ci";
 import AllUpcomingCall from "../../components/AllUpcomingCall";
 import TuteurRequest from "../../components/TuteurRequest";
+import { motion, useScroll, useSpring } from "framer-motion";
 interface AvailabilitySlot {
   day: string;
   startTime: string;
@@ -42,7 +43,7 @@ interface UpcomingCall {
 }
 
 const WelcomeComponent = () => {
-  const { user, getLoggedInUser } = useContext(AuthContext);
+  const { user, isSignedIn, getLoggedInUser } = useContext(AuthContext);
   const [open, setOpen] = React.useState(false);
   const client = useStreamVideoClient();
   const [values, setValues] = useState(initialValues);
@@ -77,9 +78,28 @@ const WelcomeComponent = () => {
     "Friday",
     "saturday",
   ];
-  const formatDate = (date?: Date): string => {
-    return date ? date.toLocaleDateString() : "";
-  };
+
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  // Refs pour chaque section
+  const heroRef = useRef(null);
+  const profileRef = useRef(null);
+  const scheduleRef = useRef(null);
+  const upcomingCallsRef = useRef(null);
+  const reviewsRef = useRef(null);
+  const statisticsRef = useRef(null);
+  const requestsRef = useRef(null);
+
+  useEffect(() => {
+    if (!loading && !isSignedIn && !user) {
+      navigate("/tuteur/connexion");
+    }
+  }, [loading, isSignedIn, navigate, user]);
 
   // Fetching availability from BackSide
   useEffect(() => {
@@ -293,67 +313,77 @@ const WelcomeComponent = () => {
     });
 
     return (
-      <div className="mx-auto flex justify-center p-5">
-        <table className="w-full text-sm border-t-4 text-left rtl:text-right dark:text-gray-400">
-          <thead className="text-md uppercase dark:text-gray-400">
-            <tr>
-              {days.map((day) => (
-                <th key={day}>{day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {getUniqueTimes(availability).map((time) => (
-              <tr key={time}>
+      <div className="mx-auto p-5 bg-gray-800 rounded-xl shadow-lg">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-gray-200">
+            <thead className="text-xs uppercase bg-gray-700 text-gray-400">
+              <tr>
                 {days.map((day) => (
-                  <td
-                    className="px-2 py-4 cursor-pointer"
-                    key={`${day}-${time}`}
-                  >
-                    {slotsByDay[day] &&
-                      slotsByDay[day].find(
-                        (slot) => slot.startTime === time
-                      ) && (
-                        <span
-                          className="underline bg-slate-200 p-2 rounded-lg"
-                          onClick={() => {
-                            HandleClickTime(time, day);
-                          }}
-                        >
-                          {time}
-                        </span>
-                      )}
-                  </td>
+                  <th key={day} className="px-4 py-3">
+                    {day}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-
+            </thead>
+            <tbody>
+              {getUniqueTimes(availability).map((time) => (
+                <tr key={time} className="border-b border-gray-700">
+                  {days.map((day) => (
+                    <td className="px-4 py-3" key={`${day}-${time}`}>
+                      {slotsByDay[day] &&
+                        slotsByDay[day].find(
+                          (slot) => slot.startTime === time
+                        ) && (
+                          <button
+                            className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+                            onClick={() => {
+                              HandleClickTime(time, day);
+                            }}
+                          >
+                            {time}
+                          </button>
+                        )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         {!callDetails ? (
           <Dialog
             open={open}
             onClose={handleClose}
             fullWidth
-            sx={{ height: "100vh" }}
+            maxWidth="sm"
+            PaperProps={{
+              className: "bg-gray-800 text-gray-200 rounded-lg",
+            }}
           >
-            <form onSubmit={createMeeting}>
-              <DialogTitle>Ajouter un leçon</DialogTitle>
+            <form onSubmit={createMeeting} className="p-6">
+              <DialogTitle className="text-2xl font-bold mb-4">
+                Ajouter un leçon
+              </DialogTitle>
               <DialogContent>
-                <div className="flex flex-col gap-6">
-                  <div className="flex flex-col gap-2.5">
-                    <label className="text-base font-normal leading-[22.4px] text-sky-2">
-                      Ajouter une Description
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Description
                     </label>
                     <TextField
                       required
-                      className="border-none bg-cyan-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      fullWidth
+                      variant="outlined"
                       onChange={handleChange}
+                      className="bg-gray-700 rounded-md"
+                      InputProps={{
+                        className: "text-gray-200",
+                      }}
                     />
                   </div>
                   <div className="flex w-full flex-col gap-2.5">
-                    <label className="text-base font-normal leading-[22.4px]">
-                      Créneaux Horraires
+                    <label className="block text-sm font-medium mb-2">
+                      Créneau Horaire
                     </label>
                     <ReactDatePicker
                       selected={values.dateTime}
@@ -365,7 +395,7 @@ const WelcomeComponent = () => {
                       timeIntervals={15}
                       timeCaption="time"
                       dateFormat="MMMM d, yyyy h:mm aa"
-                      className="w-full rounded p-2 focus:outline-none text-black"
+                      className="w-full rounded-md p-2 bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     {/* <TextField
                       className="w-full rounded p-2 focus:outline-none text-black"
@@ -375,8 +405,18 @@ const WelcomeComponent = () => {
                 </div>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose}>Annuler</Button>
-                <Button type="submit">Ajouter</Button>
+                <Button
+                  onClick={handleClose}
+                  className="bg-gray-600 hover:bg-gray-700 text-white"
+                >
+                  Annuler
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                >
+                  Ajouter
+                </Button>
               </DialogActions>
             </form>
           </Dialog>
@@ -386,14 +426,21 @@ const WelcomeComponent = () => {
             onClose={() => {
               handleClose();
             }}
+            PaperProps={{
+              className: "bg-gray-800 text-gray-200 rounded-lg",
+            }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle>Meeting Link</DialogTitle>
+            <DialogTitle className="text-2xl font-bold">
+              Meeting Link
+            </DialogTitle>
             <DialogContent>
-              <DialogContentText>
-                Meeting created successfully
-                <p>Meeting Link: {meetingLink}</p>
+              <DialogContentText className="text-gray-300">
+                Réunion créée avec succès
+                <p className="mt-2 p-2 bg-gray-700 rounded">
+                  Meeting Link: {meetingLink}
+                </p>
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -403,8 +450,9 @@ const WelcomeComponent = () => {
                   setCallDetails(undefined);
                   setMeetingState(undefined);
                 }}
+                className="bg-blue-500 hover:bg-blue-600 text-white"
               >
-                Copy Meeting Link
+                Copier le lien
               </Button>
             </DialogActions>
           </Dialog>
@@ -420,432 +468,196 @@ const WelcomeComponent = () => {
 
   return (
     <TuteurLayout>
-      <div className="flex justify-center font-korto font-sans h-full bg-gray-200 p-8">
-        <div className="">
-          <section className="relative block h-[500px]">
-            <div
-              className="absolute top-0 w-full h-full bg-center bg-cover"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80')",
-              }}
-            >
-              <span
-                id="blackOverlay"
-                className="w-full h-full absolute opacity-50 bg-black"
-              ></span>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col space-y-8 text-gray-100 relative"
+      >
+        {/* Ligne de progression */}
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-2 bg-blue-500 z-50"
+          style={{ scaleX }}
+        />
+        {/* Hero Section */}
+        <motion.section
+          ref={heroRef}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative h-[300px] rounded-xl overflow-hidden"
+        >
+          {" "}
+          <div
+            className="absolute inset-0 bg-center bg-cover"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80')",
+            }}
+          >
+            <div className="absolute inset-0 bg-gray-900 opacity-75"></div>
+          </div>
+          <div className="relative h-full flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold mb-4">
+                Bienvenue, {user?.username}
+              </h1>
+              <p className="text-xl">Prêt à inspirer et éduquer ?</p>
             </div>
-            <div
-              className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-[70px]"
-              style={{ transform: "translateZ(0px)" }}
-            >
-              <SvgIcon
-                className="absolute bottom-0 overflow-hidden text-blueGray-200 fill-current"
-                viewBox="0 0 2560 100"
-                xmlns="http://www.w3.org/2000/svg"
-                preserveAspectRatio="none"
-              >
-                <polygon points="2560 0 2560 100 0 100" />
-              </SvgIcon>
+          </div>
+        </motion.section>
+
+        {/* Profile Section */}
+        <motion.section
+          ref={profileRef}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="bg-gray-800 rounded-xl p-6 shadow-lg"
+        >
+          {" "}
+          <div className="flex items-center space-x-4">
+            <Avatar
+              alt={user?.username}
+              src={`http://localhost:5000/${user?.profileImage}`}
+              sx={{ width: 100, height: 100 }}
+            />
+            <div>
+              <h2 className="text-2xl font-bold">{user?.username}</h2>
+              <p className="text-gray-400">{user?.country}</p>
             </div>
-          </section>
-          <section className="relative py-16 bg-blueGray-200">
-            <Container>
-              <Box className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
-                <Box className="px-6">
-                  <Box className="flex flex-wrap justify-center">
-                    <Box className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-                      <Box className="relative">
-                        <Avatar
-                          alt="Profile Picture"
-                          src="https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg"
-                          className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-                          sx={{ width: 150, height: 150 }}
-                        />
-                      </Box>
-                    </Box>
-                  </Box>
-                  <Box className="text-center mt-20">
-                    <Typography
-                      variant="h3"
-                      className="font-semibold leading-normal mb-2 text-blueGray-700 mb-2"
-                    >
-                      {user?.username}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      className="leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase"
-                    >
-                      <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                      Los Angeles, California
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      className="mb-2 text-blueGray-600 mt-10"
-                    >
-                      <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-                      Teaches English lessons Speaks French (B1),
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      className="mb-2 text-blueGray-600"
-                    >
-                      <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>
-                      Greek (B1) 5,689 lessons taught
-                    </Typography>
-                  </Box>
-                  <Box className="mt-10 py-10 border-t border-blueGray-200 text-center">
-                    <Box className="flex flex-wrap justify-center">
-                      <Box className="w-full lg:w-9/12 px-4">
-                        <Typography
-                          variant="body1"
-                          className="mb-4 text-lg leading-relaxed text-blueGray-700"
-                        >
-                          Build your Future: I will make you fluent in English
-                          with customized classes. * IELTS Examiner for 5 years
-                          and 8 years as a 1-1 Online English Tutor * Native
-                          Speaker * SAT Exam Preparation
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-            </Container>
-          </section>
-          <div className="flex-1 bg-white rounded-lg shadow-xl p-8">
-            <div className="gap-2 flex items-center cursor-pointer">
-              <h4 className="text-xl text-gray-900 font-bold">Personal Info</h4>
-              <div>
-                <CiEdit
-                  size={20}
-                  onClick={() => {
-                    navigate("/tuteur/account");
-                  }}
+          </div>
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold mb-2">À propos de moi</h3>
+            <p className="text-gray-300">{user?.aboutMe}</p>
+          </div>
+          <Button
+            color="blue"
+            className="mt-4"
+            onClick={() => navigate("/tuteur/edit")}
+          >
+            Modifier le profil
+          </Button>
+        </motion.section>
+
+        {/* Schedule Section */}
+        <motion.section
+          ref={scheduleRef}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="bg-gray-800 rounded-xl p-6 shadow-lg"
+        >
+          {" "}
+          <h2 className="text-2xl font-bold mb-4">Horaire</h2>
+          {renderAvailabilityTable()}
+        </motion.section>
+
+        {/* Upcoming Calls Section */}
+        <motion.section
+          ref={upcomingCallsRef}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="bg-gray-800 rounded-xl p-6 shadow-lg"
+        >
+          {" "}
+          <h2 className="text-2xl font-bold mb-4">Appels à venir</h2>
+          <AllUpcomingCall />
+        </motion.section>
+
+        {/* Reviews Section */}
+        <motion.section
+          ref={reviewsRef}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="bg-gray-800 rounded-xl p-6 shadow-lg"
+        >
+          {" "}
+          <h2 className="text-2xl font-bold mb-4">Avis des élèves</h2>
+          <div className="space-y-4">
+            {/* Implement ReviewCard component with dark theme */}
+            <ReviewCard
+              name="Theodora D."
+              imageSrc="https://picsum.photos/id/646/200/200"
+              description="Excellent tuteur, très patient et compétent."
+            />
+            <ReviewCard
+              name="Chedi"
+              imageSrc="https://picsum.photos/id/646/200/200"
+              description="Les cours sont toujours bien structurés et intéressants."
+            />
+            {show && (
+              <>
+                <ReviewCard
+                  name="Azizza"
+                  imageSrc="https://picsum.photos/id/646/200/200"
+                  description="J'ai fait beaucoup de progrès grâce à ces cours."
                 />
-              </div>
-            </div>
-            <ul className="mt-2 text-gray-700">
-              <li className="flex border-y py-2">
-                <span className="font-bold w-24">Full name:</span>
-                <span className="text-gray-700">{user?.username}</span>
-              </li>
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Birthday:</span>
-                <span className="text-gray-700">
-                  {formatDate(user?.dateOfBirth)}
-                </span>
-              </li>
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Joined:</span>
-                <span className="text-gray-700">{user?.createdAt}</span>
-              </li>
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Gender:</span>
-                <span className="text-gray-700">{user?.gender}</span>
-              </li>
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Email:</span>
-                <span className="text-gray-700">{user?.email}</span>
-              </li>
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Location:</span>
-                <span className="text-gray-700">New York, US</span>
-              </li>
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Languages:</span>
-                <span className="text-gray-700">English, Spanish</span>
-              </li>
-            </ul>
+              </>
+            )}
           </div>
-          <section
-            id="section-2"
-            className="bg-white rounded-lg shadow-xl p-8 mt-5"
-          >
-            <div className="">
-              <div className="text-2xl font-bold my-4">Schedule</div>
-              <div
-                className="flex items-center p-4 mb-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-                role="alert"
-              >
-                <svg
-                  className="flex-shrink-0 inline w-4 h-4 me-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                </svg>
-                <span className="sr-only">Info</span>
-                <div className="text-lg">
-                  Cliquer sur une date pour planifier un meet !!
-                </div>
-              </div>
-              <div>{renderAvailabilityTable()}</div>
-            </div>
-          </section>
-          <section id="Upcoming Call" className="bg-white shadow-xl p-8 mt-5">
-            <p className="text-2xl font-bold my-4">Les Appels à venir</p>
-            <AllUpcomingCall />
-          </section>
-          <section
-            id="reviews"
-            ref={ReviewRef}
-            className="bg-white shadow-xl p-8 mt-5"
-          >
-            <div className="font-bold text-2xl my-4">
-              Ce que disent les élèves
-            </div>
-            <div className="p-1 ml-2 space-y-3">
-              <ReviewCard
-                name="Theodora D."
-                imageSrc="https://picsum.photos/id/646/200/200"
-                description="Sapien consequat eleifend! Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-              />
-              <ReviewCard
-                name="Chedi"
-                imageSrc="https://picsum.photos/id/646/200/200"
-                description="consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-              />
-              <ReviewCard
-                name="Azizza"
-                imageSrc="https://picsum.photos/id/646/200/200"
-                description="Sapien consequat eleifend! Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-              />
-              {show ? (
-                <div>
-                  <ReviewCard
-                    name="Haythem"
-                    imageSrc="https://picsum.photos/id/646/200/200"
-                    description="Sapien consequat eleifend! Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-                  />
-                  <ReviewCard
-                    name="Rayen"
-                    imageSrc="https://picsum.photos/id/646/200/200"
-                    description="Sapien consequat eleifend! Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-                  />
-                  <ReviewCard
-                    name="Taha"
-                    imageSrc="https://picsum.photos/id/646/200/200"
-                    description="Sapien consequat eleifend! Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-                  />
-                </div>
-              ) : null}
-            </div>
-            <button
-              className="text-blue-500 text-sm mt-2 focus:outline-none underline"
-              onClick={ToggleShowAllReviews}
-            >
-              {show ? "Afficher moins" : "Afficher plus"}
-            </button>
-          </section>
-          <section id="Resume" className="bg-white shadow-xl p-8 mt-5">
-            <p className="text-2xl font-bold my-4">Resumé</p>
-            <div className="p-4 mt-4">
-              <div className="border-b-4 w-64 text-xl font-semibold mb-4">
-                Expérience Professionnel
-              </div>
-              <div className="p-5">
-                Topica Native - An Online English School Serving Vietnamese
-                English Learners English Language Teacher
-              </div>
-            </div>
-          </section>
-          <section id="Specialite" className="bg-white shadow-xl p-8 mt-5">
-            <p className="text-2xl font-bold my-4">Specialité</p>
-            <div className="p-4">
-              <div className="text-xl font-semibold mb-3">
-                Conversational English
-              </div>
-              <div className="p-2">
-                I have been teaching 1 on on private lessons for 4 years. this
-                can be about anything! family, hobbies, business meeting. If
-                your not sure, lets book some time to figure out what you need
-              </div>
-            </div>
-          </section>
+          <Button color="blue" className="mt-4" onClick={ToggleShowAllReviews}>
+            {show ? "Afficher moins" : "Afficher plus"}
+          </Button>
+        </motion.section>
 
-          <section id="Specialite" className="bg-white shadow-xl p-8 mt-5">
-            <TuteurRequest />
-          </section>
-
-          <div className="flex-1 bg-white rounded-lg shadow-xl mt-4 p-8">
-            <h4 className="text-xl text-gray-900 font-bold">Statistics</h4>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-4">
-              <div className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-sm text-indigo-600">
-                    Total Revenue
-                  </span>
-                  <span className="text-xs bg-gray-200 hover:bg-gray-500 text-gray-500 hover:text-gray-200 px-2 py-1 rounded-lg transition duration-200 cursor-default">
-                    7 days
-                  </span>
-                </div>
-                <div className="flex items-center justify-between mt-6">
-                  <div>
-                    <svg
-                      className="w-12 h-12 p-2.5 bg-indigo-400 bg-opacity-20 rounded-full text-indigo-600 border border-indigo-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1"
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex items-end">
-                      <span className="text-2xl 2xl:text-3xl font-bold">
-                        $8,141
-                      </span>
-                      <div className="flex items-center ml-2 mb-1">
-                        <svg
-                          className="w-5 h-5 text-green-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                          ></path>
-                        </svg>
-                        <span className="font-bold text-sm text-gray-500 ml-0.5">
-                          3%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-sm text-green-600">
-                    New Orders
-                  </span>
-                  <span className="text-xs bg-gray-200 hover:bg-gray-500 text-gray-500 hover:text-gray-200 px-2 py-1 rounded-lg transition duration-200 cursor-default">
-                    7 days
-                  </span>
-                </div>
-                <div className="flex items-center justify-between mt-6">
-                  <div>
-                    <svg
-                      className="w-12 h-12 p-2.5 bg-green-400 bg-opacity-20 rounded-full text-green-600 border border-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1"
-                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex items-end">
-                      <span className="text-2xl 2xl:text-3xl font-bold">
-                        217
-                      </span>
-                      <div className="flex items-center ml-2 mb-1">
-                        <svg
-                          className="w-5 h-5 text-green-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                          ></path>
-                        </svg>
-                        <span className="font-bold text-sm text-gray-500 ml-0.5">
-                          5%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-sm text-blue-600">
-                    New Connections
-                  </span>
-                  <span className="text-xs bg-gray-200 hover:bg-gray-500 text-gray-500 hover:text-gray-200 px-2 py-1 rounded-lg transition duration-200 cursor-default">
-                    7 days
-                  </span>
-                </div>
-                <div className="flex items-center justify-between mt-6">
-                  <div>
-                    <svg
-                      className="w-12 h-12 p-2.5 bg-blue-400 bg-opacity-20 rounded-full text-blue-600 border border-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="flex items-end">
-                      <span className="text-2xl 2xl:text-3xl font-bold">
-                        54
-                      </span>
-                      <div className="flex items-center ml-2 mb-1">
-                        <svg
-                          className="w-5 h-5 text-green-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                          ></path>
-                        </svg>
-                        <span className="font-bold text-sm text-gray-500 ml-0.5">
-                          7%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <VerticalBarChart />
-            </div>
+        {/* Statistics Section */}
+        <motion.section
+          ref={statisticsRef}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="bg-gray-800 rounded-xl p-6 shadow-lg"
+        >
+          {" "}
+          <h2 className="text-2xl font-bold mb-4">Statistiques</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <StatCard title="Revenus totaux" value="$8,141" change="+3%" />
+            <StatCard title="Nouvelles commandes" value="217" change="+5%" />
+            <StatCard title="Nouvelles connexions" value="54" change="+7%" />
           </div>
-        </div>
-      </div>
+          <VerticalBarChart />
+        </motion.section>
+
+        {/* Requests Section */}
+        <motion.section
+          ref={requestsRef}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="bg-gray-800 rounded-xl p-6 shadow-lg"
+        >
+          <h2 className="text-2xl font-bold mb-4">Demandes des élèves</h2>
+          <TuteurRequest />
+        </motion.section>
+      </motion.div>
     </TuteurLayout>
   );
 };
+
+// Helper component for stat cards
+const StatCard = ({
+  title,
+  value,
+  change,
+}: {
+  title: string;
+  value: string;
+  change: string;
+}) => (
+  <div className="bg-gray-700 p-4 rounded-lg">
+    <h3 className="text-gray-400 text-sm font-medium">{title}</h3>
+    <p className="text-2xl font-bold mt-2">{value}</p>
+    <p
+      className={`text-sm ${
+        change.startsWith("+") ? "text-green-400" : "text-red-400"
+      }`}
+    >
+      {change}
+    </p>
+  </div>
+);
 
 export default WelcomeComponent;

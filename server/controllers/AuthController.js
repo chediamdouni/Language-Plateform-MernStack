@@ -2,8 +2,10 @@ const { createSecretToken } = require("../utils/SecretToken");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { getStreamToken, syncUser } = require("../utils/stream");
+const { sendVerificationEmail } = require("../utils/SendEmail");
+const jwt = require("jsonwebtoken");
 
-const getSuccessResponse = async (user) => ({
+/*const getSuccessResponse = async (user) => ({
   user: {
     id: user._id,
     email: user.email,
@@ -11,8 +13,24 @@ const getSuccessResponse = async (user) => ({
   },
   bearerToken: await createSecretToken(user),
   streamToken: getStreamToken(user),
-});
+});*/
+const getSuccessResponse = async (user) => {
+  // Convertir le document Mongoose en objet JavaScript simple
+  const userObject = user.toObject();
 
+  // Supprimer le mot de passe pour des raisons de sécurité
+  delete userObject.password;
+
+  // Transformer _id en id
+  userObject.id = userObject._id.toString();
+  delete userObject._id;
+
+  return {
+    user: userObject,
+    bearerToken: await createSecretToken(user),
+    streamToken: getStreamToken(user),
+  };
+};
 // SIGNUP ///
 const signupUser = async (req, res, next) => {
   try {
@@ -30,32 +48,117 @@ const signupUser = async (req, res, next) => {
     if (existingUser) {
       res.status(402).send("Email is already taken");
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await User.create({
       email,
-      password,
+      password: hashedPassword,
       username,
+      verified: false,
       roles: roles.toLowerCase(),
     });
     await syncUser(user);
+
+    await sendVerificationEmail(user);
+
     const response = await getSuccessResponse(user);
     response.message = "User registered successfully";
     res.status(201).send(response);
-    // // const token = createSecretToken({ userId: user._id });
-    // // res.cookie("jwt", token, {
-    // //   withCredentials: true,
-    // //   httpOnly: false,
-    // // });
-    // // res.status(201).json({
-    // //   success: true,
-    // //   message: "User has been added successfully",
-    // //   user,
-    // // });
   } catch (error) {
     console.error("Error in signup:", error);
     res.status(500).send("There is something wrong in signup");
   }
 };
+const verifyEmail = async (req, res) => {
+  const { token } = req.query;
+  console.log("Token reçu:", token);
 
+  if (!token) {
+    console.log("Erreur: Token manquant");
+    return res.status(400).json({ success: false, message: "Token manquant" });
+  }
+
+  try {
+    console.log("Tentative de vérification du token");
+    const decoded = jwt.verify(token, process.env.VERIFICATION_TOKEN_SECRET);
+    console.log("Token décodé:", decoded);
+
+    const user = await User.findById(decoded.userId);
+    console.log("Utilisateur trouvé:", user);
+
+    if (!user) {
+      console.log("Erreur: Utilisateur non trouvé");
+      return res
+        .status(404)
+        .json({ success: false, message: "Utilisateur non trouvé" });
+    }
+
+    if (user.verified) {
+      console.log("Erreur: Compte déjà vérifié");
+      return res
+        .status(400)
+        .json({ success: false, message: "Compte déjà vérifié" });
+    }
+
+    user.verified = true;
+    await user.save();
+    console.log("Compte vérifié avec succès");
+
+    res.json({
+      success: true,
+      message: "Votre compte a été vérifié avec succès",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la vérification du token:", error);
+    res
+      .status(400)
+      .json({ success: false, message: "Token invalide ou expiré" });
+  }
+};
+const resendVerificationEmail = async (req, res) => {
+  console.log("Requête reçue pour renvoyer l'email de vérification");
+  console.log("Corps de la requête:", req.body);
+
+  try {
+    const { email } = req.body;
+
+    // Vérifier si l'utilisateur existe
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Utilisateur non trouvé" });
+    }
+
+    // Vérifier si l'utilisateur est déjà vérifié
+    if (user.verified) {
+      return res
+        .status(400)
+        .json({ success: false, message: "L'utilisateur est déjà vérifié" });
+    }
+
+    // Générer un nouveau token de vérification
+    const verificationToken = jwt.sign(
+      { userId: user._id },
+      process.env.VERIFICATION_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // Envoyer le nouvel email de vérification
+    await sendVerificationEmail(user, verificationToken);
+
+    res.status(200).json({
+      success: true,
+      message: "Email de vérification renvoyé avec succès",
+    });
+  } catch (error) {
+    console.error("Erreur lors du renvoi de l'email de vérification:", error);
+    res.status(500).json({
+      success: false,
+      message: "Erreur lors de l'envoi de l'email de vérification",
+    });
+  }
+};
 // LOGIN ///
 const login = async (req, res, next) => {
   try {
@@ -67,15 +170,16 @@ const login = async (req, res, next) => {
     if (!user) {
       return res.json({ message: "Incorrect email" });
     }
-    const auth = await bcrypt.compare(password, user.password);
-    if (!auth) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log(password, user.password);
+    if (!isPasswordValid) {
       return res.json({ message: "Incorrect password" });
     }
     const response = await getSuccessResponse(user);
     const token = response.bearerToken;
     res.cookie("bearerToken", token, {
       withCredentials: true,
-      httpOnly: true,
+      // httpOnly: true,
     });
     response.message = "Login successful";
     res.status(200).send(response);
@@ -87,12 +191,12 @@ const login = async (req, res, next) => {
 // USER LOGGED IN ///
 const getLoggedInUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user?._id);
+    const user = await User.findById(req.user?.id);
+
     if (!user) {
       return res.status(400).json({ message: "No User Found" });
     }
     const response = await getSuccessResponse(user);
-
     return res.status(200).send(response);
   } catch (e) {
     res
@@ -109,6 +213,8 @@ const logout = async (req, res) => {
 
 module.exports = {
   signupUser,
+  verifyEmail,
+  resendVerificationEmail,
   login,
   getLoggedInUser,
   logout,

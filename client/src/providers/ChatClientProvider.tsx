@@ -40,7 +40,7 @@ const ChatClientProvider = ({ children }: { children: ReactNode }) => {
       userData: {
         id: user?.id,
         name: user?.username || user?.id,
-        image: user?.profileImageUrl,
+        image: user?.profileImage,
       },
       tokenOrProvider: tokenProvider,
     });

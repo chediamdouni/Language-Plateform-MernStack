@@ -1,10 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "src/Context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import logo from "../../assets/images/logo.jpg";
+import logo from "../../assets/images/logo.png";
+import GoogleAuthButton from "../../components/GoogleAuthButton";
+import { FaUserPlus, FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+
 interface formData {
   username: string;
   email: string;
@@ -14,6 +17,7 @@ interface formData {
 const Signup: React.FC = () => {
   const navigate = useNavigate();
   const { setLoading } = useContext(AuthContext);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const {
     register,
     handleSubmit,
@@ -33,8 +37,10 @@ const Signup: React.FC = () => {
     const checkbox = document.getElementById("remember") as HTMLInputElement;
     console.log(checkbox.checked);
     if (!checkbox.checked) {
-      console.log("veuillez accepter les termes");
-      return; // empechez l'envoie du formulaire
+      toast.error("veuillez accepter les termes !", {
+        position: "top-center",
+      });
+      return;
     }
     try {
       setLoading(true);
@@ -51,6 +57,9 @@ const Signup: React.FC = () => {
         setTimeout(() => {
           navigate("/apprenant/connexion");
         }, 1000);
+        toast.success(
+          "Un email de vérification a été envoyé. Veuillez vérifier votre boîte de réception."
+        );
       } else {
         setLoading(false);
         handleError(message);
@@ -62,141 +71,175 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div>
-      <a href="/#" className="flex items-center text-lg mt-5 ml-10">
-        <img src={logo} alt="" className="h-12" />
-        <span className="font-semibold font-korto font-sans text-slate-800">
-          LearnUp
-        </span>
-      </a>
-      <div className="flex justify-center items-center p-6">
-        <div className="relative flex flex-col p-6 text-gray-700 bg-transparent shadow-2xl rounded-xl bg-clip-border items-center mt-10">
-          <h4 className="block font-sans text-2xl text-sky-600 antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-            Inscrivez-vous
-          </h4>
-          <p className="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-            Enchanté de vous rencontrer !
-          </p>
-          <p className="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-            Entrez vos coordonnées pour vous inscrire.
-          </p>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="max-w-screen-lg mt-8 mb-2 w-80 sm:w-96"
-          >
-            <div className="flex flex-col gap-6 mb-1">
-              <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-gray-600">
-                Votre nom
-              </h6>
-              <div className="relative h-11 w-full min-w-[200px]">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex flex-col md:flex-row">
+      <div className="flex-1 flex flex-col justify-center items-center p-4 md:p-8">
+        <Link
+          to="/"
+          className="mb-8 flex items-center text-2xl font-bold text-indigo-700"
+        >
+          <img src={logo} alt="LearnUp Logo" className="h-12 mr-2" />
+          <span>LearnUp</span>
+        </Link>
+        <h1 className="text-4xl md:text-5xl font-bold text-indigo-800 mb-4 text-center">
+          Bienvenue sur LearnUp
+        </h1>
+        <p className="text-xl text-indigo-600 mb-8 text-center max-w-md">
+          Rejoignez notre communauté d'apprenants passionnés et commencez votre
+          voyage éducatif dès aujourd'hui !
+        </p>
+      </div>
+
+      <div className="flex-1 flex justify-center items-center p-4 md:p-8">
+        <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+          <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">
+            Créez votre compte
+          </h2>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Nom d'utilisateur
+              </label>
+              <div className="relative">
+                <FaUser className="absolute top-3 left-3 text-gray-400" />
                 <input
+                  id="username"
                   type="text"
-                  {...register("username", { required: true })}
-                  placeholder="Username username"
-                  className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                  {...register("username", {
+                    required: "Le nom d'utilisateur est requis",
+                  })}
+                  className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Votre nom d'utilisateur"
                 />
-                <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all before:content-none after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all after:content-none peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
-                {errors.username && (
-                  <span className="text-red-700">Ce champ est obligatoire</span>
-                )}
               </div>
-              <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-                Votre Email
-              </h6>
-              <div className="relative h-11 w-full min-w-[200px]">
+              {errors.username && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.username.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Adresse e-mail
+              </label>
+              <div className="relative">
+                <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
                 <input
+                  id="email"
                   type="email"
                   {...register("email", {
-                    required: true,
+                    required: "L'adresse e-mail est requise",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Adresse email invalide",
+                      message: "Adresse e-mail invalide",
                     },
                   })}
-                  placeholder="exemple@exemple.com"
-                  className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                  className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="vous@exemple.com"
                 />
-                <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all before:content-none after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all after:content-none peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
-                {errors.email && (
-                  <span className="text-red-700">Ce champ est obligatoire</span>
-                )}
               </div>
-              <h6 className="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
-                Mot de Passe
-              </h6>
-              <div className="relative h-11 w-full min-w-[200px]">
-                <input
-                  type="password"
-                  {...register("password", { required: true, minLength: 8 })}
-                  placeholder="********"
-                  className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-                />
-                {errors.password && (
-                  <span className="text-red-700">
-                    Le mot de passe comporte au moins 8 caractères!!
-                  </span>
-                )}
-                <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all before:content-none after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all after:content-none peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.1] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"></label>
-              </div>
-            </div>
-            <div className="inline-flex items-center mt-10">
-              <label
-                className="relative -ml-2.5 flex cursor-pointer items-center rounded-full p-3"
-                htmlFor="remember"
-              >
-                <input
-                  type="checkbox"
-                  className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-gray-900 checked:bg-gray-900 checked:before:bg-gray-900 hover:before:opacity-10"
-                  id="remember"
-                />
-                <span className="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-3.5 w-3.5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    stroke="currentColor"
-                    stroke-width="1"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </span>
-              </label>
-              <label
-                className="mt-px font-light text-gray-700 cursor-pointer select-none "
-                htmlFor="remember"
-              >
-                <p className="flex items-center font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-                  J'accepte les
-                  <Link
-                    to="#"
-                    className="font-medium transition-colors hover:text-gray-900"
-                  >
-                    &nbsp; termes et conditions
-                  </Link>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
                 </p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Mot de passe
+              </label>
+              <div className="relative">
+                <FaLock className="absolute top-3 left-3 text-gray-400" />
+                <input
+                  id="password"
+                  type="password"
+                  {...register("password", {
+                    required: "Le mot de passe est requis",
+                    minLength: {
+                      value: 8,
+                      message:
+                        "Le mot de passe doit contenir au moins 8 caractères",
+                    },
+                  })}
+                  className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="••••••••"
+                />
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center">
+              <input
+                id="agree-terms"
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <label
+                htmlFor="agree-terms"
+                className="ml-2 block text-sm text-gray-700"
+              >
+                J'accepte les{" "}
+                <Link
+                  to="/terms"
+                  className="text-indigo-600 hover:text-indigo-500"
+                >
+                  termes et conditions
+                </Link>
               </label>
             </div>
+
             <button
-              className="mt-6 block w-full select-none rounded-lg bg-sky-600 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="submit"
+              disabled={!agreeTerms}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
             >
-              S'inscrire
+              <FaUserPlus className="mr-2" /> S'inscrire
             </button>
-            <p className="block mt-4 font-sans text-base antialiased font-normal leading-relaxed text-center text-gray-700">
-              T'as déja un compte?
-              <Link
-                to="/apprenant/connexion"
-                className="font-medium text-gray-900 px-1"
-              >
-                S'identifier
-              </Link>
-            </p>
           </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Ou inscrivez-vous avec
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <GoogleAuthButton />
+            </div>
+          </div>
+
+          <p className="mt-8 text-center text-sm text-gray-600">
+            Déjà membre ?{" "}
+            <Link
+              to="/apprenant/connexion"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              Connectez-vous
+            </Link>
+          </p>
         </div>
       </div>
     </div>

@@ -99,61 +99,95 @@ const Home: React.FC = () => {
           Avec plus de 30 000 tuteurs et plus d'un million d'apprenants, nous
           connaissons l'apprentissage des langues.
         </Typography>
-        <div className="flex gap-9 m-10 p-1 md:flex-row sm:flex-col lg:flex-row">
-          {tutors.map((tutor) => (
-            <Card
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 m-10">
+          {tutors.slice(0, 3).map((tutor) => (
+            <div
               key={tutor._id}
-              className="max-w-[20rem] overflow-hidden hover:bg-sky-100"
+              className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer"
               onClick={() => handleSelectTutor(tutor._id)}
             >
-              <CardHeader
-                floated={false}
-                shadow={false}
-                color="transparent"
-                className="m-0 rounded-none"
-              >
-                <img src={Person} alt="ui/ux review check" />
-              </CardHeader>
-              <CardBody>
-                <Typography variant="h4" className=" text-orange-600">
+              <div className="relative">
+                <img
+                  src={Person}
+                  alt={`${tutor.username}'s profile`}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="absolute top-0 right-0 bg-orange-500 text-white px-3 py-1 rounded-bl-lg text-sm font-semibold">
+                  50 dinars
+                </div>
+              </div>
+
+              <div className="p-6">
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
                   {tutor.username}
-                </Typography>
-                <Typography
-                  variant="lead"
-                  color="gray"
-                  className="mt-3 font-normal text-sm"
-                >
-                  Contact : {tutor.email}
-                </Typography>
-                <Typography
-                  variant="lead"
-                  color="gray"
-                  className="mt-3 font-normal text-sm"
-                >
-                  Pays Natale : {tutor.country}
-                </Typography>
-                <Typography
-                  variant="lead"
-                  color="gray"
-                  className="mt-3 font-normal text-sm"
-                >
-                  Expérience : {tutor.experience} ans
-                </Typography>
-                <Typography
-                  variant="lead"
-                  color="gray"
-                  className="mt-3 font-bold text-base"
-                >
-                  <p>50 dinars</p>
-                </Typography>
-              </CardBody>
-              <CardFooter className="flex items-center justify-between">
-                <div className="flex items-center -space-x-3"></div>
-                <Typography className="font-normal">
-                  {new Date(tutor.createdAt).toLocaleDateString()}
-                </Typography>
-              </CardFooter>
-            </Card>
+                </h3>
+
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center text-gray-600">
+                    <svg
+                      className="w-5 h-5 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span className="text-sm">{tutor.email}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <svg
+                      className="w-5 h-5 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span className="text-sm">{tutor.country}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <svg
+                      className="w-5 h-5 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span className="text-sm">
+                      {tutor.experience} ans d'expérience
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                  <span className="text-sm text-gray-500 mr-2">
+                    Inscrit le {new Date(tutor.createdAt).toLocaleDateString()}
+                  </span>
+                  <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-300">
+                    Voir le profil
+                  </button>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -476,8 +510,8 @@ const Home: React.FC = () => {
         <button
           className="max-w-xs select-none rounded-lg bg-gradient-to-tr from-orange-400 to-orange-300 py-3 px-10 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-10"
           type="button"
-          onClick={()=>{
-            navigate("/")
+          onClick={() => {
+            navigate("/apprenant");
           }}
         >
           Commencer l'apprentissage

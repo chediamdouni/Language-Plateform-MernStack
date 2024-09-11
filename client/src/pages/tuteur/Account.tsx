@@ -1,14 +1,15 @@
-import { Breadcrumbs, Button } from "@material-tailwind/react";
-import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "src/Context/AuthContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import TuteurLayout from "src/layouts/TuteurLayout";
 import axios from "axios";
 import * as Yup from "yup";
+import { FiUser, FiMail, FiLock, FiCheck } from "react-icons/fi";
+import { motion } from "framer-motion";
 
 const TuteurSettingsAccount = () => {
   const { user, updateUser } = useContext(AuthContext);
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const initialValues = {
     username: user?.username || "",
@@ -18,41 +19,40 @@ const TuteurSettingsAccount = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string().required("Username is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().min(6, "Password must be at least 6 characters"),
+    username: Yup.string().required("Le nom d'utilisateur est requis"),
+    email: Yup.string().email("Email invalide").required("L'email est requis"),
+    password: Yup.string().min(
+      6,
+      "Le mot de passe doit contenir au moins 6 caractères"
+    ),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Confirm Password is required"),
+      .oneOf([Yup.ref("password")], "Les mots de passe doivent correspondre")
+      .when("password", {
+        is: (val: string) => val && val.length > 0,
+        then: (schema) =>
+          schema.required("La confirmation du mot de passe est requise"),
+      }),
   });
 
   const handleSubmit = async (
     values: typeof initialValues,
     { setSubmitting, resetForm }: any
   ) => {
-    // const formData = new FormData();
-    // formData.append("username", values.username);
-    // formData.append("email", values.email);
-    // if (values.password) {
-    //   formData.append("password", values.password);
-    // }
-    const data = {
-      username: values.username,
-      email: values.email,
-      password: values.password || undefined,
-    };
-
-    // console.log("FormData content:");
-    // console.log("username:", formData.get("username"));
-    // console.log("email:", formData.get("email"));
-    // console.log("password:", formData.get("password"));
-
     try {
+      const data = {
+        username: values.username,
+        email: values.email,
+        password: values.password || undefined,
+      };
+
       const res = await axios.put(
         `http://localhost:5000/api/users/editUserProfile/${user?.id || ""}`,
         data
       );
       console.log("Form Data:", data);
+      updateUser(res.data);
+      setUpdateSuccess(true);
+      setTimeout(() => setUpdateSuccess(false), 3000);
       resetForm();
     } catch (error) {
       console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
@@ -63,18 +63,16 @@ const TuteurSettingsAccount = () => {
 
   return (
     <TuteurLayout>
-      <div className=" max-w-5xl  h-screen mx-auto p-8 ">
-        <div className="flex flex-col ">
-          <Breadcrumbs>
-            <a href="/#" className="opacity-60">
-              Tuteur
-            </a>
-            <a href="/#" className="opacity-60">
-              Account
-            </a>
-            <a href="/#">Informations</a>
-          </Breadcrumbs>
-          <div className="font-semibold text-2xl mt-4">Account</div>
+      <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl font-bold mb-8 text-center text-blue-400"
+          >
+            Paramètres du compte
+          </motion.h1>
 
           <Formik
             initialValues={initialValues}
@@ -82,124 +80,121 @@ const TuteurSettingsAccount = () => {
             onSubmit={handleSubmit}
           >
             {({ isSubmitting }) => (
-              <Form className="my-6">
-                <div className="grid gap-6 mb-6 md:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="username"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      User name
-                    </label>
-                    <Field
-                      type="text"
-                      name="username"
-                      id="username"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="John"
-                    />
-                    <ErrorMessage
-                      name="username"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                      Email address
-                    </label>
-                    <Field
-                      type="email"
-                      name="email"
-                      id="email"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="john.doe@company.com"
-                    />
-                    <ErrorMessage
-                      name="email"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
-                  </div>
+              <Form className="bg-gray-800 shadow-xl rounded-lg px-8 pt-6 pb-8 mb-4">
+                <div className="mb-6">
+                  <label
+                    htmlFor="username"
+                    className="block text-gray-300 text-sm font-bold mb-2"
+                  >
+                    <FiUser className="inline-block mr-2" />
+                    Nom d'utilisateur
+                  </label>
+                  <Field
+                    type="text"
+                    name="username"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+                    placeholder="Nom d'utilisateur"
+                  />
+                  <ErrorMessage
+                    name="username"
+                    component="div"
+                    className="text-red-500 text-xs italic mt-1"
+                  />
                 </div>
+
+                <div className="mb-6">
+                  <label
+                    htmlFor="email"
+                    className="block text-gray-300 text-sm font-bold mb-2"
+                  >
+                    <FiMail className="inline-block mr-2" />
+                    Adresse email
+                  </label>
+                  <Field
+                    type="email"
+                    name="email"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+                    placeholder="Email"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-red-500 text-xs italic mt-1"
+                  />
+                </div>
+
                 <div className="mb-6">
                   <label
                     htmlFor="password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block text-gray-300 text-sm font-bold mb-2"
                   >
-                    Password
+                    <FiLock className="inline-block mr-2" />
+                    Nouveau mot de passe
                   </label>
                   <Field
                     type="password"
                     name="password"
-                    id="password"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="•••••••••"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+                    placeholder="Laissez vide pour ne pas changer"
                   />
                   <ErrorMessage
                     name="password"
                     component="div"
-                    className="text-red-500 text-sm"
+                    className="text-red-500 text-xs italic mt-1"
                   />
                 </div>
+
                 <div className="mb-6">
                   <label
                     htmlFor="confirmPassword"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block text-gray-300 text-sm font-bold mb-2"
                   >
-                    Confirm password
+                    <FiLock className="inline-block mr-2" />
+                    Confirmer le nouveau mot de passe
                   </label>
                   <Field
                     type="password"
                     name="confirmPassword"
-                    id="confirmPassword"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="•••••••••"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
+                    placeholder="Confirmer le mot de passe"
                   />
                   <ErrorMessage
                     name="confirmPassword"
                     component="div"
-                    className="text-red-500 text-sm"
+                    className="text-red-500 text-xs italic mt-1"
                   />
                 </div>
-                <div className="flex items-start mb-6">
-                  <div className="flex items-center h-5">
-                    <Field
-                      type="checkbox"
-                      name="terms"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
-                    />
-                  </div>
-                  <label
-                    htmlFor="terms"
-                    className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+
+                <div className="flex items-center justify-between">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out"
                   >
-                    I agree with the{" "}
-                    <a
-                      href="/#"
-                      className="text-blue-600 hover:underline dark:text-blue-500"
-                    >
-                      terms and conditions
-                    </a>
-                    .
-                  </label>
+                    {isSubmitting ? "Mise à jour..." : "Mettre à jour"}
+                  </motion.button>
                 </div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  {isSubmitting ? "Envoi en cours..." : "Envoyer"}
-                </button>
               </Form>
             )}
           </Formik>
+
+          {updateSuccess && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mt-4 p-4 bg-green-500 text-white rounded-md flex items-center justify-center"
+            >
+              <FiCheck className="mr-2" />
+              Mise à jour réussie !
+            </motion.div>
+          )}
         </div>
       </div>
     </TuteurLayout>
   );
 };
+
 export default TuteurSettingsAccount;

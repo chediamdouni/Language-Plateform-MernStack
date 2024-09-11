@@ -3,9 +3,10 @@ import { AuthContext } from "../Context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import { Loader } from "lucide-react";
+import { Loader, Calendar, Clock, Link2, Trash2 } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface UpcomingMeeting {
   _id: string;
@@ -82,11 +83,11 @@ const AllUpcomingCall = () => {
 
   const handleDelete = async (upcomingMeetingId: string) => {
     confirmAlert({
-      title: "Confirm to delete",
-      message: "Are you sure you want to delete this meeting?",
+      title: "Confirmer la suppression",
+      message: "Êtes-vous sûr de vouloir supprimer cette réunion ?",
       buttons: [
         {
-          label: "Yes",
+          label: "Oui",
           onClick: async () => {
             try {
               console.log(
@@ -100,57 +101,97 @@ const AllUpcomingCall = () => {
                 )
               );
             } catch (error) {
-              console.error("Error deleting meeting:", error);
+              console.error(
+                "Erreur lors de la suppression de la réunion:",
+                error
+              );
             }
           },
         },
         {
-          label: "No",
+          label: "Non",
           onClick: () => {},
         },
       ],
     });
   };
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader className="animate-spin text-blue-500" size={48} />
+      </div>
+    );
   return (
-    <>
-      {upcomingMeetings.length !== 0 ? (
-        <ul className="flex gap-4 flex-wrap">
-          {upcomingMeetings.map((meeting) => (
-            <li
-              key={meeting.upcoming_meeting_id}
-              className="mb-4 border drop-shadow-md p-2 w-auto"
-            >
-              <p>
-                <strong>Description:</strong>
-                {meeting.meeting_description || "No description"}
-              </p>
-              <p>
-                <strong>Time:</strong>
-                {new Date(meeting.meeting_time).toLocaleString()}
-              </p>
-              <p>
-                <strong>Link:</strong>
-                <a
-                  href={meeting.meeting_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {meeting.meeting_url}
-                </a>
-              </p>
-              <button
-                onClick={() => handleDelete(meeting.upcoming_meeting_id)}
-                className="bg-red-500 text-white px-2 py-1 rounded mt-3"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="bg-gray-900 text-white p-6 rounded-xl shadow-lg"
+    >
+      <h2 className="text-3xl font-bold mb-6 text-blue-400">Appels à venir</h2>
+      <AnimatePresence>
+        {upcomingMeetings.length > 0 ? (
+          <motion.div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {upcomingMeetings.map((meeting) => (
+              <motion.div
+                key={meeting.upcoming_meeting_id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="bg-gray-800 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
               >
-                Supprimer
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <h1 className="text-2xl font-bold text-black">{noCallsMessage}</h1>
-      )}
-    </>
+                <h3 className="text-xl font-semibold mb-4 text-blue-300">
+                  {meeting.meeting_description || "Pas de description"}
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center text-gray-300">
+                    <Calendar className="mr-2" size={18} />
+                    <span>
+                      {new Date(meeting.meeting_time).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center text-gray-300">
+                    <Clock className="mr-2" size={18} />
+                    <span>
+                      {new Date(meeting.meeting_time).toLocaleTimeString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center text-blue-400">
+                    <Link2 className="mr-2" size={18} />
+                    <a
+                      href={meeting.meeting_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      Lien de la réunion
+                    </a>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleDelete(meeting.upcoming_meeting_id)}
+                  className="mt-4 flex items-center justify-center w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition duration-300"
+                >
+                  <Trash2 size={18} className="mr-2" />
+                  Supprimer
+                </motion.button>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-xl text-gray-400 text-center"
+          >
+            Aucun appel à venir
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

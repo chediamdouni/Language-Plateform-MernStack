@@ -8,10 +8,12 @@ var cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const PORT = process.env.PORT || 5000;
-
+require("./utils/Passport");
 var mainRouter = require("./routes/index");
 const { syncUsers } = require("./utils/stream");
 const User = require("./models/User");
+const session = require("express-session");
+const passport = require("passport");
 
 mongoose.set("strictQuery", false);
 
@@ -35,14 +37,28 @@ const corsOptions = {
   credentials: true,
   optionSuccessStatus: 200,
 };
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: "production",
+      httpOnly: true,
+    },
+  })
+);
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(cookieParser());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-
+// app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api", mainRouter);
 
 // catch 404 and forward to error handler
@@ -60,6 +76,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
 const server = http.Server(app);
 server.listen(PORT, () => {
   console.log(`Server Connected to port ${PORT}`);

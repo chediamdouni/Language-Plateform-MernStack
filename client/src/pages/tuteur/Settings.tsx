@@ -1,88 +1,46 @@
-import { Breadcrumbs, Option, Select } from "@material-tailwind/react";
 import React from "react";
 import TuteurLayout from "src/layouts/TuteurLayout";
+import { FaGlobe, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 
 const Settings = () => {
   return (
     <TuteurLayout>
-      <div className="max-w-5xl h-screen mx-auto p-8 ">
-        <div className="flex flex-col">
-          <Breadcrumbs>
-            <a href="/#" className="opacity-60">
-              Tuteur
-            </a>
-            <a href="/#" className="opacity-60">
-              Account Settings
-            </a>
-            <a href="/#">Login Methods</a>
-          </Breadcrumbs>
-          <div className="font-korto font-sans text-4xl my-8"> Settings </div>
-          <div className="space-y-4 divide-y ">
-            <div className="p-2">
-              <div className="flex gap-8 my-8">
-                <label
-                  htmlFor="default"
-                  className="block mb-2 w-64 text-sm font-medium font-korto font-sans text-gray-900 dark:text-white text-xl "
-                >
-                  Language
-                </label>
-                <select
-                  id="default"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option selected>Choose a country</option>
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
-                  <option value="FR">France</option>
-                  <option value="DE">Germany</option>
-                </select>
+      <div className="max-w-4xl mx-auto p-8 bg-gray-900 text-gray-100 rounded-lg shadow-xl">
+        <h1 className="text-4xl font-bold mb-8">Paramètres</h1>
+        <div className="space-y-6">
+          {[ 
+            { icon: FaGlobe, label: "Langue", type: "select", options: ["Français", "English", "Deutsch", "Español"] },
+            { icon: FaMapMarkerAlt, label: "Localisation actuelle", type: "select", options: ["France", "Canada", "États-Unis", "Allemagne"] },
+            { icon: FaClock, label: "Fuseau horaire", type: "text", value: "Europe/Paris" },
+          ].map((setting) => (
+            <div key={setting.label} className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg">
+              <setting.icon className="text-2xl text-indigo-400" />
+              <div className="flex-grow">
+                <label className="block text-sm font-medium text-gray-400">{setting.label}</label>
+                {setting.type === "select" ? (
+                  <select className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-700 bg-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                    {setting.options?.map((option) => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    value={setting.value}
+                    readOnly
+                    className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-700 rounded-md text-gray-300 focus:outline-none"
+                  />
+                )}
               </div>
             </div>
-            <div className="p-2">
-              <div className="flex gap-8 my-8">
-                <label
-                  htmlFor="default"
-                  className="block mb-2 w-64 text-sm font-medium font-korto font-sans text-gray-900 dark:text-white text-xl "
-                >
-                  Current Location
-                </label>
-                <select
-                  id="default"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  <option selected>Choose a country</option>
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
-                  <option value="FR">France</option>
-                  <option value="DE">Germany</option>
-                </select>
-              </div>
-            </div>
-            <div className="p-2">
-              <div className="flex gap-8 my-8">
-                <label
-                  htmlFor="default"
-                  className="block mb-2 w-64 text-sm font-medium font-korto font-sans text-gray-900 dark:text-white text-xl "
-                >
-                  Current Location Timezone
-                </label>
-                <div className="font-korto font-meduim font-sans ">
-                  Africa/Tunis
-                </div>
-              </div>
-            </div>
-            <div className="py-8">
-              <button
-                type="button"
-                className="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 w-24"
-              >
-                Save
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
+        <button className="mt-8 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">
+          Enregistrer les modifications
+        </button>
       </div>
     </TuteurLayout>
   );
 };
+
 export default Settings;

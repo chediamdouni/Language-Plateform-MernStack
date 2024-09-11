@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import {
   useState,
   createContext,
@@ -8,9 +8,7 @@ import {
 } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
-import { StreamChat } from "stream-chat";
-import { jwtDecode } from "jwt-decode";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const apiKey = "mmhfdzb5evj2";
 // const client = StreamChat.getInstance(apiKey);
@@ -22,9 +20,17 @@ export interface User {
   password: string;
   email: string;
   roles: string;
-  profileImageUrl: string;
+  profileImage: string;
+  verified: boolean;
   createdAt: string;
   updatedAt: string;
+  aboutMe?: string;
+  experience?: number;
+  certificate?: string;
+  language?: string;
+  country?: string;
+  favoriteTutors?: string[];
+  favoriteCourses?: string[];
 }
 
 export interface ProviderInterface {
@@ -41,6 +47,7 @@ interface IAuthContext {
   setLoading: (value: SetStateAction<boolean>) => void;
   getLoggedInUser: () => void;
   updateUser: (data: FormData) => void;
+  //getUserInfo: () => Promise<void>;
   setUser: Dispatch<SetStateAction<User | null>>;
   setIsSignedIn: Dispatch<SetStateAction<boolean>>;
   setStreamToken: Dispatch<SetStateAction<string | null>>;
@@ -52,6 +59,7 @@ export const AuthContext = createContext<IAuthContext>({
   tutors: null,
   loading: false,
   streamToken: null,
+  //getUserInfo: async () => {},
   handleSignout: () => {},
   setLoading: (value: SetStateAction<boolean>) => {},
   getLoggedInUser: () => {},
@@ -69,8 +77,9 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
   const [tutors, setTutors] = useState<User[] | null>(null);
   const [streamToken, setStreamToken] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSignout = async () => {
+  const handleSignout = useCallback(async () => {
     try {
       const response = await axios.get(
         "http://localhost:5000/api/auth/logout",
@@ -82,9 +91,7 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
       if (response.status === 200) {
         console.log("Successfully logged out from backend");
 
-        // Supprimer le cookie côté client
         removeCookie("bearerToken", { path: "/" });
-
         const checkCookie = cookies.bearerToken;
         if (!checkCookie) {
           console.log("Cookie bearerToken supprimé avec succès");
@@ -92,7 +99,6 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
           console.log("Échec de la suppression du cookie bearerToken");
         }
 
-        // Réinitialiser l'état
         setIsSignedIn(false);
         setUser(null);
         setStreamToken(null);
@@ -102,9 +108,9 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
     } catch (error) {
       console.error("Erreur lors de l'appel à l'API de déconnexion :", error);
     }
-  };
+  }, [removeCookie, cookies.bearerToken]);
 
-  const getLoggedInUser = async () => {
+  const getLoggedInUser = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(
@@ -113,15 +119,13 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
           withCredentials: true,
         }
       );
-      console.log("User Data", response.data.user);
+
       if (response.data.user) {
         setIsSignedIn(true);
         setUser(response.data.user);
         setStreamToken(response.data.streamToken);
       } else {
-        setIsSignedIn(false);
-        setUser(null);
-        setStreamToken(null);
+        handleSignout();
       }
     } catch (e) {
       console.log("Error fetching logged in user:", e);
@@ -130,45 +134,61 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [handleSignout]);
 
   useEffect(() => {
     getLoggedInUser();
-  }, []);
+  }, [getLoggedInUser, location]);
 
-  const updateUser = async (data: FormData) => {
-    try {
-      setLoading(true);
-      console.log(data);
-      const res = await axios.put(
-        `http://localhost:5000/api/users/editUserProfile/${user?.id || ""}`,
-        data,
-        {
-          withCredentials: true,
-        }
-      );
-      setUser(res.data);
-    } catch (e) {
-      console.log(e);
-      alert("Something went wrong !! ");
-    } finally {
-      setLoading(false);
-    }
-  };
-  const contextValue: IAuthContext = {
-    isSignedIn,
-    user,
-    tutors,
-    loading,
-    streamToken,
-    handleSignout,
-    setLoading,
-    getLoggedInUser,
-    updateUser,
-    setUser,
-    setIsSignedIn,
-    setStreamToken,
-  };
+  const updateUser = useCallback(
+    async (data: FormData) => {
+      try {
+        setLoading(true);
+        console.log(data);
+        const res = await axios.put(
+          `http://localhost:5000/api/users/editUserProfile/${user?.id || ""}`,
+          data,
+          {
+            withCredentials: true,
+          }
+        );
+        setUser(res.data);
+      } catch (e) {
+        console.log(e);
+        alert("Something went wrong !! ");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user?.id]
+  );
+
+  const contextValue: IAuthContext = useMemo(
+    () => ({
+      isSignedIn,
+      user,
+      tutors,
+      loading,
+      streamToken,
+      handleSignout,
+      setLoading,
+      getLoggedInUser,
+      updateUser,
+      setUser,
+      setIsSignedIn,
+      setStreamToken,
+    }),
+    [
+      isSignedIn,
+      user,
+      tutors,
+      loading,
+      streamToken,
+      handleSignout,
+      getLoggedInUser,
+      updateUser,
+    ]
+  );
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
