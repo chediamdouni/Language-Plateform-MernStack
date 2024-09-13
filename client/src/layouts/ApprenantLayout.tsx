@@ -23,6 +23,7 @@ import RequestsList from "../components/RequestsList";
 import { Popover, Transition } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import ApprenantChatbot from "../components/ApprenantChatbot";
+import ChatbotComponent from "@/componentsChatBotComponent";
 
 // profile menu component
 const profileMenuItems = [
@@ -393,7 +394,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                 />
               </svg>
             </button>
-            <ApprenantChatbot />
+            <ChatbotComponent />
           </motion.div>
         )}
       </AnimatePresence>

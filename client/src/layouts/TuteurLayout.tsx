@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import logo from "../assets/images/logo.png";
-import { useNavigate } from "react-router";
 import { useCookies } from "react-cookie";
 import {
   Avatar,
@@ -18,7 +17,7 @@ import {
   PowerIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "src/Context/AuthContext";
 
 interface Props {

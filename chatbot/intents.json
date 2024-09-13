@@ -1,0 +1,143 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Bonjour",
+        "Salut",
+        "Bonjour à tous",
+        "Bon matin",
+        "Bon après-midi",
+        "Bonsoir",
+        "Comment ça va ?",
+        "Y a-t-il quelqu'un ?",
+        "Salut, peux-tu m'aider ?"
+      ],
+      "responses": [
+        "Bonjour ! Comment puis-je vous aider dans votre apprentissage des langues ?",
+        "Salut ! En quoi puis-je vous aider aujourd'hui ?",
+        "Bienvenue ! Comment puis-je soutenir vos études de langues ?",
+        "Salutations ! Que souhaitez-vous savoir sur nos cours de langues ?"
+      ]
+    },
+    {
+      "tag": "course_inquiry",
+      "patterns": [
+        "Quels cours proposez-vous ?",
+        "Parlez-moi de vos cours de langues",
+        "Quelles langues puis-je apprendre ?",
+        "Avez-vous des cours avancés ?",
+        "Y a-t-il des cours adaptés aux débutants ?",
+        "Quelle est la durée des cours ?",
+        "Que comprend un cours ?"
+      ],
+      "responses": [
+        "Nous proposons une large gamme de cours de langues, allant du niveau débutant au niveau avancé. Nos langues les plus populaires incluent l'espagnol, le français, l'allemand et le mandarin. Chaque cours dure généralement 12 semaines et comprend des sessions en direct, des exercices interactifs et des aperçus culturels.",
+        "Nos cours de langues s'adaptent à tous les niveaux. Que vous soyez débutant ou que vous cherchiez à perfectionner vos compétences, nous avons quelque chose pour vous. Les cours durent généralement 3 mois et couvrent les compétences en expression orale, écoute, lecture et écriture.",
+        "Nous proposons des cours dans plus de 20 langues. Vous pouvez choisir entre des programmes intensifs courts ou des cours plus longs et complets. Tous nos cours comprennent des sessions en direct avec un instructeur, des modules auto-rythmés et des pratiques avec des locuteurs natifs."
+      ]
+    },
+    {
+      "tag": "tutor_request",
+      "patterns": [
+        "J'ai besoin d'un tuteur",
+        "Pouvez-vous recommander un tuteur ?",
+        "Comment trouver un bon tuteur de langue ?",
+        "Vos tuteurs sont-ils des locuteurs natifs ?",
+        "Quels sont les qualifications des tuteurs ?",
+        "Puis-je choisir mon propre tuteur ?",
+        "Comment réserver une session avec un tuteur ?"
+      ],
+      "responses": [
+        "Nous avons un réseau de tuteurs qualifiés pour toutes les langues que nous proposons. Beaucoup sont des locuteurs natifs, et tous possèdent des certifications d'enseignement. Vous pouvez consulter les profils des tuteurs sur notre site web et choisir en fonction de leur expertise et disponibilité.",
+        "Pour trouver un tuteur, rendez-vous dans la section 'Tuteurs' de notre site web. Vous pouvez filtrer par langue, disponibilité et spécialisation. Tous nos tuteurs passent par un processus de sélection rigoureux pour garantir une instruction de qualité.",
+        "Réserver un tuteur est facile ! Parcourez nos profils de tuteurs, sélectionnez celui que vous préférez et utilisez notre système de planification en ligne pour réserver une session. Vous pouvez choisir entre des sessions individuelles ou en petits groupes."
+      ]
+    },
+    {
+      "tag": "subscription_info",
+      "patterns": [
+        "Quels sont vos plans d'abonnement ?",
+        "Combien ça coûte ?",
+        "Offrez-vous un essai gratuit ?",
+        "Puis-je annuler mon abonnement à tout moment ?",
+        "Que comprend le plan premium ?",
+        "Y a-t-il des réductions pour les abonnements à long terme ?",
+        "Comment puis-je upgrader mon plan ?"
+      ],
+      "responses": [
+        "Nous proposons divers plans d'abonnement pour répondre à différents besoins et budgets. Notre plan de base commence à 29 $/mois et donne accès à un cours de langue. Le plan premium à 49 $/mois vous donne accès à toutes les langues et à des fonctionnalités supplémentaires comme des plans d'étude personnalisés.",
+        "Oui, nous offrons un essai gratuit de 7 jours pour les nouveaux utilisateurs. Vous pouvez explorer notre plateforme et essayer différents cours avant de vous engager. Les abonnements peuvent être annulés à tout moment, et nous offrons des réductions pour les engagements trimestriels et annuels.",
+        "Pour upgrader votre plan, connectez-vous à votre compte et allez dans la section 'Abonnement'. Là, vous pouvez comparer les différents plans et choisir celui qui convient le mieux à vos objectifs d'apprentissage. Si vous avez besoin d'aide, notre équipe de support client est toujours prête à vous aider."
+      ]
+    },
+    {
+      "tag": "lesson_scheduling",
+      "patterns": [
+        "Comment programmer une leçon ?",
+        "Puis-je reprogrammer ma classe ?",
+        "Quelle est votre politique d'annulation ?",
+        "Les leçons sont-elles flexibles ?",
+        "Proposez-vous des cours le week-end ?",
+        "À quelle fréquence ont lieu les leçons ?",
+        "Que faire si je rate une leçon ?"
+      ],
+      "responses": [
+        "Programmer une leçon est simple. Connectez-vous à votre compte, allez dans la section 'Programme', et choisissez votre créneau horaire préféré. Vous pouvez reprogrammer ou annuler une leçon jusqu'à 24 heures avant l'heure prévue sans pénalité.",
+        "Nous offrons une planification flexible pour s'adapter aux différents fuseaux horaires et engagements personnels. Les leçons ont généralement lieu chaque semaine, mais vous pouvez ajuster la fréquence en fonction de votre rythme d'apprentissage. Nous proposons également des cours le week-end pour ceux qui ont un emploi du temps chargé en semaine.",
+        "Si vous manquez une leçon, vous pouvez accéder à la version enregistrée plus tard. Cependant, nous encourageons la participation aux sessions en direct pour un apprentissage interactif. Vous pouvez également utiliser les leçons non utilisées pendant votre période d'abonnement."
+      ]
+    },
+    {
+      "tag": "technical_support",
+      "patterns": [
+        "J'ai des problèmes pour me connecter",
+        "La vidéo ne fonctionne pas",
+        "Comment réinitialiser mon mot de passe ?",
+        "Y a-t-il une application mobile ?",
+        "Mon audio ne fonctionne pas pendant les leçons",
+        "Puis-je utiliser la plateforme sur plusieurs appareils ?",
+        "Comment mettre à jour mes informations de paiement ?"
+      ],
+      "responses": [
+        "Pour les problèmes de connexion, essayez de vider le cache de votre navigateur ou de réinitialiser votre mot de passe via le lien 'Mot de passe oublié'. Si les problèmes persistent, contactez notre équipe de support à support@languageplatform.com.",
+        "Nous avons une application mobile disponible pour les appareils iOS et Android. Vous pouvez la télécharger depuis l'App Store ou le Google Play Store. La plateforme peut être accédée depuis plusieurs appareils avec le même compte.",
+        "Pour les problèmes audio/vidéo pendant les leçons, vérifiez votre connexion internet et assurez-vous que votre navigateur est à jour. Vous trouverez des étapes de dépannage détaillées dans notre Centre d'Aide ou contactez notre équipe de support technique pour assistance."
+      ]
+    },
+    {
+      "tag": "progress_tracking",
+      "patterns": [
+        "Comment puis-je suivre mes progrès ?",
+        "Y a-t-il des tests ou des évaluations ?",
+        "Fournissez-vous des certificats ?",
+        "Comment savoir si je progresse ?",
+        "Puis-je voir mon historique des leçons ?",
+        "Y a-t-il un moyen de mesurer mon niveau de langue ?",
+        "Proposez-vous des tests de compétence en langue officiels ?"
+      ],
+      "responses": [
+        "Vous pouvez suivre vos progrès via votre tableau de bord personnel, qui montre les leçons complètes, les scores de quiz et les améliorations globales de la compétence en langue. Nous offrons également des évaluations régulières pour mesurer vos progrès.",
+        "Nous fournissons des certificats de réussite pour chaque niveau de cours. De plus, vous pouvez passer des tests de compétence en langue standardisés via notre plateforme, qui sont reconnus internationalement.",
+        "Votre historique des leçons, y compris les notes et les domaines à améliorer, est disponible dans votre compte. Notre système d'apprentissage adaptatif fournit également des informations personnalisées sur vos forces et vos domaines nécessitant plus de pratique."
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Merci, au revoir",
+        "C'est tout ce dont j'avais besoin",
+        "Bye",
+        "À plus tard",
+        "Merci pour votre aide",
+        "Je suis terminé pour l'instant"
+      ],
+      "responses": [
+        "De rien ! Si vous avez d'autres questions, n'hésitez pas à demander. Bon apprentissage !",
+        "Content d'avoir pu aider. Profitez de votre apprentissage des langues !",
+        "Merci d'avoir choisi notre plateforme. Passez une bonne journée et bonne chance avec vos études !",
+        "Au revoir ! N'oubliez pas, la pratique régulière est la clé de la maîtrise des langues. À bientôt dans votre prochaine leçon !"
+      ]
+    }
+  ]
+}
