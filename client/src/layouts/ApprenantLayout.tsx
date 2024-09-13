@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import FooterWithLogo from "../components/footer";
 import { useNavigate } from "react-router-dom";
 import {
   Typography,
@@ -23,7 +22,7 @@ import RequestsList from "../components/RequestsList";
 import { Popover, Transition } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import ApprenantChatbot from "../components/ApprenantChatbot";
-import ChatbotComponent from "@/componentsChatBotComponent";
+import ChatbotComponent from "../components/ChatBotComponent";
 
 // profile menu component
 const profileMenuItems = [
