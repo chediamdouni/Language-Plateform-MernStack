@@ -30,8 +30,6 @@
     "lucide-react": "^0.303.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
-    "react-alert": "^7.0.3",
-    "react-alert-template-basic": "^1.0.2",
     "react-big-calendar": "^1.8.2",
     "react-chartjs-2": "^5.2.0",
     "react-chatbot-kit": "^2.2.2",
