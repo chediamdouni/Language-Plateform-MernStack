@@ -13,7 +13,8 @@ import {
 import ApprenantLayout from "src/layouts/ApprenantLayout";
 import { toast } from "react-toastify";
 import { AuthContext } from "src/Context/AuthContext";
-import { CircleProgress } from "react-gradient-progress";
+import "react-circular-progressbar/dist/styles.css";
+import { CircularProgressbar } from "react-circular-progressbar";
 import {
   BookOpenIcon,
   CheckCircleIcon,
@@ -300,12 +301,9 @@ const LessonList: React.FC = () => {
             </Typography>
             <div className="mb-8 bg-white rounded-xl p-6 shadow-sm">
               <div className="relative">
-                <CircleProgress
-                  percentage={progression?.progress || 0}
+                <CircularProgressbar
+                  value={progression?.progress || 0}
                   strokeWidth={8}
-                  primaryColor={["#3B82F6", "#60A5FA"]}
-                  secondaryColor="#E2E8F0"
-                  size={120}
                 />
                 {/*
                 <div className="absolute inset-0 flex items-center justify-center flex-col">
@@ -462,18 +460,26 @@ const LessonList: React.FC = () => {
                   {showResults ? (
                     <div className="text-center">
                       <div className="mb-6">
-                        <CircleProgress
-                          percentage={
+                        <CircularProgressbar
+                          value={(score / selectedQuiz.questions.length) * 100}
+                          text={`${
                             (score / selectedQuiz.questions.length) * 100
-                          }
+                          }%`}
+                          background
+                          backgroundPadding={6}
                           strokeWidth={8}
-                          primaryColor={
-                            score >= selectedQuiz.questions.length / 2
-                              ? ["#10B981", "#34D399"]
-                              : ["#EF4444", "#F87171"]
-                          }
-                          secondaryColor="#E2E8F0"
-                          size={150}
+                          styles={{
+                            background: {
+                              fill: "#3e98c7",
+                            },
+                            text: {
+                              fill: "#fff",
+                            },
+                            path: {
+                              stroke: "#fff",
+                            },
+                            trail: { stroke: "transparent" },
+                          }}
                         />
                       </div>
                       <Typography variant="h5" className="mb-4 text-gray-800">
