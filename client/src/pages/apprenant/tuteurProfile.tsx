@@ -11,7 +11,6 @@ import { IoClose } from "react-icons/io5";
 import { StreamChat, Channel as StreamChannel } from "stream-chat";
 import { Box, Modal } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
-import { useAlert } from "react-alert";
 import { useNavigate, useParams } from "react-router-dom";
 import ApprenantLayout from "src/layouts/ApprenantLayout";
 import { AuthContext } from "src/Context/AuthContext";
@@ -115,7 +114,6 @@ const TuteurProfile = () => {
   const [tutor, setTutor] = useState<Tutor | null>(null);
   const [open, setOpen] = React.useState(false);
   // const [client, setClient] = useState<StreamVideoClient>();
-  const alert = useAlert();
   const [values, setValues] = useState(initialValues);
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -189,7 +187,7 @@ const TuteurProfile = () => {
 
   const handleReserve = async () => {
     if (!values.dateTime || !user) {
-      alert.show("Please select a date");
+      toast.error("Please select a date");
       return;
     }
 
@@ -206,9 +204,9 @@ const TuteurProfile = () => {
       );
 
       if (response.status === 201) {
-        alert.show("Reservation successful");
+        toast.success("Reservation successful");
       } else {
-        alert.show("Failed to make a reservation");
+        toast.error("Failed to make a reservation");
       }
     } catch (error) {
       console.error("Error making reservation:", error);
