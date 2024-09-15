@@ -88,7 +88,7 @@ const LessonList: React.FC = () => {
   const [showResults, setShowResults] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
   const [course, setCourse] = useState<Course | null>(null);
-
+  const percentage = 66;
   const handleOpen = (value: any) => {
     setOpen(open === value ? 0 : value);
   };
@@ -459,27 +459,12 @@ const LessonList: React.FC = () => {
 
                   {showResults ? (
                     <div className="text-center">
-                      <div className="mb-6">
+                      <div className="mb-6 text-black">
                         <CircularProgressbar
-                          value={(score / selectedQuiz.questions.length) * 100}
+                          value={(score / selectedQuiz.questions.length) * 100} // Changed 'percentage' to 'value'
                           text={`${
                             (score / selectedQuiz.questions.length) * 100
                           }%`}
-                          background
-                          backgroundPadding={6}
-                          strokeWidth={8}
-                          styles={{
-                            background: {
-                              fill: "#3e98c7",
-                            },
-                            text: {
-                              fill: "#fff",
-                            },
-                            path: {
-                              stroke: "#fff",
-                            },
-                            trail: { stroke: "transparent" },
-                          }}
                         />
                       </div>
                       <Typography variant="h5" className="mb-4 text-gray-800">

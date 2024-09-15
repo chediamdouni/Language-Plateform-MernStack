@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@alptugidin/react-circular-progress-bar": "^1.1.4",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@headlessui/react": "^1.7.19",
@@ -76,7 +77,6 @@
     ]
   },
   "devDependencies": {
-    "@types/react-alert": "^7.0.6",
     "react-scrolling-nav": "^1.1.5",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
