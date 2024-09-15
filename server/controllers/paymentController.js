@@ -1,6 +1,6 @@
 const User = require("../models/User.js");
 const { sendSubscriptionConfirmationEmail } = require("../utils/SendEmail.js");
-const stripe = require("../utils/Stripe.js");
+const stripe = require("../utils/stripe.js");
 
 const createPaymentIntent = async (req, res) => {
   try {
