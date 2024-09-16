@@ -143,9 +143,7 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
         setLoading(true);
         console.log(data);
         const res = await axios.put(
-          `${process.env.REACT_APP_API_URL}/users/editUserProfile/${
-            user?.id || ""
-          }`,
+          `${apiUrl}/users/editUserProfile/${user?.id || ""}`,
           data,
           {
             withCredentials: true,
