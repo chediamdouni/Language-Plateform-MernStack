@@ -40,14 +40,16 @@ const corsOptions = {
   credentials: true,
   optionSuccessStatus: 200,
 };
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", 
+      httpOnly: true, 
+      sameSite: "None",
     },
   })
 );

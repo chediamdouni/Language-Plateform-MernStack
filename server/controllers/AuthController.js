@@ -172,7 +172,7 @@ const login = async (req, res, next) => {
       withCredentials: true,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: "None",
     });
     response.message = "Login successful";
     res.status(200).send(response);

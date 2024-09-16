@@ -62,7 +62,7 @@ router.get(
         withCredentials: true,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        sameSite: "None",
       });
 
       console.log("Cookie set, redirecting to frontend");
