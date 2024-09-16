@@ -169,7 +169,7 @@ const login = async (req, res, next) => {
     const response = await getSuccessResponse(user);
     const token = response.bearerToken;
     res.cookie("bearerToken", token, {
-      withCredentials: true,
+      
       httpOnly: true,
       secure: true,
       sameSite: "none",
