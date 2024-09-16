@@ -5,15 +5,6 @@ const { getStreamToken, syncUser } = require("../utils/stream");
 const { sendVerificationEmail } = require("../utils/SendEmail");
 const jwt = require("jsonwebtoken");
 
-/*const getSuccessResponse = async (user) => ({
-  user: {
-    id: user._id,
-    email: user.email,
-    username: user.username,
-  },
-  bearerToken: await createSecretToken(user),
-  streamToken: getStreamToken(user),
-});*/
 const getSuccessResponse = async (user) => {
   // Convertir le document Mongoose en objet JavaScript simple
   const userObject = user.toObject();
@@ -179,7 +170,9 @@ const login = async (req, res, next) => {
     const token = response.bearerToken;
     res.cookie("bearerToken", token, {
       withCredentials: true,
-      // httpOnly: true,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
     });
     response.message = "Login successful";
     res.status(200).send(response);
@@ -187,11 +180,17 @@ const login = async (req, res, next) => {
     console.error(error);
   }
 };
-
 // USER LOGGED IN ///
 const getLoggedInUser = async (req, res, next) => {
   try {
-    const userId = getUserIdFromJWT(req.cookies.bearerToken); // Extract user ID from token
+    const token = req.cookies.bearerToken;
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized, no token provided" });
+    }
+
+    const userId = getUserIdFromJWT(token);
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized, invalid token" });
     }

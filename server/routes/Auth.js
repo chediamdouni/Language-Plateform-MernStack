@@ -59,13 +59,16 @@ router.get(
       console.log("Token created:", token);
 
       res.cookie("bearerToken", token, {
+        withCredentials: true,
         httpOnly: true,
-        secure: "production",
-        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
       });
 
       console.log("Cookie set, redirecting to frontend");
-      res.redirect("http://localhost:3000/auth/google/callback");
+      res.redirect(
+        "https://language-plateform-mern-stack.vercel.app/auth/google/callback"
+      );
     } catch (error) {
       console.error("Error creating token:", error);
       res.redirect("/");
