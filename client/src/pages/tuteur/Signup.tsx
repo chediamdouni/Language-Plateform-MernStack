@@ -94,7 +94,7 @@ const SignupTuteur: React.FC = () => {
               <div className="relative">
                 <Input
                   size="lg"
-                  label="Nom d'utilisateur"
+                  label=""
                   {...register("username", {
                     required: "Ce champ est obligatoire",
                   })}
@@ -115,7 +115,7 @@ const SignupTuteur: React.FC = () => {
                 <Input
                   size="lg"
                   type="email"
-                  label="Email"
+                  label=""
                   {...register("email", {
                     required: "Ce champ est obligatoire",
                     pattern: {
@@ -140,7 +140,7 @@ const SignupTuteur: React.FC = () => {
                 <Input
                   size="lg"
                   type="password"
-                  label="Mot de passe"
+                  label=""
                   {...register("password", {
                     required: "Ce champ est obligatoire",
                     minLength: {

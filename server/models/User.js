@@ -77,19 +77,15 @@ const userSchema = new mongoose.Schema(
       type: {
         type: String,
         enum: ["30min", "1hour", "1.5hours", "2hours"],
-        required: true,
       },
       startDate: {
         type: Date,
-        required: true,
       },
       endDate: {
         type: Date,
-        required: true,
       },
       weeklyAllowance: {
         type: Number,
-        required: true,
       },
       usedTime: {
         type: Number,
