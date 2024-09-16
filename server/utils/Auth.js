@@ -6,7 +6,6 @@ const userVerification = async (req, res, next) => {
   const token = req.cookies.bearerToken;
 
   if (!token) {
-    console.error("Token not found in cookies");
     return res.status(401).json({ message: "Unauthorized, no token provided" });
   }
 
