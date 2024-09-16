@@ -171,8 +171,8 @@ const login = async (req, res, next) => {
     res.cookie("bearerToken", token, {
       withCredentials: true,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
     });
     response.message = "Login successful";
     res.status(200).send(response);
