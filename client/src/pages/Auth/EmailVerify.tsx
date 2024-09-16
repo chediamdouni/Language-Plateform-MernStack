@@ -16,7 +16,7 @@ const VerifyEmail: React.FC = () => {
 
     if (token) {
       axios
-        .get(`http://localhost:5000/api/auth/verify-email?token=${token}`)
+        .get(`${process.env.REACT_APP_API_URL}/auth/verify-email?token=${token}`)
         .then(async (response) => {
           if (response.data.success) {
             setIsVerified(true);

@@ -82,7 +82,7 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
   const handleSignout = useCallback(async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/logout",
+        `${process.env.REACT_APP_API_URL}/auth/logout`,
         {
           withCredentials: true,
         }
@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:5000/api/auth/loggedInUser",
+        `${process.env.REACT_APP_API_URL}/auth/loggedInUser`,
         {
           withCredentials: true,
         }
@@ -146,7 +146,9 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
         setLoading(true);
         console.log(data);
         const res = await axios.put(
-          `http://localhost:5000/api/users/editUserProfile/${user?.id || ""}`,
+          `${process.env.REACT_APP_API_URL}/users/editUserProfile/${
+            user?.id || ""
+          }`,
           data,
           {
             withCredentials: true,

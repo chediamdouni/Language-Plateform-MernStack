@@ -45,7 +45,7 @@ const Signup: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:5000/api/auth/signup/apprenant",
+        `${process.env.REACT_APP_API_URL}/auth/signup/apprenant`,
         {
           ...data,
         },

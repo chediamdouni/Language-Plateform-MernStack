@@ -50,7 +50,7 @@ export const LoginApprenant = () => {
       setLoading(true);
       // validation des donnees
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login/apprenant",
+        `${process.env.REACT_APP_API_URL}/auth/login/apprenant`,
         {
           ...inputValue,
         },
@@ -198,7 +198,7 @@ export const LoginTuteur = () => {
       setLoading(true);
       // validation des donnees
       const response = await axios.post(
-        "https://language-plateform-mernstack.onrender.com/api/auth/login/tuteur",
+        `${process.env.REACT_APP_API_URL}/auth/login/tuteur`,
         {
           ...inputValue,
         },
