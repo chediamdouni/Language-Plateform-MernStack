@@ -115,10 +115,12 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
       const response = await axios.get(`${apiUrl}/auth/loggedInUser`, {
         withCredentials: true,
       });
+      console.log("Response from loggedInUser API:", response.data);
 
       if (response.data.user) {
         console.log("User data:", response.data.user);
         setIsSignedIn(true);
+        console.log("Is signed in after setting:", isSignedIn);
         setUser(response.data.user);
         setStreamToken(response.data.streamToken);
       } else {
@@ -132,6 +134,10 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
       setLoading(false);
     }
   }, [handleSignout]);
+
+  useEffect(() => {
+    console.log("Is signed in updated:", isSignedIn);
+  }, [isSignedIn]);
 
   useEffect(() => {
     getLoggedInUser();

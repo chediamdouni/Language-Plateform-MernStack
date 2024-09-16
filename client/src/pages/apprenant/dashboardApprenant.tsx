@@ -38,7 +38,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 
 const DashboardApprenant: React.FC = () => {
   const navigate = useNavigate();
-  const { user, isSignedIn, streamToken } = useContext(AuthContext);
+  const { user, isSignedIn, streamToken, loading } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Tutor[]>([]);
   const [showChat, setShowChat] = useState(false);
@@ -51,10 +51,11 @@ const DashboardApprenant: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (!isSignedIn) {
+    if (!isSignedIn && !loading) {
+      // Vérifiez que le chargement est terminé
       navigate("/apprenant/connexion");
     }
-  }, [isSignedIn, navigate]);
+  }, [isSignedIn, loading, navigate]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
