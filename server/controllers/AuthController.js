@@ -169,17 +169,17 @@ const login = async (req, res, next) => {
     const response = await getSuccessResponse(user);
     const token = response.bearerToken;
     res.cookie("bearerToken", token, {
-      
+      withCredentials: true,
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000,
     });
     response.message = "Login successful";
     res.status(200).send(response);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" }); // Handle errors
+
   }
 };
 // USER LOGGED IN ///
