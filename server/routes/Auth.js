@@ -61,8 +61,8 @@ router.get(
       res.cookie("bearerToken", token, {
         withCredentials: true,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
+        secure: true,
+        sameSite: "none",
       });
 
       console.log("Cookie set, redirecting to frontend");
