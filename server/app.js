@@ -41,7 +41,6 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 
-
 app.use(cors(corsOptions));
 app.use(
   session({
@@ -51,7 +50,6 @@ app.use(
     cookie: {
       secure: true,
       httpOnly: true,
-      
     },
   })
 );
@@ -78,7 +76,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  // res.render("error");
 });
 
 const server = http.Server(app);

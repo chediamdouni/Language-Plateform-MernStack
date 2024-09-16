@@ -170,8 +170,8 @@ const login = async (req, res, next) => {
     const token = response.bearerToken;
     res.cookie("bearerToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", 
-      sameSite: "lax", 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
     response.message = "Login successful";
@@ -185,6 +185,7 @@ const login = async (req, res, next) => {
 const getLoggedInUser = async (req, res, next) => {
   try {
     const token = req.cookies.bearerToken;
+    console.log("Token:", token);
     if (!token) {
       return res
         .status(401)
@@ -192,11 +193,13 @@ const getLoggedInUser = async (req, res, next) => {
     }
 
     const userId = getUserIdFromJWT(token);
+    console.log("User ID from token:", userId);
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized, invalid token" });
     }
 
     const user = await User.findById(userId);
+    console.log("User found:", user);
     if (!user) {
       return res.status(400).json({ message: "No User Found" });
     }
