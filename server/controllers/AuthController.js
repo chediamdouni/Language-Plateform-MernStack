@@ -170,8 +170,8 @@ const login = async (req, res, next) => {
     const token = response.bearerToken;
     res.cookie("bearerToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // true in production
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Use "none" only in production
+      secure: process.env.NODE_ENV === "production", 
+      sameSite: "lax", 
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
     response.message = "Login successful";
