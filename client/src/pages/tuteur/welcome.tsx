@@ -22,6 +22,8 @@ import { CiEdit } from "react-icons/ci";
 import AllUpcomingCall from "../../components/AllUpcomingCall";
 import TuteurRequest from "../../components/TuteurRequest";
 import { motion, useScroll, useSpring } from "framer-motion";
+
+const apiUrl = process.env.REACT_APP_API_URL;
 interface AvailabilitySlot {
   day: string;
   startTime: string;
@@ -222,7 +224,7 @@ const WelcomeComponent = () => {
         setLoading(true);
         console.log("Sending request to server with data:", UpcomingCalls);
         const response = await axios.post(
-          "http://localhost:5000/api/meet/upcoming",
+          `${apiUrl}/meet/upcoming`,
           UpcomingCalls
         );
 

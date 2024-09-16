@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "src/Context/AuthContext";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const Checkout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Checkout: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await axios.post(
-          "http://localhost:5000/api/payment/create-checkout-session",
+          `${apiUrl}/payment/create-checkout-session`,
           {
             planType,
             selectedPlan,

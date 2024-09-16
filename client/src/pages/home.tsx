@@ -47,6 +47,7 @@ const data = [
     budget: "USD 5$",
   },
 ];
+const apiUrl = process.env.REACT_APP_API_URL;
 interface Tutor {
   _id: string;
   username: string;
@@ -66,7 +67,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/tuteur/");
+        const response = await axios.get(`${apiUrl}/tuteur/`);
         console.log(response);
         setTutors(response.data.tuteurs);
       } catch (err) {

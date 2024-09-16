@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@material-tailwind/react";
 import { AuthContext } from "src/Context/AuthContext";
 import { toast } from "react-toastify";
+const apiUrl = process.env.REACT_APP_API_URL;
 interface Course {
   _id: string;
   titre: string;
@@ -95,7 +96,7 @@ const DisplayTutorCourse = () => {
         console.log("Cour  n'est pas defini ");
       }
       const response = await axios.post(
-        "http://localhost:5000/api/users/favorite/courses/add",
+       `${apiUrl}/users/favorite/courses/add`,
         { courseId: id, userId: user?.id }
       );
       console.log("Message de succès:", response.data.message);

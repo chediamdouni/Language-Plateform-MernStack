@@ -11,6 +11,8 @@ import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const apiKey = "mmhfdzb5evj2";
+const apiUrl = process.env.REACT_APP_API_URL;
+
 // const client = StreamChat.getInstance(apiKey);
 export interface User {
   id: string;
@@ -81,12 +83,9 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
 
   const handleSignout = useCallback(async () => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/auth/logout`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${apiUrl}/auth/logout`, {
+        withCredentials: true,
+      });
 
       if (response.status === 200) {
         console.log("Successfully logged out from backend");
@@ -113,14 +112,12 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
   const getLoggedInUser = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/auth/loggedInUser`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${apiUrl}/auth/loggedInUser`, {
+        withCredentials: true,
+      });
 
       if (response.data.user) {
+        console.log("User data:", response.data.user);
         setIsSignedIn(true);
         setUser(response.data.user);
         setStreamToken(response.data.streamToken);

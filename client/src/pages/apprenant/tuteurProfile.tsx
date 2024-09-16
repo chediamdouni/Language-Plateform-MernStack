@@ -28,6 +28,7 @@ import {
 } from "stream-chat-react";
 import { FaDollarSign } from "react-icons/fa6";
 import { toast } from "react-toastify";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface AvailabilitySlot {
   day: string;
@@ -192,16 +193,13 @@ const TuteurProfile = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/request/add",
-        {
-          user_id: user?.id,
-          user_name: user?.username,
-          tutor_id: tutor?._id,
-          tutor_name: tutor?.username,
-          meeting_time: values.dateTime,
-        }
-      );
+      const response = await axios.post(`${apiUrl}/request/add`, {
+        user_id: user?.id,
+        user_name: user?.username,
+        tutor_id: tutor?._id,
+        tutor_name: tutor?.username,
+        meeting_time: values.dateTime,
+      });
 
       if (response.status === 201) {
         toast.success("Reservation successful");
@@ -384,10 +382,10 @@ const TuteurProfile = () => {
       if (!tutorId) {
         console.log("tuteur  n'est pas defini ");
       }
-      const response = await axios.post(
-        "http://localhost:5000/api/users/favorite/tutors/add",
-        { tutorId: id, userId: user?.id }
-      );
+      const response = await axios.post(`${apiUrl}/users/favorite/tutors/add`, {
+        tutorId: id,
+        userId: user?.id,
+      });
       console.log("Message de succès:", response.data.message);
 
       setMessage(response.data.message);

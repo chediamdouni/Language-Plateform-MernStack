@@ -29,6 +29,10 @@ interface FavoritesData {
   favoriteCourses: Course[];
 }
 
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
+
 const Favorites: React.FC = () => {
   const { user } = useContext(AuthContext);
   const [favorites, setFavorites] = useState<FavoritesData>({
@@ -63,7 +67,7 @@ const Favorites: React.FC = () => {
     try {
       console.log("id tuteur ", tutorId);
       const response = await axios.post(
-        "http://localhost:5000/api/users/favorite/tutors/remove",
+        `${apiUrl}/users/favorite/tutors/remove`,
         { tutorId, userId: user?.id }
       );
       setFavorites((prevFavorites) => ({
@@ -82,7 +86,7 @@ const Favorites: React.FC = () => {
   const removeFavoriteCourse = async (courseId: string) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/users/favorite/courses/remove",
+        `${apiUrl}/users/favorite/courses/remove`,
         { courseId, userId: user?.id }
       );
       setFavorites((prevFavorites) => ({

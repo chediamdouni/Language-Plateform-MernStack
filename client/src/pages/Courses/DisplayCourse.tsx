@@ -7,7 +7,7 @@ import { AuthContext } from "src/Context/AuthContext";
 import { toast } from "react-toastify";
 import { FiClock, FiBook, FiAward, FiHeart } from "react-icons/fi";
 import ApprenantLayout from "src/layouts/ApprenantLayout";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 interface Course {
   _id: string;
   titre: string;
@@ -103,7 +103,7 @@ const DisplayCourse = () => {
         return;
       }
       const response = await axios.post(
-        "http://localhost:5000/api/users/favorite/courses/add",
+        `${apiUrl}/users/favorite/courses/add`,
         { courseId, userId }
       );
       setIsFavorite(true);
@@ -200,7 +200,9 @@ const DisplayCourse = () => {
                   } text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300`}
                   onClick={addToFavorites}
                 >
-                  <FiHeart className={`mr-2 ${isFavorite ? "fill-current" : ""}`} />
+                  <FiHeart
+                    className={`mr-2 ${isFavorite ? "fill-current" : ""}`}
+                  />
                   {isFavorite ? "Dans vos favoris" : "Ajouter aux favoris"}
                 </motion.button>
               </div>
@@ -214,7 +216,9 @@ const DisplayCourse = () => {
               transition={{ delay: 0.4 }}
               className="md:w-2/3"
             >
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Contenu du cours</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Contenu du cours
+              </h2>
               <div className="bg-white rounded-2xl shadow-xl p-6">
                 <AnimatePresence>
                   {course.lessons.map((lesson, index) => (
@@ -227,7 +231,9 @@ const DisplayCourse = () => {
                       className="mb-4 last:mb-0 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300"
                     >
                       <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-lg text-gray-800">{lesson.titre}</h3>
+                        <h3 className="font-semibold text-lg text-gray-800">
+                          {lesson.titre}
+                        </h3>
                         <div className="flex items-center text-gray-600">
                           <FiClock className="mr-2" />
                           <span>{lesson.duration} min</span>
@@ -246,7 +252,9 @@ const DisplayCourse = () => {
               transition={{ delay: 0.6 }}
               className="md:w-1/3 mt-8 md:mt-0"
             >
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Cours relatifs</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Cours relatifs
+              </h2>
               <div className="bg-white rounded-2xl shadow-xl p-6">
                 {courses.map((relatedCourse) => (
                   <motion.a
@@ -255,8 +263,12 @@ const DisplayCourse = () => {
                     className="block mb-4 last:mb-0 hover:bg-indigo-50 rounded-lg p-3 transition duration-300"
                     whileHover={{ scale: 1.03 }}
                   >
-                    <h3 className="font-semibold text-indigo-600">{relatedCourse.titre}</h3>
-                    <p className="text-sm text-gray-600">{relatedCourse.tuteur?.username}</p>
+                    <h3 className="font-semibold text-indigo-600">
+                      {relatedCourse.titre}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {relatedCourse.tuteur?.username}
+                    </p>
                   </motion.a>
                 ))}
               </div>

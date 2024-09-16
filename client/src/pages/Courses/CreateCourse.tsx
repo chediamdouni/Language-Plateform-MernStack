@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useDropzone } from "react-dropzone";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const CreateCourse: React.FC = () => {
   const [titre, setTitre] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -31,15 +33,11 @@ const CreateCourse: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/courses/add",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/courses/add`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       navigate(`/courses/${response.data.course._id}`);
     } catch (error) {
       console.error("Erreur lors de la création du cours", error);
@@ -49,7 +47,7 @@ const CreateCourse: React.FC = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleDrop,
   });
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

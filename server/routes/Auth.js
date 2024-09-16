@@ -44,7 +44,8 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "http://localhost:3000/apprenant/connexion",
+    failureRedirect:
+      "https://language-plateform-mern-stack.vercel.app/apprenant/connexion",
   }),
   async (req, res) => {
     console.log("Google callback triggered");

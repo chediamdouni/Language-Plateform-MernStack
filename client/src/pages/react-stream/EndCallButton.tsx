@@ -8,7 +8,7 @@ import {
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 function EndCallButton() {
   const call = useCall();
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ function EndCallButton() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/meet/updateMeeting",
+        `${apiUrl}/meet/updateMeeting`,
         userData
       );
 

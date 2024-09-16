@@ -1,4 +1,4 @@
-const { createSecretToken } = require("../utils/SecretToken");
+const { createSecretToken, getUserIdFromJWT } = require("../utils/SecretToken");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { getStreamToken, syncUser } = require("../utils/stream");
@@ -191,8 +191,12 @@ const login = async (req, res, next) => {
 // USER LOGGED IN ///
 const getLoggedInUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user?.id);
+    const userId = getUserIdFromJWT(req.cookies.bearerToken); // Extract user ID from token
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized, invalid token" });
+    }
 
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(400).json({ message: "No User Found" });
     }

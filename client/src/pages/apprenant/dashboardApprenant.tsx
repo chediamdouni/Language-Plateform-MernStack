@@ -34,6 +34,8 @@ interface Tutor {
   certificate: string;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const DashboardApprenant: React.FC = () => {
   const navigate = useNavigate();
   const { user, isSignedIn, streamToken } = useContext(AuthContext);
@@ -88,7 +90,7 @@ const DashboardApprenant: React.FC = () => {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/tuteur/");
+        const response = await axios.get(`${apiUrl}/tuteur/`);
         console.log(response);
         setTutors(response.data.tuteurs);
         setSearchResults(response.data.tuteurs);

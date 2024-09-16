@@ -17,7 +17,6 @@ import TuteurProfile from "./pages/apprenant/tuteurProfile";
 import WelcomeComponent from "./pages/tuteur/welcome";
 import NotFound from "./pages/NotFound";
 import TuteurSettingsAccount from "./pages/tuteur/Account";
-import TestingRoom from "./pages/react-stream/TestingRoom";
 import Meeting from "./pages/react-stream/Meet";
 import StreamVideoProvider from "./providers/StreamClientProvider";
 import "react-toastify/dist/ReactToastify.css";
@@ -84,15 +83,6 @@ const App = () => {
             </StreamVideoProvider>
           }
         />
-        {/* <Route path="/create-meeting" element={<CreateMeetingComponent />} />
-        <Route
-          path="/video-conference"
-          element={
-            <StreamVideoProvider>
-              <TestingRoom />
-            </StreamVideoProvider>
-          }
-        /> */}
         <Route
           path="/apprenant/tuteur/:id"
           element={

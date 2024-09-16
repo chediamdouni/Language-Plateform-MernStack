@@ -1,9 +1,11 @@
 import React from "react";
 import { FaGoogle } from "react-icons/fa";
 
+const apiUrl = process.env.REACT_APP_API_URL; 
+
 const GoogleAuthButton: React.FC = () => {
   const handleGoogleAuth = () => {
-    window.location.href = "http://localhost:5000/api/auth/google";
+    window.location.href = `${apiUrl}/auth/google`;
   };
 
   return (

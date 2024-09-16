@@ -15,6 +15,8 @@ interface PaymentFormProps {
   };
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const PaymentForm: React.FC<PaymentFormProps> = ({ amount, selectedPlan }) => {
   const stripe = useStripe();
   const { user } = useContext(AuthContext);
@@ -34,7 +36,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ amount, selectedPlan }) => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/payment/create-payment-intent",
+        `${apiUrl}/payment/create-payment-intent`,
         {
           amount,
           currency: "usd",
@@ -55,18 +57,15 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ amount, selectedPlan }) => {
       } else if (paymentIntent.status === "succeeded") {
         console.log("Paiement réussi !");
         toast.success("Paiement réussi !");
-        await axios.post(
-          "http://localhost:5000/api/payment/send-confirmation",
-          {
-            userId: user?.id, // Assuming you have access to the user object
-            planDetails: {
-              name: selectedPlan.name,
-              price: selectedPlan.price,
-              period: selectedPlan.period,
-              duration: selectedPlan.duration, // You might need to add this to your plan object
-            },
-          }
-        );
+        await axios.post(`${apiUrl}/payment/send-confirmation`, {
+          userId: user?.id, 
+          planDetails: {
+            name: selectedPlan.name,
+            price: selectedPlan.price,
+            period: selectedPlan.period,
+            duration: selectedPlan.duration, 
+          },
+        });
         toast.success("Consulter votre courrier pour plus de détails !");
         navigate("/apprenant");
       }

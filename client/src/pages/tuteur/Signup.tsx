@@ -13,14 +13,12 @@ import {
 } from "@material-tailwind/react";
 import { FaUser, FaEnvelope, FaLock, FaUserPlus } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 interface FormData {
   username: string;
   email: string;
   password: string;
 }
-
-
 
 const SignupTuteur: React.FC = () => {
   const navigate = useNavigate();
@@ -40,11 +38,9 @@ const SignupTuteur: React.FC = () => {
     }
     try {
       setLoading(true);
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/signup/tuteur",
-        data,
-        { withCredentials: true }
-      );
+      const response = await axios.post(`${apiUrl}/auth/signup/tuteur`, data, {
+        withCredentials: true,
+      });
       toast.success(response.data.message);
       setTimeout(() => {
         navigate("/tuteur/connexion");

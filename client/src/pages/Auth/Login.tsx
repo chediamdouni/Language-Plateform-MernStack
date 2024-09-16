@@ -14,6 +14,8 @@ export interface IUser {
   password: "";
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 export const LoginApprenant = () => {
   const navigate = useNavigate();
   const { setUser, setIsSignedIn, setLoading, setStreamToken } =
@@ -50,7 +52,7 @@ export const LoginApprenant = () => {
       setLoading(true);
       // validation des donnees
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/login/apprenant`,
+        `${apiUrl}/auth/login/apprenant`,
         {
           ...inputValue,
         },

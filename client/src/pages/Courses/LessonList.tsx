@@ -21,6 +21,9 @@ import {
   PlayCircleIcon,
   XCircleIcon,
 } from "lucide-react";
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
 interface Course {
   _id: string;
   titre: string;
@@ -182,12 +185,9 @@ const LessonList: React.FC = () => {
 
       if (selectedLesson && score >= selectedQuiz.questions.length / 2) {
         try {
-          await axios.post(
-            "http://localhost:5000/api/courses/lesson/completed",
-            {
-              lessonId: selectedLesson._id,
-            }
-          );
+          await axios.post(`${apiUrl}/courses/lesson/completed`, {
+            lessonId: selectedLesson._id,
+          });
           toast.success("Leçon terminée avec succès !");
           updateProgression(selectedLesson._id);
           fetchLessons();
@@ -201,7 +201,7 @@ const LessonList: React.FC = () => {
   const markQuizAsCompleted = async (quizId: string) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/progression/quiz/completed",
+        `${apiUrl}/progression/quiz/completed`,
         {
           quizId: quizId,
           userId: user?.id,

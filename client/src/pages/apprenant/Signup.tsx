@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import logo from "../../assets/images/logo.png";
 import GoogleAuthButton from "../../components/GoogleAuthButton";
 import { FaUserPlus, FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 interface formData {
   username: string;
   email: string;
@@ -34,10 +34,9 @@ const Signup: React.FC = () => {
     });
 
   const onSubmit = async (data: formData) => {
-    const checkbox = document.getElementById("remember") as HTMLInputElement;
-    console.log(checkbox.checked);
-    if (!checkbox.checked) {
-      toast.error("veuillez accepter les termes !", {
+    if (!agreeTerms) {
+      // Check the state instead of the DOM
+      toast.error("Veuillez accepter les termes !", {
         position: "top-center",
       });
       return;
@@ -45,7 +44,7 @@ const Signup: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/signup/apprenant`,
+        `${apiUrl}/auth/signup/apprenant`,
         {
           ...data,
         },

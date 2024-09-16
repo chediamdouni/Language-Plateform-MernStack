@@ -56,6 +56,8 @@ const recommendedCourses = [
   },
 ];
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ProfileApprenant = () => {
   const { user, isSignedIn, loading } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -77,7 +79,7 @@ const ProfileApprenant = () => {
   const handleResendVerification = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/resend-verification-email",
+        `${apiUrl}/auth/resend-verification-email`,
         { email: user?.email },
         { withCredentials: true }
       );
