@@ -171,7 +171,7 @@ const login = async (req, res, next) => {
     res.cookie("bearerToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
     response.message = "Login successful";
@@ -212,10 +212,12 @@ const getLoggedInUser = async (req, res, next) => {
   }
 };
 const logout = async (req, res) => {
-  return res
-    .clearCookie("bearerToken")
-    .status(200)
-    .json({ message: "Successfully logged out 😏 🍀" });
+  res.clearCookie("bearerToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+  });
+  res.sendStatus(200);
 };
 
 module.exports = {

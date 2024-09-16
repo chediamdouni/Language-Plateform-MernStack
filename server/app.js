@@ -33,10 +33,7 @@ mongoose
 var app = express();
 
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "https://language-plateform-mern-stack.vercel.app",
-  ],
+  origin: "https://language-plateform-mern-stack.vercel.app",
   credentials: true,
   optionSuccessStatus: 200,
 };
@@ -48,8 +45,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,
+      secure: process.env.NODE_ENV === "production", // true in production
       httpOnly: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     },
   })
 );
