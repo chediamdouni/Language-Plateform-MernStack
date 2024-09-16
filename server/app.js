@@ -41,26 +41,24 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 
+app.use(cors(corsOptions));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", 
-      httpOnly: true, 
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     },
   })
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(cookieParser());
 app.use(logger("dev"));
 app.use(express.json());
-app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 // app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
