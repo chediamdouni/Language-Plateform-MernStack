@@ -169,17 +169,16 @@ const login = async (req, res, next) => {
     const response = await getSuccessResponse(user);
     const token = response.bearerToken;
     res.cookie("bearerToken", token, {
-      withCredentials: true,
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production", // true in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Use "none" only in production
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
     response.message = "Login successful";
     res.status(200).send(response);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" }); // Handle errors
-
   }
 };
 // USER LOGGED IN ///
