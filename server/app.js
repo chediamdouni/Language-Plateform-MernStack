@@ -33,7 +33,10 @@ mongoose
 var app = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: [
+    "http://localhost:3000",
+    "https://language-plateform-mern-stack.vercel.app",
+  ],
   credentials: true,
   optionSuccessStatus: 200,
 };

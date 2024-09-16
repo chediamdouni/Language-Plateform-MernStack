@@ -114,8 +114,6 @@ const WelcomeComponent = () => {
         setAvailability(response.data.availability || []);
       } catch (error) {
         console.log(error);
-      } finally {
-        setIsLoading(false);
       }
     };
     fetchData();
