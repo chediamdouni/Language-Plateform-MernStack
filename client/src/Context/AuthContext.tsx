@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const apiKey = "mmhfdzb5evj2";
 const apiUrl = process.env.REACT_APP_API_URL;
 
+axios.defaults.withCredentials = true;
 // const client = StreamChat.getInstance(apiKey);
 export interface User {
   id: string;
@@ -112,11 +113,16 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
   const getLoggedInUser = useCallback(async () => {
     try {
       setLoading(true);
+      console.log(
+        "Fetching logged in user from:",
+        `${apiUrl}/auth/loggedInUser`
+      );
       const response = await axios.get(`${apiUrl}/auth/loggedInUser`, {
         withCredentials: true,
       });
       console.log("Response from loggedInUser API:", response.data);
-
+      console.log("LoggedInUser response:", response);
+      console.log("LoggedInUser headers:", response.headers);
       if (response.data.user) {
         console.log("User data:", response.data.user);
         setIsSignedIn(true);

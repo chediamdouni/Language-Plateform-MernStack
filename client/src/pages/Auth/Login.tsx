@@ -58,6 +58,8 @@ export const LoginApprenant = () => {
         },
         { withCredentials: true }
       );
+      console.log("Login response:", response);
+      console.log("Response headers:", response.headers);
       console.log("utilisateur:", response.data);
       const { message } = response.data.message;
       if (response) {

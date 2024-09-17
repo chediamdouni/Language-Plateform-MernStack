@@ -168,11 +168,17 @@ const login = async (req, res, next) => {
     }
     const response = await getSuccessResponse(user);
     const token = response.bearerToken;
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+    console.log("Setting cookie with options:", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
     res.cookie("bearerToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 24 * 60 * 60 * 1000,
+      domain: "https://language-plateform-mernstack.onrender.com", // 1 day
     });
     response.message = "Login successful";
     res.status(200).send(response);
@@ -212,12 +218,10 @@ const getLoggedInUser = async (req, res, next) => {
   }
 };
 const logout = async (req, res) => {
-  res.clearCookie("bearerToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-  });
-  res.sendStatus(200);
+  return res
+    .clearCookie("bearerToken")
+    .status(200)
+    .json({ message: "Successfully logged out 😏 🍀" });
 };
 
 module.exports = {
