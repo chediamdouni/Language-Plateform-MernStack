@@ -85,11 +85,11 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
   const handleSignout = useCallback(async () => {
     try {
       await axios.get(`${apiUrl}/auth/logout`, { withCredentials: true });
-      removeCookie("bearerToken", { path: "/" });
       localStorage.removeItem("bearerToken");
       setIsSignedIn(false);
       setUser(null);
       setStreamToken(null);
+      removeCookie("bearerToken", { path: "/" });
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
     }
