@@ -190,13 +190,19 @@ const login = async (req, res, next) => {
 const getLoggedInUser = async (req, res, next) => {
   try {
     const token = req.cookies.bearerToken;
+
+    if (!token) {
+      const authHeader = req.headers["authorization"];
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+      }
+    }
     console.log("Token:", token);
     if (!token) {
       return res
         .status(401)
         .json({ message: "Unauthorized, no token provided" });
     }
-
     const userId = getUserIdFromJWT(token);
     console.log("User ID from token:", userId);
     if (!userId) {
