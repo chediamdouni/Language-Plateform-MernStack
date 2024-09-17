@@ -218,7 +218,7 @@ const getLoggedInUser = async (req, res) => {
   }
 };
 
-// LOGOUT 
+// LOGOUT
 const logout = async (req, res) => {
   return res
     .clearCookie("bearerToken")
