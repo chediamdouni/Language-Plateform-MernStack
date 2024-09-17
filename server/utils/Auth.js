@@ -3,9 +3,20 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const userVerification = async (req, res, next) => {
-  const token =
-    req.cookies.bearerToken || req.headers.authorization?.split(" ")[1];
-  console.log("hahou je lemaadhabni ", token);
+  console.log("Cookies:", req.cookies);
+  console.log("Headers:", req.headers);
+
+  let token = req.cookies.bearerToken;
+
+  if (!token && req.headers.authorization) {
+    const parts = req.headers.authorization.split(" ");
+    if (parts.length === 2 && parts[0] === "Bearer") {
+      token = parts[1];
+    }
+  }
+
+  console.log("Retrieved token:", token);
+
   if (!token) {
     return res.status(401).json({ message: "Unauthorized, no token provided" });
   }
@@ -14,7 +25,6 @@ const userVerification = async (req, res, next) => {
     const data = jwt.verify(token, process.env.JWT_SIGNING_KEY);
 
     const user = await User.findById(data.id);
-    // extraction de l'utilisateur via jwt payload
     if (!user) {
       console.error("User not found with id:", data.id);
       return res.status(404).json({ message: "User not found" });

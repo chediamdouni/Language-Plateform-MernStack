@@ -61,10 +61,10 @@ export const LoginApprenant = () => {
       console.log("Login response:", response);
       console.log("Response headers:", response.headers);
       console.log("utilisateur:", response.data);
-      
+
       if (response.data.bearerToken) {
         // Store the token in localStorage as a fallback
-        localStorage.setItem('bearerToken', response.data.bearerToken);
+        localStorage.setItem("bearerToken", response.data.bearerToken);
       }
       const { message } = response.data.message;
       if (response) {
@@ -76,6 +76,7 @@ export const LoginApprenant = () => {
         setTimeout(() => {
           navigate("/apprenant/profile");
         }, 1000);
+        console.log("Document cookies:", document.cookie);
       } else {
         handleError(message);
       }
