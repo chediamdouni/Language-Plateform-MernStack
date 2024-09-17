@@ -84,45 +84,28 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
 
   const handleSignout = useCallback(async () => {
     try {
-      const response = await axios.get(`${apiUrl}/auth/logout`, {
-        withCredentials: true,
-      });
-
-      if (response.status === 200) {
-        console.log("Successfully logged out from backend");
-
-        removeCookie("bearerToken", { path: "/" });
-        const checkCookie = cookies.bearerToken;
-        if (!checkCookie) {
-          console.log("Cookie bearerToken supprimé avec succès");
-        } else {
-          console.log("Échec de la suppression du cookie bearerToken");
-        }
-
-        setIsSignedIn(false);
-        setUser(null);
-        setStreamToken(null);
-      } else {
-        console.error("Erreur lors de la déconnexion backend");
-      }
+      await axios.get(`${apiUrl}/auth/logout`, { withCredentials: true });
+      removeCookie("bearerToken", { path: "/" });
+      localStorage.removeItem("bearerToken");
+      setIsSignedIn(false);
+      setUser(null);
+      setStreamToken(null);
     } catch (error) {
-      console.error("Erreur lors de l'appel à l'API de déconnexion :", error);
+      console.error("Erreur lors de la déconnexion :", error);
     }
-  }, [removeCookie, cookies.bearerToken]);
+  }, [removeCookie]);
 
   const getLoggedInUser = useCallback(async () => {
     try {
       setLoading(true);
-      console.log(
-        "Fetching logged in user from:",
-        `${apiUrl}/auth/loggedInUser`
-      );
-      const response = await axios.get(`${apiUrl}/auth/loggedInUser`, {
+      const token = localStorage.getItem("bearerToken");
+      const config = {
         withCredentials: true,
-      });
-      console.log("Response from loggedInUser API:", response.data);
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      };
+
+      const response = await axios.get(`${apiUrl}/auth/loggedInUser`, config);
       console.log("LoggedInUser response:", response);
-      console.log("LoggedInUser headers:", response.headers);
       if (response.data.user) {
         console.log("User data:", response.data.user);
         setIsSignedIn(true);

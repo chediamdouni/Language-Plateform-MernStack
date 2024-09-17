@@ -3,8 +3,9 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const userVerification = async (req, res, next) => {
-  const token = req.cookies.bearerToken;
-
+  const token =
+    req.cookies.bearerToken || req.headers.authorization?.split(" ")[1];
+  console.log("hahou je lemaadhabni ", token);
   if (!token) {
     return res.status(401).json({ message: "Unauthorized, no token provided" });
   }
