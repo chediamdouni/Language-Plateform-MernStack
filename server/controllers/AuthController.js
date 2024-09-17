@@ -187,40 +187,38 @@ const login = async (req, res, next) => {
   }
 };
 // USER LOGGED IN ///
-const getLoggedInUser = async (req, res, next) => {
+const getLoggedInUser = async (req, res) => {
   try {
-    const token = req.cookies.bearerToken;
+    const token =
+      req.cookies.bearerToken || req.headers["authorization"]?.split(" ")[1];
 
-    if (!token) {
-      const authHeader = req.headers["authorization"];
-      if (authHeader && authHeader.startsWith("Bearer ")) {
-        token = authHeader.split(" ")[1];
-      }
-    }
-    console.log("Token:", token);
+    console.log("Kharya ", token);
+
     if (!token) {
       return res
         .status(401)
         .json({ message: "Unauthorized, no token provided" });
     }
+
     const userId = getUserIdFromJWT(token);
-    console.log("User ID from token:", userId);
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized, invalid token" });
     }
 
     const user = await User.findById(userId);
-    console.log("User found:", user);
     if (!user) {
-      return res.status(400).json({ message: "No User Found" });
+      return res.status(404).json({ message: "User not found" });
     }
+
     const response = await getSuccessResponse(user);
     return res.status(200).send(response);
   } catch (e) {
-    console.error("Error in getLoggedInUser:", e);
+    console.error("Error in getLoggedInUser:", e.stack); // Log stack trace for more details
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// LOGOUT 
 const logout = async (req, res) => {
   return res
     .clearCookie("bearerToken")
