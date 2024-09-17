@@ -84,7 +84,6 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
 
   const handleSignout = useCallback(async () => {
     try {
-      await axios.get(`${apiUrl}/auth/logout`);
       localStorage.removeItem("bearerToken");
       setIsSignedIn(false);
       setUser(null);
