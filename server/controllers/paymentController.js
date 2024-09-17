@@ -56,8 +56,8 @@ const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `http://localhost:3000/apprenant/profile`,
-      cancel_url: `http://localhost:3000/pricing`,
+      success_url: `https://language-plateform-mern-stack.vercel.app/apprenant/profile`,
+      cancel_url: `https://language-plateform-mern-stack.vercel.app/pricing`,
       metadata: {
         userId,
         planType,
