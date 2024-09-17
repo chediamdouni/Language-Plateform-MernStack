@@ -9,7 +9,6 @@ import {
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
-import api from "src/utils/api";
 
 const apiKey = "mmhfdzb5evj2";
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -105,7 +104,7 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       };
 
-      const response = await api.get(`/auth/loggedInUser`, config);
+      const response = await axios.get(`${apiUrl}/auth/loggedInUser`, config);
       console.log("LoggedInUser response:", response);
       if (response.data.user) {
         console.log("User data:", response.data.user);
