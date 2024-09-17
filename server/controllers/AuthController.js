@@ -217,9 +217,8 @@ const getLoggedInUser = async (req, res, next) => {
     const response = await getSuccessResponse(user);
     return res.status(200).send(response);
   } catch (e) {
-    res
-      .status(500)
-      .json({ message: "something went wrong in getLoggedInUser" });
+    console.error("Error in getLoggedInUser:", e);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 const logout = async (req, res) => {
