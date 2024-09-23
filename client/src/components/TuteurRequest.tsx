@@ -10,11 +10,12 @@ interface Request {
   user_name: string;
   meeting_time: string;
 }
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const fetchRequests = async (tutorId: string) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/request/tutor/${tutorId}`
+      `${apiUrl}/request/tutor/${tutorId}`
     );
     return response.data;
   } catch (error) {
@@ -25,7 +26,7 @@ const fetchRequests = async (tutorId: string) => {
 const deleteRequest = async (requestId: string) => {
   try {
     const response = await axios.delete(
-      `http://localhost:5000/api/request/delete/${requestId}`
+       `${apiUrl}/request/delete/${requestId}`
     );
     return response.data;
   } catch (error) {

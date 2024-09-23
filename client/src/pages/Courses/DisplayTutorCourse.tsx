@@ -57,7 +57,7 @@ const DisplayTutorCourse = () => {
   // all courses
   const fetchCourses = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/courses/all`);
+      const response = await axios.get( `${apiUrl}/courses/all`);
       setCourses(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des cours", error);
@@ -72,7 +72,7 @@ const DisplayTutorCourse = () => {
   const fetchCourse = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/courses/${id}`
+         `${apiUrl}/courses/${id}`
       );
       setCourse(response.data);
     } catch (error) {

@@ -99,7 +99,7 @@ const LessonList: React.FC = () => {
   const fetchCourse = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/courses/${id}`
+         `${apiUrl}/courses/${id}`
       );
       setCourse(response.data);
     } catch (error) {
@@ -114,7 +114,7 @@ const LessonList: React.FC = () => {
   const fetchLessons = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/courses/${id}/fetch/lessons`
+        `${apiUrl}/courses/${id}/fetch/lessons`
       );
       setLessons(response.data);
     } catch (error) {
@@ -125,7 +125,7 @@ const LessonList: React.FC = () => {
   const fetchQuizzes = async (lessonId: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/courses/lessons/${lessonId}/quizzes`
+        `${apiUrl}/courses/lessons/${lessonId}/quizzes`
       );
       console.log(response.data);
       setQuizzes(response.data);
@@ -221,7 +221,7 @@ const LessonList: React.FC = () => {
     const fetchCompletedQuizzes = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/progression/${user?.id}/${id}`
+           `${apiUrl}/progression/${user?.id}/${id}`
         );
         setCompletedQuizzes(response.data.completedQuizzes || []);
       } catch (error) {
@@ -242,7 +242,7 @@ const LessonList: React.FC = () => {
       }
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/progression/${userId}/${courseId}`
+           `${apiUrl}/progression/${userId}/${courseId}`
         );
         console.log(response.data);
         setProgression(response.data);
@@ -264,7 +264,7 @@ const LessonList: React.FC = () => {
       if (!userId || !courseId) return;
 
       const response = await axios.post(
-        `http://localhost:5000/api/progression/update/${userId}/${courseId}`,
+         `${apiUrl}/progression/update/${userId}/${courseId}`,
         {
           lessonId,
         }

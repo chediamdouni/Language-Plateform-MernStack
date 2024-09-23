@@ -110,7 +110,7 @@ const WelcomeComponent = () => {
       setError(null);
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/tuteur/availability/65dcd2e9d997a54d215c10dd`
+          `https://language-plateform-mernstack.onrender.com/api/tuteur/availability/65dcd2e9d997a54d215c10dd`
         );
         console.log(response.data.availability);
         setAvailability(response.data.availability || []);
@@ -209,7 +209,7 @@ const WelcomeComponent = () => {
           const user_id = call.currentUserId || "";
           const meeting_time = startsAt;
           const meeting_description = description;
-          const meeting_url = `http://localhost:3000/meeting/${call.id}`;
+          const meeting_url = `https://language-plateform-mern-stack.vercel.app/meeting/${call.id}`;
 
           UpcomingCalls.push({
             upcoming_meeting_id,
@@ -274,7 +274,7 @@ const WelcomeComponent = () => {
     const value = e.target.value;
     setValues({ ...values, description: value });
   };
-  const meetingLink = `http://localhost:3000/meeting/${callDetails?.id}`;
+  const meetingLink = `https://language-plateform-mern-stack.vercel.app/meeting/${callDetails?.id}`;
   // Scroll To an Element
   const ToggleShowAllReviews = () => {
     setShow(!show);
@@ -519,7 +519,7 @@ const WelcomeComponent = () => {
           <div className="flex items-center space-x-4">
             <Avatar
               alt={user?.username}
-              src={`http://localhost:5000/${user?.profileImage}`}
+              src={`https://language-plateform-mernstack.onrender.com/${user?.profileImage}`}
               sx={{ width: 100, height: 100 }}
             />
             <div>

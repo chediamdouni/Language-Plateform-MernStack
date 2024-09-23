@@ -14,11 +14,12 @@ interface UpcomingMeeting {
   meeting_url: string;
   __v: number;
 }
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const fetchUpcoming = async (userId: string): Promise<UpcomingMeeting[]> => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/meet/GetUpcoming/${userId}`
+       `${apiUrl}/meet/GetUpcoming/${userId}`
     );
 
     console.log("Réponse de l'API:", response);

@@ -18,7 +18,7 @@ interface Course {
   etudiantsInscrits: string[];
   createdAt: string;
 }
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const Courses: React.FC = () => {
   const { user } = useContext(AuthContext);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -39,7 +39,7 @@ const Courses: React.FC = () => {
   const fetchCourses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/courses/tuteur/${user!.id}`
+        `${apiUrl}/courses/tuteur/${user!.id}`
       );
       console.log(response.data);
       setCourses(response.data);
@@ -87,7 +87,7 @@ const Courses: React.FC = () => {
             >
               <div className="relative h-48">
                 <img
-                  src={`http://localhost:5000/${course.image}`}
+                  src={`https://language-plateform-mernstack.onrender.com/${course.image}`}
                   alt={course.titre}
                   className="w-full h-full object-cover"
                 />
@@ -135,7 +135,7 @@ const Courses: React.FC = () => {
               {lastCourse ? (
                 <>
                   <img
-                    src={`http://localhost:5000/${lastCourse.image}`}
+                    src={`https://language-plateform-mernstack.onrender.com/${lastCourse.image}`}
                     alt={lastCourse.titre}
                     className="w-full h-48 object-cover rounded-lg mb-4"
                   />

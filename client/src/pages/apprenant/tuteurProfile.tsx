@@ -152,7 +152,7 @@ const TuteurProfile = () => {
       setError(null);
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/tuteur/availability/65dcd2e9d997a54d215c10dd`
+           `${apiUrl}/tuteur/availability/65dcd2e9d997a54d215c10dd`
         );
         console.log(response.data.availability);
         setAvailability(response.data.availability || []);
@@ -170,7 +170,7 @@ const TuteurProfile = () => {
     const fetchTutor = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/tuteur/${id}`
+           `${apiUrl}/tuteur/${id}`
         );
         setTutor(response.data.tuteur);
       } catch (err) {
@@ -360,7 +360,7 @@ const TuteurProfile = () => {
     const fetchFavorites = async () => {
       try {
         const response = await axios.get<Favorites>(
-          `http://localhost:5000/api/users/favorites/${user?.id}`
+          `${apiUrl}/users/favorites/${user?.id}`
         );
         setFavorites(response.data);
       } catch (error) {

@@ -6,7 +6,7 @@ import axios from "axios";
 import * as Yup from "yup";
 import { FiUser, FiMail, FiLock, FiCheck } from "react-icons/fi";
 import { motion } from "framer-motion";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const TuteurSettingsAccount = () => {
   const { user, updateUser } = useContext(AuthContext);
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -46,7 +46,7 @@ const TuteurSettingsAccount = () => {
       };
 
       const res = await axios.put(
-        `http://localhost:5000/api/users/editUserProfile/${user?.id || ""}`,
+        `${apiUrl}/users/editUserProfile/${user?.id || ""}`,
         data
       );
       console.log("Form Data:", data);

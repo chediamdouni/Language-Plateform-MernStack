@@ -13,6 +13,7 @@ interface Request {
   tutor_name: string;
   meeting_time: Date;
 }
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const RequestsList = () => {
   const { user } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const RequestsList = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/request/user/${user?.id}`
+           `${apiUrl}/request/user/${user?.id}`
         );
         setRequests(response.data);
         setIsLoading(false);

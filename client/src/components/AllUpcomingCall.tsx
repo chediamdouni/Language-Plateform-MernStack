@@ -7,6 +7,7 @@ import { Loader, Calendar, Clock, Link2, Trash2 } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface UpcomingMeeting {
   _id: string;
@@ -21,7 +22,7 @@ interface UpcomingMeeting {
 const fetchUpcoming = async (userId: string): Promise<UpcomingMeeting[]> => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/meet/GetAllUpcoming/${userId}`
+       `${apiUrl}/meet/GetAllUpcoming/${userId}`
     );
 
     console.log("Réponse de l'API:", response);
@@ -41,7 +42,7 @@ const fetchUpcoming = async (userId: string): Promise<UpcomingMeeting[]> => {
 const deleteUpcomingMeeting = async (upcomingMeetingId: string) => {
   try {
     await axios.delete(
-      `http://localhost:5000/api/meet/DelUpcoming/${upcomingMeetingId}`
+       `${apiUrl}/meet/DelUpcoming/${upcomingMeetingId}`
     );
     console.log("Meeting deleted successfully");
   } catch (error) {

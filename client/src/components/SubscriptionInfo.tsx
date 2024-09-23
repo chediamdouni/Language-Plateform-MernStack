@@ -4,6 +4,7 @@ import axios from "axios";
 interface SubscriptionInfoProps {
   userId?: string;
 }
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({ userId }) => {
   const [subscriptionInfo, setSubscriptionInfo] = useState<any>(null);
@@ -12,7 +13,7 @@ const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({ userId }) => {
     const fetchSubscriptionInfo = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/subscription/status/${userId}`
+           `${apiUrl}/subscription/status/${userId}`
         );
         setSubscriptionInfo(response.data);
       } catch (error) {

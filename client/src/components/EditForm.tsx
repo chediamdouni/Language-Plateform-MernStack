@@ -49,6 +49,9 @@ const languages = [
   "Hindi",
   // Ajoutez d'autres langues selon vos besoins
 ];
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
   const { updateUser } = useContext(AuthContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -144,7 +147,7 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/users/editUserProfile/${user.id}`,
+         `${apiUrl}/users/editUserProfile/${user.id}`,
         formData
       );
 

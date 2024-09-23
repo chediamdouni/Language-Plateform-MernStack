@@ -12,6 +12,7 @@ import {
   Input,
 } from "@material-tailwind/react";
 import axios from "axios";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 interface Request {
   _id: string;
@@ -23,7 +24,7 @@ interface Request {
 const fetchRequests = async (tutorId: string) => {
   try {
     const response = await axios.get(
-      `http://localhost:5000/api/request/tutor/${tutorId}`
+      `${apiUrl}/request/tutor/${tutorId}`
     );
     return response.data;
   } catch (error) {

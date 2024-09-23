@@ -47,6 +47,7 @@ interface Option {
   text: string;
   correct: boolean;
 }
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const CourseDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -65,7 +66,7 @@ const CourseDetails: React.FC = () => {
   const fetchCourse = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/courses/${id}`
+         `${apiUrl}/courses/${id}`
       );
       setCourse(response.data);
     } catch (error) {
@@ -88,7 +89,7 @@ const CourseDetails: React.FC = () => {
       }
 
       const lessonResponse = await axios.post(
-        `http://localhost:5000/api/courses/${id}/lessons`,
+         `${apiUrl}/courses/${id}/lessons`,
         formData,
         {
           headers: {
@@ -101,7 +102,7 @@ const CourseDetails: React.FC = () => {
 
       // Ajouter le quiz à la leçon
       await axios.post(
-        `http://localhost:5000/api/courses/${id}/lessons/${lessonId}/quizzes`,
+         `${apiUrl}/courses/${id}/lessons/${lessonId}/quizzes`,
         {
           cours: id,
           name: quizName,

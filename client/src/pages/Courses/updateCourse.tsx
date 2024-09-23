@@ -47,6 +47,7 @@ interface Course {
   categorie: string;
   lessons: Lesson[];
 }
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const UpdateCourse = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -68,7 +69,7 @@ const UpdateCourse = () => {
   const fetchCourse = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/courses/${courseId}`
+         `${apiUrl}/courses/${courseId}`
       );
       setCourse(response.data);
       setLoading(false);
@@ -85,7 +86,7 @@ const UpdateCourse = () => {
   const handleUpdateCourse = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/courses/edit/${courseId}`,
+         `${apiUrl}/courses/edit/${courseId}`,
         course
       );
       console.log("Cours mis à jour avec succès", response.data);
@@ -98,7 +99,7 @@ const UpdateCourse = () => {
     if (!course) return;
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/courses/${course._id}/lessons`,
+        `${apiUrl}/courses/${course._id}/lessons`,
         newLesson
       );
       setCourse({
@@ -115,7 +116,7 @@ const UpdateCourse = () => {
     if (!course || !selectedLessonId) return;
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/courses/${course._id}/lessons/${selectedLessonId}/quizzes`,
+         `${apiUrl}/courses/${course._id}/lessons/${selectedLessonId}/quizzes`,
         newQuiz
       );
       const updatedLessons = course.lessons.map((lesson) =>
@@ -132,7 +133,7 @@ const UpdateCourse = () => {
   const handleDeleteQuiz = async (quizId: string, lessonId: string) => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/quizzes/${quizId}/${lessonId}`
+         `${apiUrl}/quizzes/${quizId}/${lessonId}`
       );
       // Update local state to reflect the deletion of the quiz
       setCourse((prevCourse) => {

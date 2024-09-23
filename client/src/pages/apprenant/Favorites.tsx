@@ -47,7 +47,7 @@ const Favorites: React.FC = () => {
     const fetchFavorites = async () => {
       try {
         const response = await axios.get<FavoritesData>(
-          `http://localhost:5000/api/users/favorites/${user?.id}`
+           `${apiUrl}/users/favorites/${user?.id}`
         );
         setFavorites(response.data);
         setIsLoading(false);
