@@ -24,7 +24,7 @@ interface EditFormProps {
 }
 const countries = [
   "France",
-  "États-Unis",
+  "États-Unis", 
   "Canada",
   "Royaume-Uni",
   "Allemagne",
@@ -39,7 +39,7 @@ const countries = [
 const languages = [
   "Français",
   "Anglais",
-  "Espagnol",
+  "Espagnol", 
   "Allemand",
   "Italien",
   "Portugais",
@@ -90,19 +90,8 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
       6,
       "Le mot de passe doit comporter au moins 6 caractères"
     ),
-    /*confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Les mots de passe doivent correspondre")
-      .required("Confirmation du mot de passe requise"),*/
     dateOfBirth: Yup.date().nullable(),
     gender: Yup.string().oneOf(["homme", "femme", "autre"], "Genre invalide"),
-    profileImage: Yup.mixed().test(
-      "fileSize",
-      "Le fichier est trop volumineux",
-      (value) => {
-        if (!value || !(value instanceof File)) return true;
-        return value.size <= 5 * 1024 * 1024;
-      }
-    ),
     aboutMe: Yup.string(),
     experience: Yup.number()
       .positive("L'expérience doit être un nombre positif")
@@ -124,13 +113,12 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
         ? new Date(values.dateOfBirth)
         : undefined,
       gender: values.gender,
-      profileImage: values.profileImage,
+      profileImage: values.profileImage || user.profileImage,
       aboutMe: values.aboutMe,
       experience: values.experience ? Number(values.experience) : undefined,
       language: values.language,
       country: values.country,
     };
-    console.log("Birth", values.dateOfBirth);
 
     const formData = new FormData();
     Object.entries(updatedUser).forEach(([key, value]) => {
@@ -147,7 +135,6 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
 
     try {
       await axios.put(`${apiUrl}/users/editUserProfile/${user.id}`, formData);
-
       updateUser(formData);
       onSave();
     } catch (error) {
@@ -166,11 +153,12 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
-        setFieldValue("profileImage", file); // Mettre à jour seulement si une image est sélectionnée
+        setFieldValue("profileImage", file);
       };
       reader.readAsDataURL(file);
     } else {
       setPreviewImage(null);
+      setFieldValue("profileImage", user.profileImage);
     }
   };
 
@@ -317,10 +305,6 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                     accept="image/*"
                     onChange={(event) => {
                       handleImageChange(event, setFieldValue);
-                      setFieldValue(
-                        "profileImage",
-                        event.currentTarget.files?.[0] || null
-                      );
                     }}
                     ref={fileInputRef}
                     className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
@@ -428,14 +412,6 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                   </div>
                 </div>
               </div>
-
-             {/* {previewImage && (
-                <img
-                  src={previewImage}
-                  alt="Preview"
-                  className="mt-4 max-w-xs h-auto rounded-lg shadow-md"
-                />
-              )}*/}
 
               <div className="flex justify-end">
                 <button
