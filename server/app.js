@@ -43,13 +43,24 @@ const PORT = process.env.PORT || 5000;
 
 app.set("trust proxy", 1);
 // CORS configuration
-
 const corsOptions = {
-  origin: [
-    "https://language-plateform-mern-stack.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:3001",
-  ],
+  origin: function (origin, callback) {
+    const allowedDomains = [
+      "https://language-plateform-mern-stack.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:3001"
+    ];
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow any subdomain of vercel.app
+    if (origin.endsWith('.vercel.app') || allowedDomains.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders:
