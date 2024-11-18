@@ -287,8 +287,8 @@ const LessonList: React.FC = () => {
     <ApprenantLayout>
       <div className="flex h-screen bg-gray-100">
         {/* Sidebar */}
-        <div className="w-1/4 bg-gray-50 shadow-lg overflow-hidden">
-          <div className="p-8">
+        <div className="w-1/4 bg-gray-50 shadow-lg h-screen overflow-y-auto">
+          <div className="p-8 sticky top-0 bg-gray-50 z-10">
             <Typography
               variant="h4"
               className="mb-6 text-gray-800 font-semibold"
@@ -313,7 +313,7 @@ const LessonList: React.FC = () => {
               </Typography>
             </div>
           </div>
-          <div className="overflow-y-auto h-[calc(100vh-300px)] px-4">
+          <div className="px-4">
             <List>
               {lessons.map((lesson, index) => (
                 <ListItem
