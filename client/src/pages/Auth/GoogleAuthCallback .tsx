@@ -10,7 +10,7 @@ const GoogleAuthCallback: React.FC = () => {
     const handleGoogleCallback = async () => {
       try {
         await getLoggedInUser();
-        navigate("/apprenant");
+        navigate("/tuteur/welcome");
       } catch (error) {
         console.error("Erreur lors de l'authentification Google", error);
         navigate("/apprenant/connexion");

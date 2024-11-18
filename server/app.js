@@ -27,6 +27,7 @@ mongoose
   .connect(process.env.URI_MONGO, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+	// poolSize: 10,  // Set connection pool size to 10
   })
   .then(async () => {
     console.log("DB Connected");
@@ -39,28 +40,33 @@ mongoose
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 5000;
+
 app.set("trust proxy", 1);
 // CORS configuration
+
 const corsOptions = {
   origin: [
     "https://language-plateform-mern-stack.vercel.app",
     "http://localhost:3000",
+    "http://localhost:3001",
   ],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  allowedHeaders:
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
   optionSuccessStatus: 200,
 };
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
+/* const limiter = rateLimit({
+     windowMs: 15 * 60 * 1000,
+   max: 100,
+});*/
 // Middleware setup
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(helmet());
-app.use(limiter);
+// app.use(limiter);
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
@@ -75,15 +81,7 @@ app.use(
     },
   })
 );
-app.use((req, res, next) => {
-  console.log("Session:", req.session);
-  next();
-});
-app.use((req, res, next) => {
-  console.log("Cookies:", req.cookies);
-  console.log("Signed Cookies:", req.signedCookies);
-  next();
-});
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -96,7 +94,7 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  // console.error(err.stack);
   res.status(err.status || 500).json({
     message: err.message,
     error: req.app.get("env") === "development" ? err : {},

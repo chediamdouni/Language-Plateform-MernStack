@@ -31,6 +31,7 @@ import { useCookies } from "react-cookie";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BsCalendar3Event } from "react-icons/bs";
 import { MdMessage } from "react-icons/md";
+import person from "../assets/images/default.png";
 
 const navListMenuItems = [
   {
@@ -201,45 +202,46 @@ function ProfileMenu() {
         <Button
           variant="text"
           color="blue-gray"
-          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+          className="flex items-center gap-2 rounded-full py-1 pr-3 pl-1 lg:ml-auto transition-all hover:bg-gray-100"
         >
           <Avatar
             variant="circular"
             size="md"
             alt="tania andrew"
-            className="border border-gray-900 p-0.5 rounded-full"
-            src={user?.profileImage}
+            className="border border-gray-300 p-0.5 rounded-full"
+            src={user?.profileImage?.url || person}
           />
           <ChevronDownIcon
             strokeWidth={2.5}
-            className={`h-3 w-3 transition-transform ${
+            className={`h-4 w-4 transition-transform ${
               isMenuOpen ? "rotate-180" : ""
             }`}
           />
         </Button>
       </MenuHandler>
-      <MenuList className="p-1">
+      <MenuList className="p-2 bg-white shadow-lg rounded-lg">
         {profileMenuItems.map(({ label, icon }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
             <MenuItem
               key={label}
               onClick={() => handleClick(label)}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
+              className={`flex items-center gap-3 rounded-lg p-2 transition-all hover:bg-gray-100 ${
+                isLastItem ? "hover:bg-red-100" : ""
               }`}
             >
               {React.createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
+                className: `h-5 w-5 ${
+                  isLastItem ? "text-red-500" : "text-blue-500"
+                }`,
                 strokeWidth: 2,
               })}
               <Typography
                 as="span"
                 variant="small"
-                className="font-korto font-semibold font-sans text-md py-2 px-2"
-                color={isLastItem ? "red" : "inherit"}
+                className={`font-korto font-semibold text-md ${
+                  isLastItem ? "text-red-500" : "text-gray-700"
+                }`}
               >
                 {label}
               </Typography>
@@ -264,7 +266,7 @@ const Header: React.FC = () => {
         <div className="flex w-full lg:w-auto items-center justify-between p-5">
           <a href="/#" className="flex items-center text-lg gap-2">
             <img
-              src={user?.profileImage}
+              src={user?.profileImage.url}
               alt=""
               className="h-12 rounded-full"
             />
@@ -399,104 +401,6 @@ const Header: React.FC = () => {
         </nav>
 
         <div className="hidden lg:flex items-center gap-4 text-sm font-semibold leading-6 text-gray-900">
-          <div className="mr-4 flex items-center gap-2 ">
-            <Popover placement="bottom">
-              <PopoverHandler>
-                <Button variant="text" size="sm">
-                  <svg
-                    width="30px"
-                    height="30px"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.0799 3 8.2V15.8C3 16.9201 3 17.4802 3.21799 17.908C3.40973 18.2843 3.71569 18.5903 4.09202 18.782C4.51984 19 5.0799 19 6.2 19H17.8C18.9201 19 19.4802 19 19.908 18.782C20.2843 18.5903 20.5903 18.2843 20.782 17.908C21 17.4802 21 16.9201 21 15.8V13M3 8L8.45036 11.6336C9.73296 12.4886 10.3743 12.9162 11.0674 13.0824C11.6804 13.2293 12.3196 13.2293 12.9326 13.0824C13.6257 12.9162 14.267 12.4886 15.5496 11.6336M22 6.5C22 7.88071 20.8807 9 19.5 9C18.1193 9 17 7.88071 17 6.5C17 5.11929 18.1193 4 19.5 4C20.8807 4 22 5.11929 22 6.5Z"
-                      stroke="#000000"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </Button>
-              </PopoverHandler>
-              <PopoverContent className="w-80">
-                <Typography variant="h6" color="blue-gray" className="mb-6">
-                  Les conversations avec les tuteurs seront affichées ici.
-                </Typography>
-                <Button
-                  variant="gradient"
-                  className="flex-shrink-0 w-full text-blue-gray border"
-                >
-                  Subscribe
-                </Button>
-              </PopoverContent>
-            </Popover>
-            <Popover placement="bottom">
-              <PopoverHandler>
-                <Button variant="text" size="sm">
-                  <svg
-                    width="30px"
-                    height="30px"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M3 9H21M9 15L11 17L15 13M7 3V5M17 3V5M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z"
-                      stroke="#000000"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </Button>
-              </PopoverHandler>
-              <PopoverContent className="w-80">
-                <Typography variant="h6" color="blue-gray" className="mb-6">
-                  Upcoming Lesson
-                </Typography>
-                <Button
-                  variant="gradient"
-                  className="flex-shrink-0 w-full text-blue-gray border"
-                >
-                  + Schedule Lesson
-                </Button>
-              </PopoverContent>
-            </Popover>
-            <Popover placement="bottom">
-              <PopoverHandler>
-                <Button variant="text" size="sm">
-                  <svg
-                    width="30px"
-                    height="30px"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M9.00195 17H5.60636C4.34793 17 3.71872 17 3.58633 16.9023C3.4376 16.7925 3.40126 16.7277 3.38515 16.5436C3.37082 16.3797 3.75646 15.7486 4.52776 14.4866C5.32411 13.1835 6.00031 11.2862 6.00031 8.6C6.00031 7.11479 6.63245 5.69041 7.75766 4.6402C8.88288 3.59 10.409 3 12.0003 3C13.5916 3 15.1177 3.59 16.2429 4.6402C17.3682 5.69041 18.0003 7.11479 18.0003 8.6C18.0003 11.2862 18.6765 13.1835 19.4729 14.4866C20.2441 15.7486 20.6298 16.3797 20.6155 16.5436C20.5994 16.7277 20.563 16.7925 20.4143 16.9023C20.2819 17 19.6527 17 18.3943 17H15.0003M9.00195 17L9.00031 18C9.00031 19.6569 10.3435 21 12.0003 21C13.6572 21 15.0003 19.6569 15.0003 18V17M9.00195 17H15.0003"
-                      stroke="#000000"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </Button>
-              </PopoverHandler>
-              <PopoverContent className="w-80">
-                <Typography variant="h6" color="blue-gray" className="mb-6">
-                  Notification
-                </Typography>
-                <Button
-                  variant="gradient"
-                  className="flex-shrink-0 w-full text-blue-gray border"
-                >
-                  View All
-                </Button>
-              </PopoverContent>
-            </Popover>
-          </div>
           <div>
             <ProfileMenu />
           </div>

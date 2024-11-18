@@ -16,7 +16,6 @@ import { FaArrowRight } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "src/Context/AuthContext";
 import axios from "axios";
-import Person from "../assets/images/person1.jpg";
 const data = [
   {
     imageSrc:
@@ -54,6 +53,10 @@ interface Tutor {
   verified: string;
   language: string;
   aboutMe: string;
+  profileImage: {
+    public_id: string;
+    url: string;
+  };
   country: string;
   email: string;
   experience: number;
@@ -78,7 +81,8 @@ const Home: React.FC = () => {
   }, []);
 
   const handleSelectTutor = (tutorId: string) => {
-    navigate(`/apprenant/tuteur/${tutorId}`);
+    // navigate(`/apprenant/tuteur/${tutorId}`);
+    navigate("/apprenant");
   };
 
   return (
@@ -109,7 +113,7 @@ const Home: React.FC = () => {
             >
               <div className="relative">
                 <img
-                  src={Person}
+                  src={tutor?.profileImage?.url}
                   alt={`${tutor.username}'s profile`}
                   className="w-full h-48 object-cover"
                 />

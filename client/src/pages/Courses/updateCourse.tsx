@@ -38,7 +38,9 @@ interface Course {
   titre: string;
   description: string;
   prix: number;
-  image: string;
+  image: {
+    url: string;
+  };
   tuteur: {
     _id: string;
     username: string;
@@ -68,9 +70,7 @@ const UpdateCourse = () => {
 
   const fetchCourse = async () => {
     try {
-      const response = await axios.get(
-         `${apiUrl}/courses/${courseId}`
-      );
+      const response = await axios.get(`${apiUrl}/courses/${courseId}`);
       setCourse(response.data);
       setLoading(false);
     } catch (error) {
@@ -85,8 +85,9 @@ const UpdateCourse = () => {
 
   const handleUpdateCourse = async () => {
     try {
+      console.log("course", courseId);
       const response = await axios.put(
-         `${apiUrl}/courses/edit/${courseId}`,
+        `${apiUrl}/courses/edit/${courseId}`,
         course
       );
       console.log("Cours mis à jour avec succès", response.data);
@@ -116,7 +117,7 @@ const UpdateCourse = () => {
     if (!course || !selectedLessonId) return;
     try {
       const response = await axios.post(
-         `${apiUrl}/courses/${course._id}/lessons/${selectedLessonId}/quizzes`,
+        `${apiUrl}/courses/${course._id}/lessons/${selectedLessonId}/quizzes`,
         newQuiz
       );
       const updatedLessons = course.lessons.map((lesson) =>
@@ -130,11 +131,10 @@ const UpdateCourse = () => {
       console.error("Erreur lors de l'ajout du quiz", error);
     }
   };
+
   const handleDeleteQuiz = async (quizId: string, lessonId: string) => {
     try {
-      await axios.delete(
-         `${apiUrl}/quizzes/${quizId}/${lessonId}`
-      );
+      await axios.delete(`${apiUrl}/quizzes/${quizId}/${lessonId}`);
       // Update local state to reflect the deletion of the quiz
       setCourse((prevCourse) => {
         if (!prevCourse) return null;
@@ -163,6 +163,7 @@ const UpdateCourse = () => {
       </div>
     );
   }
+  
   return (
     <TuteurLayout>
       <div className="container mx-auto px-4 py-8 bg-gray-900 text-gray-100">
@@ -172,7 +173,7 @@ const UpdateCourse = () => {
             className="relative h-56 bg-blue-gray-500"
           >
             <img
-              src={`http://localhost:5000/${course?.image}`}
+              src={course?.image.url}
               alt="Course background"
               className="w-full h-full object-cover"
             />
@@ -251,9 +252,9 @@ const UpdateCourse = () => {
                       <Typography variant="h5" className="mb-4 text-gray-200">
                         Leçon {lessonIndex + 1}
                       </Typography>
-                      <div className="space-y-4">
+                      <div className="space-y-4 z-10">
                         <Input
-                          label="Titre de la leçon"
+                          placeholder="Titre de la leçon"
                           size="lg"
                           value={lesson.titre}
                           onChange={(e) =>
@@ -269,7 +270,7 @@ const UpdateCourse = () => {
                           className="!border-gray-600 focus:!border-blue-500 text-gray-100 bg-gray-600"
                         />
                         <Textarea
-                          label="Description de la leçon"
+                          placeholder="Description de la leçon"
                           size="lg"
                           value={lesson.description}
                           onChange={(e) =>
@@ -360,11 +361,12 @@ const UpdateCourse = () => {
                     </CardBody>
                   </Card>
                 ))}
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex justify-end ">
                   <Button
                     onClick={handleUpdateCourse}
                     color="blue"
                     ripple={true}
+                    className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 transition duration-300 ease-in-out z-10"
                   >
                     Mettre à jour le cours
                   </Button>
@@ -378,9 +380,9 @@ const UpdateCourse = () => {
           <Typography variant="h4" className="mb-4 text-gray-100">
             Ajouter une nouvelle leçon
           </Typography>
-          <div className="space-y-4">
+          <div className="space-y-4 z-10">
             <Input
-              label="Titre de la leçon"
+              placeholder="Titre de la leçon"
               size="lg"
               value={newLesson.titre}
               onChange={(e) =>
@@ -389,7 +391,7 @@ const UpdateCourse = () => {
               className="!border-gray-600 focus:!border-blue-500 text-gray-100 bg-gray-700"
             />
             <Textarea
-              label="Description de la leçon"
+              placeholder="Description de la leçon"
               size="lg"
               value={newLesson.description}
               onChange={(e) =>
@@ -398,7 +400,12 @@ const UpdateCourse = () => {
               className="!border-gray-600 focus:!border-blue-500 text-gray-100 bg-gray-700"
             />
             <div className="flex justify-end">
-              <Button onClick={handleAddLesson} color="blue" ripple={true}>
+              <Button
+                onClick={handleAddLesson}
+                color="blue"
+                ripple={true}
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 transition duration-300 ease-in-out z-10"
+              >
                 Ajouter la leçon
               </Button>
             </div>
@@ -411,14 +418,14 @@ const UpdateCourse = () => {
           </Typography>
           <div className="space-y-4">
             <Input
-              label="Nom du quiz"
+              placeholder="Nom du quiz"
               size="lg"
               value={newQuiz.name}
               onChange={(e) => setNewQuiz({ ...newQuiz, name: e.target.value })}
               className="!border-gray-600 focus:!border-blue-500 text-gray-100 bg-gray-700"
             />
             <Textarea
-              label="Description du quiz"
+              placeholder="Description du quiz"
               size="lg"
               value={newQuiz.description}
               onChange={(e) =>
@@ -428,7 +435,7 @@ const UpdateCourse = () => {
             />
             <Input
               type="date"
-              label="Date limite du quiz"
+              placeholder="Date limite du quiz"
               size="lg"
               value={newQuiz.deadline}
               onChange={(e) =>
@@ -437,7 +444,7 @@ const UpdateCourse = () => {
               className="!border-gray-600 focus:!border-blue-500 text-gray-100 bg-gray-700"
             />
             <Select
-              label="Leçon associée"
+              placeholder="Leçon associée"
               value={selectedLessonId}
               onChange={(value) => setSelectedLessonId(value || "")}
               className="!border-gray-600 focus:!border-blue-500 text-gray-100 bg-gray-700"
@@ -449,7 +456,12 @@ const UpdateCourse = () => {
               ))}
             </Select>
             <div className="flex justify-end">
-              <Button onClick={handleAddQuiz} color="blue" ripple={true}>
+              <Button
+                onClick={handleAddQuiz}
+                color="blue"
+                ripple={true}
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 transition duration-300 ease-in-out"
+              >
                 Ajouter le quiz
               </Button>
             </div>
@@ -482,6 +494,7 @@ const UpdateCourse = () => {
                       onClick={() =>
                         handleDeleteQuiz(quiz?._id ?? "", lesson?._id ?? "")
                       }
+                      className="hover:bg-red-600 hover:text-white transition duration-300 ease-in-out"
                     >
                       Supprimer
                     </Button>

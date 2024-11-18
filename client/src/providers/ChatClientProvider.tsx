@@ -30,17 +30,18 @@ const ChatClientProvider = ({ children }: { children: ReactNode }) => {
 
     if (loading) return;
     if (!user) {
-      console.log("y a pas d'utulisateur");
-      navigate("/");
+      console.log("y a pas de user dans le chat");
+      // navigate("/");
       return;
     }
     if (!apiKey) throw new Error("Stream API Key is Missing");
+
     const client = useCreateChatClient({
       apiKey,
       userData: {
         id: user?.id,
         name: user?.username || user?.id,
-        image: user?.profileImage,
+        image: user?.profileImage.url,
       },
       tokenOrProvider: tokenProvider,
     });

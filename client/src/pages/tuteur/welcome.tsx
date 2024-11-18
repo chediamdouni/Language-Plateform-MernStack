@@ -2,7 +2,15 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { ReviewCard } from "../../components/ReviewCard";
 import { Button } from "@material-tailwind/react";
-import { Container, Box, Avatar, Typography, SvgIcon } from "@mui/material";
+import {
+  Container,
+  Box,
+  Avatar,
+  Typography,
+  SvgIcon,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -22,7 +30,7 @@ import { CiEdit } from "react-icons/ci";
 import AllUpcomingCall from "../../components/AllUpcomingCall";
 import TuteurRequest from "../../components/TuteurRequest";
 import { motion, useScroll, useSpring } from "framer-motion";
-
+import person from "../../assets/images/mourad.jpg";
 const apiUrl = process.env.REACT_APP_API_URL;
 interface AvailabilitySlot {
   day: string;
@@ -63,6 +71,10 @@ const WelcomeComponent = () => {
   const [meetingState, setMeetingState] = useState<
     "isScheduleMeeting" | "isMeetingCreated" | "isInstantMeeting" | undefined
   >(undefined);
+  const [openAvailabilityDialog, setOpenAvailabilityDialog] = useState(false);
+  const [newAvailability, setNewAvailability] = useState<AvailabilitySlot[]>([
+    { day: "", startTime: "", endTime: "" },
+  ]);
 
   const initialData = {
     username: user?.username || "",
@@ -70,7 +82,27 @@ const WelcomeComponent = () => {
     password: "",
     confirmPassword: "",
   };
-
+  const timeSlots: string[] = [
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "12:00",
+    "12:30",
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+  ];
   const days: string[] = [
     "sunday",
     "Monday",
@@ -110,16 +142,19 @@ const WelcomeComponent = () => {
       setError(null);
       try {
         const response = await axios.get(
-          `https://language-plateform-mernstack.onrender.com/api/tuteur/availability/65dcd2e9d997a54d215c10dd`
+          `${apiUrl}/tuteur/availability/${user?.id}`
         );
         console.log(response.data.availability);
         setAvailability(response.data.availability || []);
       } catch (error) {
         console.log(error);
+        setError("Error fetching availability" as any);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   // Modal
   const handleClickOpen = () => {
@@ -128,6 +163,80 @@ const WelcomeComponent = () => {
     setMeetingState("isScheduleMeeting");
   };
 
+  // availability
+  const handleOpenAvailabilityDialog = () => {
+    setOpenAvailabilityDialog(true);
+  };
+
+  const handleCloseAvailabilityDialog = () => {
+    setOpenAvailabilityDialog(false);
+  };
+
+  const handleAvailabilityChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    const updatedAvailability = [...newAvailability];
+    updatedAvailability[index] = {
+      ...updatedAvailability[index],
+      [name]: value,
+    };
+    setNewAvailability(updatedAvailability);
+  };
+
+  const addAvailabilitySlot = () => {
+    setNewAvailability([
+      ...newAvailability,
+      { day: "", startTime: "", endTime: "" },
+    ]);
+  };
+
+  const removeAvailabilitySlot = (index: number) => {
+    const updatedAvailability = newAvailability.filter((_, i) => i !== index);
+    setNewAvailability(updatedAvailability);
+  };
+
+  const handleSubmitAvailability = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${apiUrl}/tuteur/availability`, {
+        tutorId: user?.id,
+        availability: newAvailability,
+      });
+      if (response.status === 201) {
+        toast("🦄 Availability set successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        const updatedResponse = await axios.get(
+          `${apiUrl}/tuteur/availability/${user?.id}`
+        );
+        setAvailability(updatedResponse.data.availability || []);
+        handleCloseAvailabilityDialog();
+      }
+    } catch (error) {
+      console.error("Error setting availability:", error);
+      toast("🦄 Error setting availability!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
   // Handle time in the schedule
   const HandleClickTime = (timeString: string, day: string) => {
     const currentDate = new Date();
@@ -209,7 +318,7 @@ const WelcomeComponent = () => {
           const user_id = call.currentUserId || "";
           const meeting_time = startsAt;
           const meeting_description = description;
-          const meeting_url = `https://language-plateform-mern-stack.vercel.app/meeting/${call.id}`;
+          const meeting_url = `http://localhost:3000/meeting/${call.id}`;
 
           UpcomingCalls.push({
             upcoming_meeting_id,
@@ -274,7 +383,7 @@ const WelcomeComponent = () => {
     const value = e.target.value;
     setValues({ ...values, description: value });
   };
-  const meetingLink = `https://language-plateform-mern-stack.vercel.app/meeting/${callDetails?.id}`;
+  const meetingLink = `http://localhost:3000/meeting/${callDetails?.id}`;
   // Scroll To an Element
   const ToggleShowAllReviews = () => {
     setShow(!show);
@@ -397,10 +506,6 @@ const WelcomeComponent = () => {
                       dateFormat="MMMM d, yyyy h:mm aa"
                       className="w-full rounded-md p-2 bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    {/* <TextField
-                      className="w-full rounded p-2 focus:outline-none text-black"
-                      // value={values.dateTime?.toLocaleString()} // Display the selected date and time
-                    /> */}
                   </div>
                 </div>
               </DialogContent>
@@ -519,7 +624,7 @@ const WelcomeComponent = () => {
           <div className="flex items-center space-x-4">
             <Avatar
               alt={user?.username}
-              src={`https://language-plateform-mernstack.onrender.com/${user?.profileImage}`}
+              src={user?.profileImage?.url}
               sx={{ width: 100, height: 100 }}
             />
             <div>
@@ -548,11 +653,142 @@ const WelcomeComponent = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="bg-gray-800 rounded-xl p-6 shadow-lg"
         >
-          {" "}
           <h2 className="text-2xl font-bold mb-4">Horaire</h2>
           {renderAvailabilityTable()}
+          <Button
+            color="blue"
+            className="mt-4"
+            onClick={handleOpenAvailabilityDialog}
+          >
+            Ajouter Disponibilité
+          </Button>
         </motion.section>
-
+        <Dialog
+          open={openAvailabilityDialog}
+          onClose={handleCloseAvailabilityDialog}
+          fullWidth
+          maxWidth="sm"
+          PaperProps={{
+            className: "bg-gray-800 text-gray-200 rounded-lg",
+          }}
+        >
+          <form onSubmit={handleSubmitAvailability} className="p-6">
+            <DialogTitle className="text-2xl font-bold mb-4">
+              Ajouter Disponibilité
+            </DialogTitle>
+            <DialogContent>
+              <div className="space-y-6">
+                {newAvailability.map((slot, index) => (
+                  <div key={index} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Jour
+                      </label>
+                      <Select
+                        required
+                        fullWidth
+                        variant="outlined"
+                        name="day"
+                        value={slot.day}
+                        onChange={(e: any) =>
+                          handleAvailabilityChange(index, e)
+                        }
+                        className="bg-gray-700 rounded-md"
+                        inputProps={{
+                          className: "text-gray-200",
+                        }}
+                      >
+                        {days.map((day) => (
+                          <MenuItem key={day} value={day}>
+                            {day}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Heure de début
+                      </label>
+                      <Select
+                        required
+                        fullWidth
+                        variant="outlined"
+                        name="startTime"
+                        value={slot.startTime}
+                        onChange={(e: any) =>
+                          handleAvailabilityChange(index, e)
+                        }
+                        className="bg-gray-700 rounded-md"
+                        inputProps={{
+                          className: "text-gray-200",
+                        }}
+                      >
+                        {timeSlots.map((time) => (
+                          <MenuItem key={time} value={time}>
+                            {time}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Heure de fin
+                      </label>
+                      <Select
+                        required
+                        fullWidth
+                        variant="outlined"
+                        name="endTime"
+                        value={slot.endTime}
+                        onChange={(e: any) =>
+                          handleAvailabilityChange(index, e)
+                        }
+                        className="bg-gray-700 rounded-md"
+                        inputProps={{
+                          className: "text-gray-200",
+                        }}
+                      >
+                        {timeSlots.map((time) => (
+                          <MenuItem key={time} value={time}>
+                            {time}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                    <Button
+                      color="red"
+                      onClick={() => removeAvailabilitySlot(index)}
+                      className="mt-2"
+                    >
+                      Supprimer
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  color="green"
+                  onClick={addAvailabilitySlot}
+                  className="mt-4"
+                >
+                  Ajouter un créneau
+                </Button>
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleCloseAvailabilityDialog}
+                className="bg-gray-600 hover:bg-gray-700 text-white"
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-600 text-white"
+              >
+                Ajouter
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
         {/* Upcoming Calls Section */}
         <motion.section
           ref={upcomingCallsRef}

@@ -24,6 +24,7 @@ import { AuthContext } from "src/Context/AuthContext";
 import courseFrench from "../../assets/images/cours13.png";
 import courseEnglish from "../../assets/images/cours12.png";
 import courseSpanish from "../../assets/images/cours10.png";
+import person from "../../assets/images/default.png";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { StarIcon } from "lucide-react";
@@ -55,7 +56,32 @@ const recommendedCourses = [
     price: "29,99 €",
   },
 ];
-
+const actions = [
+  {
+    icon: trial,
+    title: "Cours d'essai",
+    desc: "30 minutes pour 1,00 $US",
+    url: "/courses/all",
+  },
+  {
+    icon: subscribe,
+    title: "S'abonner",
+    desc: "Choisissez votre programme",
+    url: "/pricing",
+  },
+  {
+    icon: tutors,
+    title: "Trouver un tuteur",
+    desc: "Parcourez nos tuteurs",
+    url: "/apprenant",
+  },
+  {
+    icon: courses,
+    title: "Voir les cours",
+    desc: "Découvrez nos supports",
+    url: "/courses/all",
+  },
+];
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const ProfileApprenant = () => {
@@ -109,7 +135,7 @@ const ProfileApprenant = () => {
           <Card className="p-6 shadow-lg rounded-xl">
             <div className="flex flex-col items-center">
               <Avatar
-                src={`http://localhost:5000/${user?.profileImage}`}
+                src={user?.profileImage?.url || person}
                 alt="Profile"
                 size="xxl"
                 className="mb-4 ring-4 ring-blue-500"
@@ -149,34 +175,13 @@ const ProfileApprenant = () => {
               Actions rapides
             </Typography>
             <div className="space-y-4">
-              {[
-                {
-                  icon: trial,
-                  title: "Cours d'essai",
-                  desc: "30 minutes pour 1,00 $US",
-                },
-                {
-                  icon: subscribe,
-                  title: "S'abonner",
-                  desc: "Choisissez votre programme",
-                },
-                {
-                  icon: tutors,
-                  title: "Trouver un tuteur",
-                  desc: "Parcourez nos tuteurs",
-                },
-                {
-                  icon: courses,
-                  title: "Voir les cours",
-                  desc: "Découvrez nos supports",
-                },
-              ].map((item, index) => (
+              {actions.map((item, index) => (
                 <Button
                   key={index}
                   color="blue"
                   variant="outlined"
                   className="w-full flex items-center justify-between p-4"
-                  onClick={() => navigate("/apprenant")}
+                  onClick={() => navigate(item.url)}
                 >
                   <div className="flex items-center">
                     <img src={item.icon} alt="" className="w-10 h-10 mr-4" />
@@ -253,7 +258,7 @@ const ProfileApprenant = () => {
                   fullWidth
                   className="mt-2"
                 >
-                  Voir le profil
+                  <Link to={`/apprenant`}>Voir le profil</Link>
                 </Button>
               </Card>
             ))}
@@ -291,7 +296,7 @@ const ProfileApprenant = () => {
                     fullWidth
                     className="flex items-center justify-center gap-2"
                   >
-                    S'inscrire au cours
+                    <Link to={`/courses/all`}>S'inscrire au cours</Link>
                     <ArrowRightIcon className="h-4 w-4" />
                   </Button>
                 </div>

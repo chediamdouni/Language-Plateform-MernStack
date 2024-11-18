@@ -146,10 +146,7 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
     });
 
     try {
-      await axios.put(
-         `${apiUrl}/users/editUserProfile/${user.id}`,
-        formData
-      );
+      await axios.put(`${apiUrl}/users/editUserProfile/${user.id}`, formData);
 
       updateUser(formData);
       onSave();
@@ -194,17 +191,17 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                 <div>
                   <label
                     htmlFor="username"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    className="block text-sm font-medium text-white dark:text-gray-300 mb-1"
                   >
                     Nom d'utilisateur
                   </label>
                   <div className="relative">
-                    <FaUser className="absolute top-3 left-3 text-gray-400" />
+                    <FaUser className="absolute top-3 left-3 text-white " />
                     <Field
                       type="text"
                       name="username"
                       id="username"
-                      className="pl-10 w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-gray-900 dark:text-white"
+                      className="pl-10 w-full px-4 py-2 bg-gray-600 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-white dark:text-white"
                       placeholder="John Doe"
                     />
                   </div>
@@ -217,17 +214,17 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    className="block text-sm font-medium text-white dark:text-gray-300 mb-1"
                   >
                     Email
                   </label>
                   <div className="relative">
-                    <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
+                    <FaEnvelope className="absolute top-3 left-3 text-white " />
                     <Field
                       type="email"
                       name="email"
                       id="email"
-                      className="pl-10 w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-gray-900 dark:text-white"
+                      className="pl-10 w-full px-4 py-2 bg-gray-600 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-white dark:text-white"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -242,17 +239,17 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
               <div className="mb-6">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-white mb-1"
                 >
                   Nouveau mot de passe
                 </label>
                 <div className="relative">
-                  <FaLock className="absolute top-3 left-3 text-gray-400" />
+                  <FaLock className="absolute top-3 left-3 text-white " />
                   <Field
                     type="password"
                     name="password"
                     id="password"
-                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                    className="pl-10 w-full px-4 py-2 border bg-gray-600 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
                     placeholder="Laissez vide pour ne pas changer"
                   />
                 </div>
@@ -267,34 +264,34 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                 <div>
                   <label
                     htmlFor="dateOfBirth"
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-white mb-1"
                   >
                     Date de Naissance
                   </label>
                   <div className="relative">
-                    <FaBirthdayCake className="absolute top-3 left-3 text-gray-400" />
+                    <FaBirthdayCake className="absolute top-3 left-3 text-white " />
                     <Field
                       type="date"
                       name="dateOfBirth"
                       id="dateOfBirth"
-                      className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                      className="pl-10 w-full px-4 py-2 border bg-gray-600 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
                     />
                   </div>
                 </div>
                 <div>
                   <label
                     htmlFor="gender"
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-white mb-1"
                   >
                     Genre
                   </label>
                   <div className="relative">
-                    <FaVenusMars className="absolute top-3 left-3 text-gray-400" />
+                    <FaVenusMars className="absolute top-3 left-3 text-white " />
                     <Field
                       as="select"
                       name="gender"
                       id="gender"
-                      className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                      className="pl-10 w-full px-4 py-2 bg-gray-600 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
                     >
                       <option value="homme">Homme</option>
                       <option value="femme">Femme</option>
@@ -307,12 +304,12 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
               <div className="mb-6">
                 <label
                   htmlFor="profileImage"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-white mb-1"
                 >
                   Photo de profil
                 </label>
                 <div className="relative">
-                  <FaImage className="absolute top-3 left-3 text-gray-400" />
+                  <FaImage className="absolute top-3 left-3 text-white " />
                   <input
                     type="file"
                     id="profileImage"
@@ -346,17 +343,17 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
               <div className="mb-6">
                 <label
                   htmlFor="aboutMe"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-white mb-1"
                 >
                   À Propos de Moi
                 </label>
                 <div className="relative">
-                  <FaInfoCircle className="absolute top-3 left-3 text-gray-400" />
+                  <FaInfoCircle className="absolute top-3 left-3 text-white " />
                   <Field
                     as="textarea"
                     name="aboutMe"
                     id="aboutMe"
-                    className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                    className="pl-10 w-full px-4 py-2 border bg-gray-600 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
                     placeholder="Parlez-nous de vous"
                     rows={4}
                   />
@@ -367,17 +364,17 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                 <div>
                   <label
                     htmlFor="experience"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    className="block text-sm font-medium text-white dark:text-gray-300 mb-1"
                   >
                     Expérience
                   </label>
                   <div className="relative">
-                    <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
+                    <FaBriefcase className="absolute top-3 left-3 text-white " />
                     <Field
                       type="number"
                       name="experience"
                       id="experience"
-                      className="pl-10 w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-gray-900 dark:text-white"
+                      className="pl-10 w-full px-4 py-2 bg-gray-600 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-white dark:text-white"
                       placeholder="Années"
                     />
                   </div>
@@ -385,17 +382,17 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                 <div>
                   <label
                     htmlFor="language"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    className="block text-sm font-medium text-white dark:text-gray-300 mb-1"
                   >
                     Langue
                   </label>
                   <div className="relative">
-                    <FaLanguage className="absolute top-3 left-3 text-gray-400" />
+                    <FaLanguage className="absolute top-3 left-3 text-white " />
                     <Field
                       as="select"
                       name="language"
                       id="language"
-                      className="pl-10 w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-gray-900 dark:text-white"
+                      className="pl-10 w-full px-4 py-2 bg-gray-600 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-white dark:text-white"
                     >
                       <option value="">Sélectionnez une langue</option>
                       {languages.map((lang) => (
@@ -409,17 +406,17 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                 <div>
                   <label
                     htmlFor="country"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    className="block text-sm font-medium text-white dark:text-gray-300 mb-1"
                   >
                     Pays
                   </label>
                   <div className="relative">
-                    <FaGlobe className="absolute top-3 left-3 text-gray-400" />
+                    <FaGlobe className="absolute top-3 left-3 text-white " />
                     <Field
                       as="select"
                       name="country"
                       id="country"
-                      className="pl-10 w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-gray-900 dark:text-white"
+                      className="pl-10 w-full px-4 py-2 bg-gray-600 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 block transition duration-150 ease-in-out text-white dark:text-white"
                     >
                       <option value="">Sélectionnez un pays</option>
                       {countries.map((country) => (
@@ -432,13 +429,13 @@ const EditForm: React.FC<EditFormProps> = ({ user, onSave }) => {
                 </div>
               </div>
 
-              {previewImage && (
+             {/* {previewImage && (
                 <img
                   src={previewImage}
                   alt="Preview"
                   className="mt-4 max-w-xs h-auto rounded-lg shadow-md"
                 />
-              )}
+              )}*/}
 
               <div className="flex justify-end">
                 <button

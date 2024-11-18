@@ -44,8 +44,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect:
-      "https://language-plateform-mern-stack.vercel.app/apprenant/connexion",
+    failureRedirect: "http://localhost:3000/apprenant/connexion",
   }),
   async (req, res) => {
     console.log("Google callback triggered");
@@ -62,13 +61,11 @@ router.get(
         withCredentials: true,
         httpOnly: true,
         secure: true,
-        sameSite: "none",
+        sameSite: "lax",
       });
 
       console.log("Cookie set, redirecting to frontend");
-      res.redirect(
-        "https://language-plateform-mern-stack.vercel.app/auth/google/callback"
-      );
+      res.redirect("http://localhost:3000/auth/google/callback");
     } catch (error) {
       console.error("Error creating token:", error);
       res.redirect("/");

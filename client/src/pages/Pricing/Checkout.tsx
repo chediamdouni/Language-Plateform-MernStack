@@ -22,7 +22,7 @@ const Checkout: React.FC = () => {
             selectedPlan,
             totalPrice,
             userId: user?.id,
-          }
+          } 
         );
         window.location.href = response.data.url;
       } catch (error) {

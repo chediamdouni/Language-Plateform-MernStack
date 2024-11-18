@@ -13,7 +13,9 @@ interface Course {
   titre: string;
   description: string;
   categorie: string;
-  image: string;
+  image: {
+    url: string;
+  };
   prix: number;
   tuteur: {
     _id: string;
@@ -45,7 +47,7 @@ const DisplayAllCourses = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get( `${apiUrl}/courses/all`);
+      const response = await axios.get(`${apiUrl}/courses/all`);
       setCourses(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des cours", error);
@@ -120,20 +122,32 @@ const DisplayAllCourses = () => {
               className="bg-gradient-to-r from-orange-400 to-pink-500 rounded-3xl p-8 mb-12 shadow-2xl relative overflow-hidden"
             >
               <div className="absolute top-0 left-0 w-full h-full bg-white opacity-10 transform -skew-y-6"></div>
-              <h2 className="text-4xl font-bold text-white mb-6">Bienvenue dans notre espace de cours</h2>
+              <h2 className="text-4xl font-bold text-white mb-6">
+                Bienvenue dans notre espace de cours
+              </h2>
               <div className="flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="flex items-center gap-4 bg-white bg-opacity-20 p-6 rounded-2xl backdrop-blur-sm">
                   <img src={person} alt="person" className="h-20 w-20" />
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Liberté de choix</h3>
-                    <p className="text-white text-opacity-90">Choisissez vos propres sujets ou discutez librement avec votre tuteur</p>
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      Liberté de choix
+                    </h3>
+                    <p className="text-white text-opacity-90">
+                      Choisissez vos propres sujets ou discutez librement avec
+                      votre tuteur
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 bg-white bg-opacity-20 p-6 rounded-2xl backdrop-blur-sm">
                   <img src={book} alt="book" className="h-20 w-20" />
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Supports guidés</h3>
-                    <p className="text-white text-opacity-90">Explorez nos propositions de sujets pour orienter vos cours</p>
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      Supports guidés
+                    </h3>
+                    <p className="text-white text-opacity-90">
+                      Explorez nos propositions de sujets pour orienter vos
+                      cours
+                    </p>
                   </div>
                 </div>
               </div>
@@ -175,7 +189,10 @@ const DisplayAllCourses = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="priceRange" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="priceRange"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Prix maximum : {priceRange[1]} €
                   </label>
                   <input
@@ -184,31 +201,44 @@ const DisplayAllCourses = () => {
                     min="0"
                     max="1000"
                     value={priceRange[1]}
-                    onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+                    onChange={(e) =>
+                      setPriceRange([0, parseInt(e.target.value)])
+                    }
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
                 <div>
-                  <h3 className="font-medium text-gray-700 mb-2">Catégories :</h3>
+                  <h3 className="font-medium text-gray-700 mb-2">
+                    Catégories :
+                  </h3>
                   <div className="flex flex-wrap gap-2">
-                    {["Développement personnel", "Exprimez-vous"].map((badge) => (
-                      <motion.span
-                        key={badge}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setSelectedBadge((prevBadge) => (prevBadge === badge ? "" : badge))}
-                        className={`inline-block px-3 py-1 rounded-full text-sm cursor-pointer ${
-                          selectedBadge === badge
-                            ? "bg-indigo-500 text-white"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        }`}
-                      >
-                        {badge}
-                        {selectedBadge === badge && (
-                          <FiX className="inline-block ml-1" onClick={() => setSelectedBadge("")} />
-                        )}
-                      </motion.span>
-                    ))}
+                    {["Développement personnel", "Exprimez-vous"].map(
+                      (badge) => (
+                        <motion.span
+                          key={badge}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() =>
+                            setSelectedBadge((prevBadge) =>
+                              prevBadge === badge ? "" : badge
+                            )
+                          }
+                          className={`inline-block px-3 py-1 rounded-full text-sm cursor-pointer ${
+                            selectedBadge === badge
+                              ? "bg-indigo-500 text-white"
+                              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          }`}
+                        >
+                          {badge}
+                          {selectedBadge === badge && (
+                            <FiX
+                              className="inline-block ml-1"
+                              onClick={() => setSelectedBadge("")}
+                            />
+                          )}
+                        </motion.span>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
@@ -216,7 +246,9 @@ const DisplayAllCourses = () => {
           </motion.div>
 
           <motion.div variants={itemVariants} className="lg:w-3/4">
-            <h1 className="text-4xl font-bold mb-8 text-gray-800">Explorer les cours</h1>
+            <h1 className="text-4xl font-bold mb-8 text-gray-800">
+              Explorer les cours
+            </h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCourses.map((course) => (
                 <motion.div
@@ -227,19 +259,27 @@ const DisplayAllCourses = () => {
                 >
                   <div className="relative h-48">
                     <img
-                      src={`http://localhost:5000/${course.image}`}
+                      src={course.image.url}
                       alt={course.titre}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                      <h2 className="text-xl font-bold text-white">{course.titre}</h2>
+                      <h2 className="text-xl font-bold text-white">
+                        {course.titre}
+                      </h2>
                     </div>
                   </div>
                   <div className="p-4">
-                    <p className="text-gray-600 mb-2 line-clamp-2">{course.description}</p>
+                    <p className="text-gray-600 mb-2 line-clamp-2">
+                      {course.description}
+                    </p>
                     <div className="flex justify-between items-center">
-                      <p className="text-indigo-600 font-bold">{course.prix} €</p>
-                      <p className="text-gray-500 text-sm">Par {course.tuteur.username}</p>
+                      <p className="text-indigo-600 font-bold">
+                        {course.prix} €
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        Par {course.tuteur.username}
+                      </p>
                     </div>
                   </div>
                 </motion.div>

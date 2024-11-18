@@ -3,8 +3,6 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const userVerification = async (req, res, next) => {
-  console.log("Cookies:", req.cookies);
-  console.log("Headers:", req.headers);
 
   let token = req.cookies.bearerToken;
 
@@ -15,7 +13,7 @@ const userVerification = async (req, res, next) => {
     }
   }
 
-  console.log("Retrieved token:", token);
+  // console.log("Retrieved token:", token);
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized, no token provided" });
@@ -46,6 +44,10 @@ const userVerification = async (req, res, next) => {
 const checkRoles = (roles) => async (req, res, next) => {
   let { email } = req.body;
   const user = await User.findOne({ email });
+  if (!user || !user.roles) {
+    console.error("User or user roles are not defined");
+    return;
+  }
   !roles.includes(user.roles)
     ? res.status(401).json("Sorry you do not have access to this route ")
     : next();

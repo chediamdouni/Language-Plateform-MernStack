@@ -1,12 +1,14 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useDropzone } from "react-dropzone";
+import { AuthContext } from "src/Context/AuthContext";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const CreateCourse: React.FC = () => {
+  const { user } = useContext(AuthContext);
   const [titre, setTitre] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categorie, setCategorie] = useState<string>("Développement personnel");
@@ -15,6 +17,21 @@ const CreateCourse: React.FC = () => {
   const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
 
+  const handleImage = (e: any) => {
+    const file = e.target.files[0];
+    setFileToBase(file);
+    console.log(file);
+  };
+
+  const setFileToBase = (file: File) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      if (reader.result) {
+        setImage(file);
+      }
+    };
+  };
   const handleDrop = (acceptedFiles: File[]) => {
     setImage(acceptedFiles[0]);
   };
@@ -27,7 +44,7 @@ const CreateCourse: React.FC = () => {
     formData.append("categorie", categorie);
     formData.append("prix", prix.toString());
     formData.append("prompts", prompts);
-    formData.append("tuteur", "66db4bb3db70fe5c01d7e147");
+    formData.append("tuteur", user?.id || "");
     if (image) {
       formData.append("image", image);
     }
@@ -143,6 +160,7 @@ const CreateCourse: React.FC = () => {
                 ? "border-blue-500 bg-blue-500 bg-opacity-10"
                 : "border-gray-600 hover:border-blue-500"
             }`}
+            onChange={handleImage}
           >
             <input {...getInputProps()} />
             {image ? (

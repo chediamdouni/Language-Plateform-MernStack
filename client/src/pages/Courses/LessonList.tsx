@@ -98,9 +98,7 @@ const LessonList: React.FC = () => {
 
   const fetchCourse = async () => {
     try {
-      const response = await axios.get(
-         `${apiUrl}/courses/${id}`
-      );
+      const response = await axios.get(`${apiUrl}/courses/${id}`);
       setCourse(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération du cours", error);
@@ -113,9 +111,7 @@ const LessonList: React.FC = () => {
 
   const fetchLessons = async () => {
     try {
-      const response = await axios.get(
-        `${apiUrl}/courses/${id}/fetch/lessons`
-      );
+      const response = await axios.get(`${apiUrl}/courses/${id}/fetch/lessons`);
       setLessons(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des leçons", error);
@@ -221,7 +217,7 @@ const LessonList: React.FC = () => {
     const fetchCompletedQuizzes = async () => {
       try {
         const response = await axios.get(
-           `${apiUrl}/progression/${user?.id}/${id}`
+          `${apiUrl}/progression/${user?.id}/${id}`
         );
         setCompletedQuizzes(response.data.completedQuizzes || []);
       } catch (error) {
@@ -242,7 +238,7 @@ const LessonList: React.FC = () => {
       }
       try {
         const response = await axios.get(
-           `${apiUrl}/progression/${userId}/${courseId}`
+          `${apiUrl}/progression/${userId}/${courseId}`
         );
         console.log(response.data);
         setProgression(response.data);
@@ -264,7 +260,7 @@ const LessonList: React.FC = () => {
       if (!userId || !courseId) return;
 
       const response = await axios.post(
-         `${apiUrl}/progression/update/${userId}/${courseId}`,
+        `${apiUrl}/progression/update/${userId}/${courseId}`,
         {
           lessonId,
         }
@@ -305,12 +301,12 @@ const LessonList: React.FC = () => {
                   value={progression?.progress || 0}
                   strokeWidth={8}
                 />
-                {/*
+
                 <div className="absolute inset-0 flex items-center justify-center flex-col">
                   <Typography variant="h3" className="font-bold text-blue-600">
                     {progression?.progress || 0}%
                   </Typography>
-                </div>*/}
+                </div>
               </div>
               <Typography className="mt-4 text-center text-gray-600">
                 Progression du cours

@@ -39,6 +39,7 @@ const fetchUpcoming = async (userId: string): Promise<UpcomingMeeting[]> => {
     throw error;
   }
 };
+
 const deleteUpcomingMeeting = async (upcomingMeetingId: string) => {
   try {
     await axios.delete(

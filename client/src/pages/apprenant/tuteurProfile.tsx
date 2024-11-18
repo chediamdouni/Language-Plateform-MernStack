@@ -28,8 +28,9 @@ import {
 } from "stream-chat-react";
 import { FaDollarSign } from "react-icons/fa6";
 import { toast } from "react-toastify";
-const apiUrl = process.env.REACT_APP_API_URL;
+import Person from "../../assets/images/mourad.jpg";
 
+const apiUrl = process.env.REACT_APP_API_URL;
 interface AvailabilitySlot {
   day: string;
   startTime: string;
@@ -53,7 +54,10 @@ interface UpcomingCall {
 interface Tutor {
   _id: string;
   username: string;
-  profileImage: string;
+  profileImage: {
+    public_id: string;
+    url: string;
+  };
   aboutMe: string;
   experience: number;
   language: string;
@@ -111,7 +115,7 @@ const CustomMessageInput = () => {
 
 const TuteurProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const { user, streamToken } = useContext(AuthContext);
+  const { user, streamToken, isSignedIn } = useContext(AuthContext);
   const [tutor, setTutor] = useState<Tutor | null>(null);
   const [open, setOpen] = React.useState(false);
   // const [client, setClient] = useState<StreamVideoClient>();
@@ -134,6 +138,7 @@ const TuteurProfile = () => {
     favoriteCourses: [],
   });
   const [message, setMessage] = useState<string>("");
+  const navigate = useNavigate();
 
   const days: string[] = [
     "sunday",
@@ -145,15 +150,18 @@ const TuteurProfile = () => {
     "saturday",
   ];
 
+  useEffect(() => {
+    if (!isSignedIn) {
+      navigate("/apprenant/connexion");
+    }
+  }, [isSignedIn, navigate]);
   // Fetching availability from BackSide
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await axios.get(
-           `${apiUrl}/tuteur/availability/65dcd2e9d997a54d215c10dd`
-        );
+        const response = await axios.get(`${apiUrl}/tuteur/availability/${id}`);
         console.log(response.data.availability);
         setAvailability(response.data.availability || []);
       } catch (error) {
@@ -169,9 +177,7 @@ const TuteurProfile = () => {
   useEffect(() => {
     const fetchTutor = async () => {
       try {
-        const response = await axios.get(
-           `${apiUrl}/tuteur/${id}`
-        );
+        const response = await axios.get(`${apiUrl}/tuteur/${id}`);
         setTutor(response.data.tuteur);
       } catch (err) {
         console.error("Error fetching tutor:", err);
@@ -389,7 +395,7 @@ const TuteurProfile = () => {
       console.log("Message de succès:", response.data.message);
 
       setMessage(response.data.message);
-      toast.success("✅ Ajouté avec succées ", {
+      toast.success(" Ajouté avec succées ", {
         position: "top-center",
       });
     } catch (error) {
@@ -432,7 +438,7 @@ const TuteurProfile = () => {
                       className="mb-5"
                     >
                       <img
-                        src={`http://localhost:5000/${tutor?.profileImage}`}
+                        src={tutor?.profileImage?.url}
                         alt={tutor?.username}
                         className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
                       />
@@ -451,7 +457,7 @@ const TuteurProfile = () => {
                   <div className="flex justify-center space-x-6">
                     <span className="flex items-center text-sm text-gray-500">
                       <IoIosSchool className="mr-2 text-purple-500" />
-                      {tutor?.experience} years experience
+                      {tutor?.experience} ans d'expérience
                     </span>
                     <span className="flex items-center text-sm text-gray-500">
                       <AiOutlineSlack className="mr-2 text-purple-500" />

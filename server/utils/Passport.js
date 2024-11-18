@@ -7,8 +7,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        "https://language-plateform-mernstack.onrender.com/api/auth/google/callback",
+      callbackURL: "http://localhost:5000/api/auth/google/callback",
     },
 
     async (accessToken, refreshToken, profile, done) => {
@@ -20,7 +19,7 @@ passport.use(
 
         if (user) {
           user.username = profile.displayName;
-          user.profileImage = profile.photos[0].value;
+          user.profileImage.url = profile.photos[0].value;
           await user.save();
           return done(null, user);
         }

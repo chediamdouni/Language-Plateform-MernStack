@@ -1,14 +1,11 @@
 const { validationResult } = require("express-validator");
 const User = require("../models/User");
 const deleteFile = require("../utils/imageDelete");
+const cloudinary = require("../utils/cloudinary");
+
 // UPDATE USER  ///
 const editUserProfile = async (req, res, next) => {
   try {
-    console.log("Début de editUserProfile");
-    console.log("userId:", req.params.userId);
-    console.log("req.body:", req.body);
-    console.log("req.file:", req.file);
-
     const user = await User.findById(req.params.userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -34,7 +31,7 @@ const editUserProfile = async (req, res, next) => {
       if (user.profileImage) {
         try {
           console.log("Tentative de suppression de l'ancienne image");
-          await deleteFile(user.profileImage);
+          await cloudinary.uploader.destroy(user.profileImage.public_id);
           console.log("Ancienne image supprimée avec succès ou non trouvée");
         } catch (error) {
           console.error(
@@ -43,8 +40,14 @@ const editUserProfile = async (req, res, next) => {
           );
         }
       }
-      user.profileImage = req.file.path.replace(/\\/g, "/");
-      console.log("Nouveau chemin d'image:", user.profileImage);
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "Users",
+      });
+      user.profileImage = {
+        public_id: result.public_id,
+        url: result.secure_url,
+      };
+      console.log("Nouveau chemin d'image:", user.profileImage.url);
     }
 
     await user.save();

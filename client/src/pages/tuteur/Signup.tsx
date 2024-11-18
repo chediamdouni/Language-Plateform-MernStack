@@ -92,12 +92,12 @@ const SignupTuteur: React.FC = () => {
               <div className="relative">
                 <Input
                   size="lg"
-                  label=""
+                  placeholder="Nom d'utilisateur "
                   {...register("username", {
                     required: "Ce champ est obligatoire",
                   })}
                   error={Boolean(errors.username)}
-                  className="pr-10"
+                  className="pr-10 "
                   icon={
                     <FaUser className="absolute top-1/2 right-3 transform -translate-y-1/2 text-blue-600" />
                   }
@@ -113,7 +113,7 @@ const SignupTuteur: React.FC = () => {
                 <Input
                   size="lg"
                   type="email"
-                  label=""
+                  placeholder="Email"
                   {...register("email", {
                     required: "Ce champ est obligatoire",
                     pattern: {
@@ -138,7 +138,7 @@ const SignupTuteur: React.FC = () => {
                 <Input
                   size="lg"
                   type="password"
-                  label=""
+                  placeholder="Mot de passe"
                   {...register("password", {
                     required: "Ce champ est obligatoire",
                     minLength: {
@@ -194,7 +194,7 @@ const SignupTuteur: React.FC = () => {
               <div className="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg">
                 <Input
                   size="lg"
-                  label="Email du collègue"
+                  placeholder="Email du collègue"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   className="bg-transparent border-none"
@@ -211,16 +211,20 @@ const SignupTuteur: React.FC = () => {
                 </Button>
               </div>
             </div>
-
-            <Typography color="gray" className="mt-4 text-center text-sm">
-              Déjà un compte ?{" "}
-              <Link
-                to="/tuteur/connexion"
-                className="text-blue-600 hover:underline font-medium"
+            <div className="mt-4">
+              <Typography
+                color="gray"
+                className="mt-4 text-center text-sm relative z-10"
               >
-                Se connecter
-              </Link>
-            </Typography>
+                Déjà un compte ?
+                <Link
+                  to="/tuteur/connexion"
+                  className="text-blue-600 hover:underline font-medium ml-1"
+                >
+                  Se connecter
+                </Link>
+              </Typography>
+            </div>
           </div>
         </div>
       </div>

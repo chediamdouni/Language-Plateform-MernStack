@@ -48,6 +48,7 @@ const signupUser = async (req, res, next) => {
       verified: false,
       roles: roles.toLowerCase(),
     });
+
     await syncUser(user);
 
     await sendVerificationEmail(user);
@@ -60,6 +61,7 @@ const signupUser = async (req, res, next) => {
     res.status(500).send("There is something wrong in signup");
   }
 };
+
 const verifyEmail = async (req, res) => {
   const { token } = req.query;
   console.log("Token reçu:", token);
@@ -70,12 +72,12 @@ const verifyEmail = async (req, res) => {
   }
 
   try {
-    console.log("Tentative de vérification du token");
+    // console.log("Tentative de vérification du token");
     const decoded = jwt.verify(token, process.env.VERIFICATION_TOKEN_SECRET);
-    console.log("Token décodé:", decoded);
+    // console.log("Token décodé:", decoded);
 
     const user = await User.findById(decoded.userId);
-    console.log("Utilisateur trouvé:", user);
+    // console.log("Utilisateur trouvé:", user);
 
     if (!user) {
       console.log("Erreur: Utilisateur non trouvé");
@@ -106,6 +108,7 @@ const verifyEmail = async (req, res) => {
       .json({ success: false, message: "Token invalide ou expiré" });
   }
 };
+
 const resendVerificationEmail = async (req, res) => {
   console.log("Requête reçue pour renvoyer l'email de vérification");
   console.log("Corps de la requête:", req.body);
@@ -150,6 +153,7 @@ const resendVerificationEmail = async (req, res) => {
     });
   }
 };
+
 // LOGIN ///
 const login = async (req, res, next) => {
   try {
@@ -174,11 +178,11 @@ const login = async (req, res, next) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.cookie("bearerToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+      /*  res.cookie("bearerToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 24 * 60 * 60 * 1000,
+      }); */
     response.message = "Login successful";
     res.status(200).send(response);
   } catch (error) {
@@ -186,6 +190,7 @@ const login = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" }); // Handle errors
   }
 };
+
 // USER LOGGED IN ///
 const getLoggedInUser = async (req, res) => {
   try {
@@ -203,7 +208,7 @@ const getLoggedInUser = async (req, res) => {
     const userId = getUserIdFromJWT(token);
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized, invalid token" });
-    }
+    } 
 
     const user = await User.findById(userId);
     if (!user) {

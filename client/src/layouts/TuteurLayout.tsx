@@ -19,6 +19,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "src/Context/AuthContext";
+import person from "../assets/images/default.png";
 
 interface Props {
   children: React.ReactNode;
@@ -92,7 +93,7 @@ function ProfileMenu() {
             size="xs"
             alt={user?.username}
             className="border border-indigo-500 p-0.5 w-8 h-8"
-            src={`http://localhost:5000/${user?.profileImage}`}
+            src={user?.profileImage?.url || person}
           />
           <Typography color="white" className="font-medium text-sm">
             {user?.username}

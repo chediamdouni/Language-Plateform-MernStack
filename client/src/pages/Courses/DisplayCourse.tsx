@@ -13,11 +13,16 @@ interface Course {
   titre: string;
   description: string;
   prix: number;
-  image: string;
+  image: {
+    url: string;
+  };
   tuteur: {
     _id: string;
     username: string;
-    profileImage: string;
+    profileImage: {
+      public_id: string;
+      url: string;
+    };
   };
   lessons: Lesson[];
   quizzes: Quiz[];
@@ -65,7 +70,7 @@ const DisplayCourse = () => {
   // all courses
   const fetchCourses = async () => {
     try {
-      const response = await axios.get( `${apiUrl}/courses/all`);
+      const response = await axios.get(`${apiUrl}/courses/all`);
       setCourses(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des cours", error);
@@ -79,9 +84,7 @@ const DisplayCourse = () => {
   // specifique course
   const fetchCourse = async () => {
     try {
-      const response = await axios.get(
-         `${apiUrl}/courses/${id}`
-      );
+      const response = await axios.get(`${apiUrl}/courses/${id}`);
       setCourse(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération du cours", error);
@@ -153,7 +156,7 @@ const DisplayCourse = () => {
                 <p className="text-gray-600 mb-6">{course.description}</p>
                 <div className="flex items-center mb-6">
                   <img
-                    src={`http://localhost:5000/${course.tuteur.profileImage}`}
+                    src={course.tuteur.profileImage?.url}
                     alt={course.tuteur.username}
                     className="w-12 h-12 rounded-full mr-4"
                   />

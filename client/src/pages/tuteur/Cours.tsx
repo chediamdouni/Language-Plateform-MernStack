@@ -7,12 +7,15 @@ import cours1 from "../../assets/images/cours1.png";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumbs, Card, Typography } from "@material-tailwind/react";
 import { motion } from "framer-motion";
+import { TrashIcon } from "lucide-react";
 
 interface Course {
   _id: string;
   titre: string;
   description: string;
-  image: string;
+  image: {
+    url: string;
+  };
   tuteur: string;
   prix: number;
   etudiantsInscrits: string[];
@@ -38,9 +41,7 @@ const Courses: React.FC = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get(
-        `${apiUrl}/courses/tuteur/${user!.id}`
-      );
+      const response = await axios.get(`${apiUrl}/courses/tuteur/${user!.id}`);
       console.log(response.data);
       setCourses(response.data);
 
@@ -51,6 +52,17 @@ const Courses: React.FC = () => {
       setLastCourse(sortedCourses[0] || null);
     } catch (error) {
       console.error("Erreur lors de la récupération des cours:", error);
+    }
+  };
+
+  const handleDeleteCourse = async (courseId: string) => {
+    try {
+      console.log("courseId", courseId);
+      await axios.delete(`${apiUrl}/courses/delete/${courseId}`);
+      // Refresh the course list or update state to remove the deleted course
+      fetchCourses();
+    } catch (error) {
+      console.error("Error deleting course", error);
     }
   };
 
@@ -82,12 +94,27 @@ const Courses: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative"
               onClick={() => navigate(`/courses/update/${course._id}`)}
             >
+              <button
+                className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition z-50"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent card click event
+                  if (
+                    window.confirm(
+                      "Are you sure you want to delete this course?"
+                    )
+                  ) {
+                    handleDeleteCourse(course._id);
+                  }
+                }}
+              >
+                <TrashIcon className="h-5 w-5" />
+              </button>
               <div className="relative h-48">
                 <img
-                  src={`https://language-plateform-mernstack.onrender.com/${course.image}`}
+                  src={course.image.url}
                   alt={course.titre}
                   className="w-full h-full object-cover"
                 />
@@ -112,7 +139,6 @@ const Courses: React.FC = () => {
             </motion.div>
           ))}
         </motion.div>
-
         <div className="flex flex-col lg:flex-row gap-8">
           <motion.div
             initial={{ x: -20, opacity: 0 }}
@@ -135,7 +161,7 @@ const Courses: React.FC = () => {
               {lastCourse ? (
                 <>
                   <img
-                    src={`https://language-plateform-mernstack.onrender.com/${lastCourse.image}`}
+                    src={lastCourse.image.url}
                     alt={lastCourse.titre}
                     className="w-full h-48 object-cover rounded-lg mb-4"
                   />

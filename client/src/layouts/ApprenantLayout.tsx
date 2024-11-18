@@ -21,8 +21,9 @@ import { AuthContext } from "src/Context/AuthContext";
 import RequestsList from "../components/RequestsList";
 import { Popover, Transition } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
-import ApprenantChatbot from "../components/ApprenantChatbot";
 import ChatbotComponent from "../components/ChatBotComponent";
+import person from "../assets/images/default.png";
+import ApprenantChatbot from "../components/ApprenantChatbot";
 
 // profile menu component
 const profileMenuItems = [
@@ -76,45 +77,46 @@ function ProfileMenu() {
         <Button
           variant="text"
           color="blue-gray"
-          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+          className="flex items-center gap-2 rounded-full py-1 pr-3 pl-1 lg:ml-auto transition-all hover:bg-gray-100"
         >
           <Avatar
             variant="circular"
             size="md"
             alt="tania andrew"
-            className="border border-gray-900 p-0.5 rounded-full"
-            src={`http://localhost:5000/${user?.profileImage}`}
+            className="border border-gray-300 p-0.5 rounded-full"
+            src={user?.profileImage?.url || person}
           />
           <ChevronDownIcon
             strokeWidth={2.5}
-            className={`h-3 w-3 transition-transform ${
+            className={`h-4 w-4 transition-transform ${
               isMenuOpen ? "rotate-180" : ""
             }`}
           />
         </Button>
       </MenuHandler>
-      <MenuList className="p-1">
+      <MenuList className="p-2 bg-white shadow-lg rounded-lg">
         {profileMenuItems.map(({ label, icon }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
             <MenuItem
               key={label}
               onClick={() => handleClick(label)}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
+              className={`flex items-center gap-3 rounded-lg p-2 transition-all hover:bg-gray-100 ${
+                isLastItem ? "hover:bg-red-100" : ""
               }`}
             >
               {React.createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
+                className: `h-5 w-5 ${
+                  isLastItem ? "text-red-500" : "text-blue-500"
+                }`,
                 strokeWidth: 2,
               })}
               <Typography
                 as="span"
                 variant="small"
-                className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                color={isLastItem ? "red" : "inherit"}
+                className={`font-korto font-semibold text-md ${
+                  isLastItem ? "text-red-500" : "text-gray-700"
+                }`}
               >
                 {label}
               </Typography>
@@ -219,7 +221,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                       leaveFrom="opacity-100 translate-y-0"
                       leaveTo="opacity-0 translate-y-1"
                     >
-                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                         <div className="p-4">
                           <h3 className="text-lg font-medium text-gray-900 mb-2">
                             Messages
@@ -244,7 +246,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
               <Popover className="relative">
                 {({ open }) => (
                   <>
-                    <Popover.Button className="p-1 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <Popover.Button className="p-1 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
                       <svg
                         className="h-6 w-6 text-gray-500"
                         fill="none"
@@ -268,7 +270,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                       leaveFrom="opacity-100 translate-y-0"
                       leaveTo="opacity-0 translate-y-1"
                     >
-                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                         <div className="p-4">
                           <h3 className="text-lg font-medium text-gray-900 mb-2">
                             Leçons à venir
@@ -276,7 +278,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                           <RequestsList />
                           <button
                             onClick={() => navigate("/apprenant")}
-                            className="w-full mt-4 bg-blue-600 text-white rounded-md px-4 py-2 hover:bg-blue-700 transition duration-300 ease-in-out"
+                            className="w-full mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-md px-4 py-2 hover:from-blue-600 hover:to-indigo-600 transition duration-300 ease-in-out"
                           >
                             + Réserver une leçon
                           </button>
@@ -314,7 +316,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                       leaveFrom="opacity-100 translate-y-0"
                       leaveTo="opacity-0 translate-y-1"
                     >
-                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                         <div className="p-4">
                           <h3 className="text-lg font-medium text-gray-900 mb-2">
                             Notifications
@@ -393,7 +395,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                 />
               </svg>
             </button>
-            <ChatbotComponent />
+            <ApprenantChatbot />
           </motion.div>
         )}
       </AnimatePresence>

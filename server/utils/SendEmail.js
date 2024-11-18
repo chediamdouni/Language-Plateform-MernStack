@@ -41,6 +41,8 @@ const sendVerificationEmail = async (user) => {
     console.error("Erreur lors de l'envoi de l'email:", error);
   }
 };
+
+
 const sendSubscriptionConfirmationEmail = async (user, planDetails) => {
   const mailOptions = {
     from: process.env.EMAIL,
@@ -70,4 +72,5 @@ const sendSubscriptionConfirmationEmail = async (user, planDetails) => {
     );
   }
 };
+
 module.exports = { sendVerificationEmail, sendSubscriptionConfirmationEmail };

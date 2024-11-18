@@ -15,17 +15,6 @@ const AccountSettings = () => {
   const { user, getLoggedInUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkUserLoggedIn = async () => {
-      await getLoggedInUser();
-      if (!user) {
-        navigate("/tuteur/connexion");
-      }
-    };
-
-    checkUserLoggedIn();
-  }, [user, getLoggedInUser, navigate]);
-
   const settingsOptions = [
     {
       icon: FiUser,

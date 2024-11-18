@@ -17,17 +17,17 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
 
     if (loading) return;
     if (!user) {
-      console.log("y a pas d'utulisateur");
+       console.log("y a pas d'utulisateur");
       /*navigate("/apprenant/connexion");*/
       return;
     }
     if (!apiKey) throw new Error("Stream API Key is Missing");
     if (!user.id) {
-      console.error("User ID is missing");
+       console.error("User ID is missing");
       return;
     }
     if (!streamToken) {
-      console.error("Stream token is missing");
+       console.error("Stream token is missing");
       return;
     }
     const client = new StreamVideoClient({
@@ -35,7 +35,7 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
       user: {
         id: user?.id,
         name: user?.username || user?.id,
-        image: user?.profileImage,
+        image: user?.profileImage?.url,
       },
       token: streamToken,
     });

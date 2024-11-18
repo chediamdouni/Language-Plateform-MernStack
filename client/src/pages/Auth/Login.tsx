@@ -58,6 +58,11 @@ export const LoginApprenant = () => {
         },
         { withCredentials: true }
       );
+      if (!response.data.user || !response.data.user.roles) {
+        handleError("User or User roles not defined");
+        return;
+      }
+
       if (response.data.bearerToken) {
         // Store the token in localStorage as a fallback
         localStorage.setItem("bearerToken", response.data.bearerToken);

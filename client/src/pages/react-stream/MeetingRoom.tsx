@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect, useState } from "react";
 import {
   SpeakerLayout,
@@ -21,6 +21,7 @@ import { Layout, Loader, Users } from "lucide-react";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import EndCallButton from "./EndCallButton";
+import { AuthContext } from "src/Context/AuthContext";
 
 type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 
@@ -31,10 +32,19 @@ const MeetingRoom = () => {
   const [showParticipants, setShowParticipants] = useState(false);
   const { useCallCallingState } = useCallStateHooks();
   const callingState = useCallCallingState();
+  const { user } = useContext(AuthContext);
 
   if (callingState !== CallingState.JOINED) return <div>attend attend </div>;
   //  console.log(callingState);
-
+  const handleLeave = () => {
+    if (user?.roles.includes("tuteur")) {
+      navigate("/tuteur/welcome");
+    } else if (user?.roles.includes("apprenant")) {
+      navigate("/apprenant");
+    } else {
+      navigate("/");
+    }
+  };
   const CallLayout = () => {
     switch (layout) {
       case "grid":
@@ -63,7 +73,7 @@ const MeetingRoom = () => {
         </div>
       </div>
       <div className="fixed bottom-0 flex w-full items-center justify-center gap-5 flex-wrap">
-        <CallControls onLeave={() => navigate("/")} />
+        <CallControls onLeave={handleLeave} />
         <Menu>
           <MenuHandler>
             <Button className="cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]">

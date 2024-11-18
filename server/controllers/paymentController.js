@@ -4,7 +4,7 @@ const stripe = require("../utils/stripe.js");
 
 const createPaymentIntent = async (req, res) => {
   try {
-    console.log("donné entré ", req.body);
+   //  console.log("donné entré ", req.body);
     const { amount, currency } = req.body;
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -37,6 +37,7 @@ const SendConfirmationPayment = async (req, res) => {
     });
   }
 };
+
 const createCheckoutSession = async (req, res) => {
   try {
     const { planType, selectedPlan, totalPrice, userId } = req.body;
@@ -56,8 +57,8 @@ const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `https://language-plateform-mern-stack.vercel.app/apprenant/profile`,
-      cancel_url: `https://language-plateform-mern-stack.vercel.app/pricing`,
+      success_url: `http://localhost:3000/apprenant/profile`,
+      cancel_url: `http://localhost:3000/pricing`,
       metadata: {
         userId,
         planType,

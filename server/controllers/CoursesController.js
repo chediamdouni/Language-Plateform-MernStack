@@ -2,6 +2,7 @@ const Course = require("../models/Course");
 const Lesson = require("../models/Lesson");
 const Quizz = require("../models/Quizz");
 const User = require("../models/User");
+const cloudinary = require("../utils/cloudinary");
 
 // ajouter un cour
 const AddCourse = async (req, res, next) => {
@@ -9,6 +10,14 @@ const AddCourse = async (req, res, next) => {
     req.body;
   const image = req.file ? req.file.path : null;
   try {
+    if (!image) {
+      return res.status(400).json({ message: "Image is required" });
+    }
+    const result = await cloudinary.uploader.upload(image, {
+      folder: "Courses",
+      // width: 300,
+      // crop: "scale"
+    });
     const newCourse = new Course({
       titre,
       description,
@@ -17,7 +26,10 @@ const AddCourse = async (req, res, next) => {
       categorie,
       prix,
       prompts,
-      image,
+      image: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
     });
     await newCourse.save();
     res
@@ -34,22 +46,45 @@ const AddCourse = async (req, res, next) => {
 // edit cours
 const updateCourse = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { titre, description, tuteur, level, categorie, prix, lessons } =
-      req.body;
+    const { courseId } = req.params;
+    console.log("courseId", courseId);
+    const data = {
+      titre: req.body.titre,
+      description: req.body.description,
+      tuteur: req.body.tuteur,
+      level: req.body.level,
+      categorie: req.body.categorie,
+      prix: req.body.prix,
+      lessons: req.body.lessons,
+    };
+    //modify image conditionnally
+    /*if (req.body.image !== "") {
+      const ImgId = currentProduct?.image.public_id;
+      if (ImgId) {
+        await cloudinary.uploader.destroy(ImgId);
+      }
 
-    const updatedCourse = await Course.findByIdAndUpdate(
-      id,
-      { titre, description, tuteur, level, categorie, prix },
-      { new: true }
-    );
+      const newImage = await cloudinary.uploader.upload(req.body.image, {
+        folder: "Courses",
+        width: 1000,
+        crop: "scale",
+      });
+
+      data.image = {
+        public_id: newImage.public_id,
+        url: newImage.secure_url,
+      };
+    }*/
+    const updatedCourse = await Course.findByIdAndUpdate(courseId, data, {
+      new: true,
+    });
 
     if (!updatedCourse) {
       return res.status(404).json({ message: "Cours non trouvé" });
     }
 
     // Mise à jour des leçons et des quizzes
-    for (let lesson of lessons) {
+    /*for (let lesson of lessons) {
       if (lesson._id) {
         const updatedLesson = await Lesson.findByIdAndUpdate(
           lesson._id,
@@ -86,7 +121,7 @@ const updateCourse = async (req, res) => {
         updatedCourse.lessons.push(newLesson._id);
         await updatedCourse.save();
       }
-    }
+    }*/
 
     res.status(200).json(updatedCourse);
   } catch (error) {
@@ -98,10 +133,21 @@ const updateCourse = async (req, res) => {
 const deleteCourse = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedCourse = await Course.findByIdAndDelete(id);
-    if (!deletedCourse) {
+    console.log(id);
+    // Retrieve the course to get the image details
+    const course = await Course.findById(id);
+    if (!course) {
       return res.status(404).json({ message: "Cours non trouvé" });
     }
+
+    // Retrieve current image ID
+    const imgId = course.image.public_id;
+    if (imgId) {
+      await cloudinary.uploader.destroy(imgId);
+    }
+
+    // Delete the course
+    const deletedCourse = await Course.findByIdAndDelete(id);
     res.status(200).json({ message: "Cours supprimé avec succès" });
   } catch (error) {
     res.status(400).json({ message: error.message });

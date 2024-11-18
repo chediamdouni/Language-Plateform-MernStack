@@ -24,7 +24,10 @@ import FooterWithLogo from "../../components/footer";
 interface Tutor {
   _id: string;
   username: string;
-  profileImage: string;
+  profileImage: {
+    public_id: string;
+    url: string;
+  };
   verified: string;
   language: string;
   aboutMe: string;
@@ -50,6 +53,8 @@ const DashboardApprenant: React.FC = () => {
     username: string;
   } | null>(null);
 
+  const badges = ["Arabe", "Science", "Anglais", "France", "Espagnol"];
+
   useEffect(() => {
     if (!isSignedIn && !loading) {
       // Vérifiez que le chargement est terminé
@@ -61,6 +66,12 @@ const DashboardApprenant: React.FC = () => {
     const query = event.target.value;
     setSearchQuery(query);
     const results = searchTutors(query);
+    setSearchResults(results);
+  };
+
+  const handleBadgeClick = (badge: string) => {
+    setSearchQuery(badge);
+    const results = searchTutors(badge);
     setSearchResults(results);
   };
 
@@ -161,6 +172,18 @@ const DashboardApprenant: React.FC = () => {
           <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-xl text-gray-400" />
         </motion.div>
 
+        <motion.div className="flex flex-wrap gap-2 mb-8" variants={itemVariants}>
+          {badges.map((badge) => (
+            <span
+              key={badge}
+              className="bg-indigo-600 text-white py-1 px-3 rounded-full cursor-pointer hover:bg-indigo-700 transition duration-300"
+              onClick={() => handleBadgeClick(badge)}
+            >
+              {badge}
+            </span>
+          ))}
+        </motion.div>
+
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
           variants={containerVariants}
@@ -173,7 +196,7 @@ const DashboardApprenant: React.FC = () => {
             >
               <div className="relative h-40">
                 <img
-                  src={`http://localhost:5000/${tutor?.profileImage}`}
+                  src={tutor?.profileImage?.url}
                   alt={`${tutor.username}'s Profile`}
                   className="w-full h-full object-cover"
                 />

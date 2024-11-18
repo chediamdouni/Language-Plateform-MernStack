@@ -30,7 +30,12 @@ const userSchema = new mongoose.Schema(
       default: "homme",
     },
     profileImage: {
-      type: String,
+      public_id: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
     },
     verified: {
       type: Boolean,

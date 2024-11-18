@@ -23,7 +23,10 @@ export interface User {
   password: string;
   email: string;
   roles: string;
-  profileImage: string;
+  profileImage: {
+    public_id: string;
+    url: string;
+  };
   verified: boolean;
   createdAt: string;
   updatedAt: string;
@@ -84,11 +87,12 @@ export const AuthProvider: React.FC<ProviderInterface> = ({ children }) => {
 
   const handleSignout = useCallback(async () => {
     try {
+      // await axios.post(`${apiUrl}/auth/logout`, {}, { withCredentials: true });
       localStorage.removeItem("bearerToken");
+      removeCookie("bearerToken", { path: "/" });
       setIsSignedIn(false);
       setUser(null);
       setStreamToken(null);
-      removeCookie("bearerToken", { path: "/" });
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
     }
