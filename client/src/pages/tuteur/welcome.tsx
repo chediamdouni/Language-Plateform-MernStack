@@ -466,17 +466,17 @@ const WelcomeComponent = () => {
             fullWidth
             maxWidth="sm"
             PaperProps={{
-              className: "bg-gray-800 text-gray-200 rounded-lg",
+              className: "bg-gradient-to-br from-gray-900 to-gray-800 text-gray-200 rounded-xl shadow-2xl border border-gray-700",
             }}
           >
-            <form onSubmit={createMeeting} className="p-4 sm:p-6">
-              <DialogTitle className="text-xl sm:text-2xl font-bold mb-4">
-                Ajouter un leçon
+            <form onSubmit={createMeeting} className="p-6">
+              <DialogTitle className="text-2xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                Ajouter une leçon
               </DialogTitle>
               <DialogContent>
-                <div className="space-y-4 sm:space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
+                <div className="space-y-6">
+                  <div className="relative">
+                    <label className="block text-sm font-medium mb-2 text-gray-300">
                       Description
                     </label>
                     <TextField
@@ -484,14 +484,23 @@ const WelcomeComponent = () => {
                       fullWidth
                       variant="outlined"
                       onChange={handleChange}
-                      className="bg-gray-700 rounded-md"
+                      className="bg-gray-700/50 rounded-lg transition-all duration-300 hover:bg-gray-700/70 focus:ring-2 focus:ring-blue-500"
                       InputProps={{
                         className: "text-gray-200",
+                        sx: {
+                          '& fieldset': {
+                            borderColor: 'rgba(107, 114, 128, 0.5)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(147, 197, 253, 0.5)',
+                          }
+                        }
                       }}
+                      placeholder="Décrivez votre leçon..."
                     />
                   </div>
-                  <div className="flex w-full flex-col gap-2">
-                    <label className="block text-sm font-medium mb-2">
+                  <div className="relative">
+                    <label className="block text-sm font-medium mb-2 text-gray-300">
                       Créneau Horaire
                     </label>
                     <ReactDatePicker
@@ -502,23 +511,24 @@ const WelcomeComponent = () => {
                       showTimeSelect
                       timeFormat="HH:mm"
                       timeIntervals={15}
-                      timeCaption="time"
-                      dateFormat="MMMM d, yyyy h:mm aa"
-                      className="w-full rounded-md p-2 bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                      timeCaption="Heure"
+                      dateFormat="MMMM d, yyyy HH:mm"
+                      className="w-full rounded-lg p-3 bg-gray-700/50 text-gray-200 border border-gray-600 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                      placeholderText="Sélectionnez date et heure"
                     />
                   </div>
                 </div>
               </DialogContent>
-              <DialogActions className="p-4">
+              <DialogActions className="p-4 flex gap-3 justify-end mt-6">
                 <Button
                   onClick={handleClose}
-                  className="bg-gray-600 hover:bg-gray-700 text-white text-sm sm:text-base"
+                  className="px-6 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-200 transition-all duration-300 text-sm font-medium"
                 >
                   Annuler
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base"
+                  className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white transition-all duration-300 text-sm font-medium"
                 >
                   Ajouter
                 </Button>
@@ -532,34 +542,42 @@ const WelcomeComponent = () => {
               handleClose();
             }}
             PaperProps={{
-              className: "bg-gray-800 text-gray-200 rounded-lg",
+              className: "bg-gradient-to-br from-gray-900 to-gray-800 text-gray-200 rounded-xl shadow-2xl border border-gray-700",
             }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle className="text-xl sm:text-2xl font-bold">
-              Meeting Link
+            <DialogTitle className="text-xl sm:text-2xl font-bold bg-gray-800/50 p-6 border-b border-gray-700">
+              <div className="flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Lien de réunion créé</span>
+              </div>
             </DialogTitle>
-            <DialogContent>
-              <DialogContentText className="text-gray-300 text-sm sm:text-base">
-                Réunion créée avec succès
-                <p className="mt-2 p-2 bg-gray-700 rounded break-all">
-                  Meeting Link: {meetingLink}
-                </p>
+            <DialogContent className="p-6">
+              <DialogContentText className="text-gray-300 text-sm sm:text-base space-y-4">
+                <p className="font-medium mt-2">Votre réunion a été créée avec succès!</p>
+                <div className="mt-4 p-4 bg-gray-700/50 rounded-lg border border-gray-600 flex items-center justify-between">
+                  <code className="text-blue-400 break-all flex-1 mr-4">
+                    {meetingLink}
+                  </code>
+                  <Button
+                    onClick={() => {
+                      navigator.clipboard.writeText(meetingLink);
+                      setCallDetails(undefined);
+                      setMeetingState(undefined);
+                    }}
+                    className="min-w-[120px] bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    <span>Copier</span>
+                  </Button>
+                </div>
               </DialogContentText>
             </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  navigator.clipboard.writeText(meetingLink);
-                  setCallDetails(undefined);
-                  setMeetingState(undefined);
-                }}
-                className="bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base"
-              >
-                Copier le lien
-              </Button>
-            </DialogActions>
           </Dialog>
         )}
       </div>
