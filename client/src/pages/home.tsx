@@ -28,7 +28,7 @@ const data = [
   {
     imageSrc:
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-    title: "Ala Ben Rjab", 
+    title: "Ala Ben Rjab",
     description: "Enseignant Débutant",
     budget: "USD 5$",
   },
@@ -43,7 +43,7 @@ const data = [
     imageSrc:
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
     title: "Mahdi Khmili",
-    description: "Enseignant Professionnel", 
+    description: "Enseignant Professionnel",
     budget: "USD 5$",
   },
 ];
@@ -419,25 +419,25 @@ const Home: React.FC = () => {
           </Card>
         </div>
       </div>
-      <div className="flex items-center justify-center my-20 font-korto">
-        <div className="relative flex bg-clip-border rounded-full bg-white text-gray-700 shadow w-full max-w-[70rem] flex-row bg-orange-200">
-          <div className="relative w-2/5 m-0 overflow-visible text-gray-700 bg-white rounded-full bg-clip-border rounded-xl ">
+      <div className="flex items-center justify-center my-10 md:my-20 font-korto">
+        <div className="relative flex flex-col md:flex-row bg-clip-border rounded-3xl md:rounded-full bg-white text-gray-700 shadow w-full max-w-[70rem] bg-orange-200">
+          <div className="relative w-full md:w-2/5 m-0 overflow-hidden text-gray-700 bg-white rounded-t-3xl md:rounded-l-full md:rounded-r-none">
             <img
               src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
               alt="card"
-              className="w-full h-full object-cover md:rounded-l-3xl"
+              className="w-full h-48 md:h-full object-cover"
             />
           </div>
           <div className="p-4 md:p-6">
-            <h4 className="text-xl md:text-2xl font-semibold mb-2">
+            <h4 className="text-lg md:text-xl lg:text-2xl font-semibold mb-2">
               Essayez nos ressources gratuites 😊🚀
             </h4>
-            <p className="text-base md:text-lg mb-4 md:mb-8">
+            <p className="text-sm md:text-base lg:text-lg mb-4 md:mb-8">
               Découvrez nos ressources gratuites ! Outils, livres et vidéos pour
               vous aider à apprendre l'anglais. Disponibles sans abonnement.
             </p>
             <Link to="/cour">
-              <button className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 text-xs font-bold text-gray-900 uppercase transition-all rounded-lg hover:bg-gray-900/10">
+              <button className="w-full md:w-auto flex items-center justify-center gap-2 px-3 md:px-6 py-2 md:py-3 text-xs font-bold text-gray-900 uppercase transition-all rounded-lg hover:bg-gray-900/10">
                 S'inscrire maintenant
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
