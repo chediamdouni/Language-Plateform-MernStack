@@ -24,6 +24,7 @@ import {
   Bars4Icon,
   UserGroupIcon,
   Cog6ToothIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import logo from "../assets/images/logo.png";
 import { AuthContext } from "src/Context/AuthContext";
@@ -120,9 +121,9 @@ function NavListMenu() {
         allowHover={true}
       >
         <MenuHandler>
-          <Typography as="div" variant="small" className="font-bold ">
+          <Typography as="div" variant="small" className="font-bold">
             <ListItem
-              className="flex items-center gap-4  pr-4 font-medium text-gray-900"
+              className="flex items-center gap-4 pr-4 font-medium text-gray-900"
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
@@ -143,7 +144,7 @@ function NavListMenu() {
           </Typography>
         </MenuHandler>
         <MenuList className="hidden max-w-screen-xl rounded-xl lg:block">
-          <ul className="grid grid-cols-3 gap-y- outline-none outline-0">
+          <ul className="grid grid-cols-3 gap-y-2 outline-none outline-0">
             {renderItems}
           </ul>
         </MenuList>
@@ -256,17 +257,21 @@ const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { user, isSignedIn, loading } = useContext(AuthContext);
 
+  const toggleMenu = (e: React.MouseEvent) => {
+    e.stopPropagation(); 
+    setOpen(!open);
+  };
+
   if (!isSignedIn) {
     return (
       <header
-        className="flex flex-col lg:flex-row justify-between items-center px-6 bg-sky-400 "
+        className="flex flex-col lg:flex-row justify-between items-center px-6 bg-sky-400"
         data-open={open}
-        onClick={() => setOpen(false)}
       >
         <div className="flex w-full lg:w-auto items-center justify-between p-5">
           <a href="/#" className="flex items-center text-lg gap-2">
             <img
-              src={user?.profileImage.url}
+              src={user?.profileImage?.url || logo}
               alt=""
               className="h-12 rounded-full"
             />
@@ -275,27 +280,21 @@ const Header: React.FC = () => {
             </span>
           </a>
           <div className="block lg:hidden">
-            <button onClick={() => setOpen(!open)} className="text-gray-800">
-              <svg
-                fill="currentColor"
-                className="w-4 h-4"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <title>Menu</title>
-                <path d="M18.278 16.864a1 1 0 01-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 01-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 011.414-1.414l4.829 4.828 4.828-4.828a1 1 0 111.414 1.414l-4.828 4.829 4.828 4.828z"></path>
-                <path d="M4 5h16a1 1 0 010 2H4a1 1 0 110-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z"></path>
-              </svg>
+            <button onClick={toggleMenu} className="text-gray-800">
+              {open ? (
+                <XMarkIcon className="h-6 w-6" />
+              ) : (
+                <Bars4Icon className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
         <nav
-          className={`hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0 ${
+          className={`${
             open ? "block" : "hidden"
-          }`}
-          data-transition=""
+          } w-full lg:w-auto mt-2 lg:flex lg:mt-0 lg:justify-center flex-grow`}
         >
-          <ul className="flex flex-col lg:flex-row lg:gap-3 text-base font-semibold leading-6 text-gray-900">
+          <ul className="flex flex-col lg:flex-row lg:gap-3 text-base font-semibold leading-6 text-gray-900 lg:justify-center">
             {menuitems.map((item, index) => (
               <React.Fragment key={index}>
                 {item.children && (
@@ -319,8 +318,8 @@ const Header: React.FC = () => {
             ))}
           </ul>
           {/* mobile */}
-          <div className="lg:hidden flex items-center mt-3 gap-4 ">
-            <Link to="#" className="muted md ">
+          <div className="lg:hidden flex items-center mt-3 gap-4">
+            <Link to="#" className="muted md">
               Log in
             </Link>
             <Link to="#" className="md block">
@@ -328,7 +327,7 @@ const Header: React.FC = () => {
             </Link>
           </div>
         </nav>
-        <div>
+        <div className="lg:ml-auto">
           <div className="hidden lg:flex items-center gap-4 text-sm font-semibold leading-6 text-gray-900">
             <Link to="/apprenant/connexion">Log in</Link>
             <Link to="/apprenant/inscription" className="md">
@@ -343,9 +342,8 @@ const Header: React.FC = () => {
   } else {
     return (
       <header
-        className="flex flex-col lg:flex-row justify-between items-center px-6 bg-sky-400 "
+        className="flex flex-col lg:flex-row justify-between items-center px-6 bg-sky-400"
         data-open={open}
-        onClick={() => setOpen(false)}
       >
         <div className="flex w-full lg:w-auto items-center justify-between p-5">
           <a href="/#" className="flex items-center text-lg gap-2">
@@ -355,27 +353,21 @@ const Header: React.FC = () => {
             </span>
           </a>
           <div className="block lg:hidden">
-            <button onClick={() => setOpen(!open)} className="text-gray-800">
-              <svg
-                fill="currentColor"
-                className="w-4 h-4"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <title>Menu</title>
-                <path d="M18.278 16.864a1 1 0 01-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 01-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 011.414-1.414l4.829 4.828 4.828-4.828a1 1 0 111.414 1.414l-4.828 4.829 4.828 4.828z"></path>
-                <path d="M4 5h16a1 1 0 010 2H4a1 1 0 110-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z"></path>
-              </svg>
+            <button onClick={toggleMenu} className="text-gray-800">
+              {open ? (
+                <XMarkIcon className="h-6 w-6" />
+              ) : (
+                <Bars4Icon className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
         <nav
-          className={`hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0 ${
+          className={`${
             open ? "block" : "hidden"
-          }`}
-          data-transition=""
+          } w-full lg:w-auto mt-2 lg:flex lg:mt-0 lg:justify-center flex-grow`}
         >
-          <ul className="flex flex-col lg:flex-row lg:gap-3 text-base font-semibold leading-6 text-gray-900">
+          <ul className="flex flex-col lg:flex-row lg:gap-3 text-base font-semibold leading-6 text-gray-900 lg:justify-center">
             {menuitems.map((item, index) => (
               <React.Fragment key={index}>
                 {item.children && (
@@ -400,9 +392,11 @@ const Header: React.FC = () => {
           </ul>
         </nav>
 
-        <div className="hidden lg:flex items-center gap-4 text-sm font-semibold leading-6 text-gray-900">
-          <div>
-            <ProfileMenu />
+        <div className="lg:ml-auto">
+          <div className="hidden lg:flex items-center gap-4 text-sm font-semibold leading-6 text-gray-900">
+            <div>
+              <ProfileMenu />
+            </div>
           </div>
         </div>
       </header>

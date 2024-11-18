@@ -422,13 +422,13 @@ const WelcomeComponent = () => {
     });
 
     return (
-      <div className="mx-auto p-5 bg-gray-800 rounded-xl shadow-lg">
+      <div className="mx-auto p-2 sm:p-5 bg-gray-800 rounded-xl shadow-lg">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-gray-200">
+          <table className="min-w-full text-xs sm:text-sm text-gray-200">
             <thead className="text-xs uppercase bg-gray-700 text-gray-400">
               <tr>
                 {days.map((day) => (
-                  <th key={day} className="px-4 py-3">
+                  <th key={day} className="px-2 py-2 sm:px-4 sm:py-3">
                     {day}
                   </th>
                 ))}
@@ -438,13 +438,13 @@ const WelcomeComponent = () => {
               {getUniqueTimes(availability).map((time) => (
                 <tr key={time} className="border-b border-gray-700">
                   {days.map((day) => (
-                    <td className="px-4 py-3" key={`${day}-${time}`}>
+                    <td className="px-2 py-2 sm:px-4 sm:py-3" key={`${day}-${time}`}>
                       {slotsByDay[day] &&
                         slotsByDay[day].find(
                           (slot) => slot.startTime === time
                         ) && (
                           <button
-                            className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+                            className="bg-blue-500 hover:bg-blue-600 text-white text-xs sm:text-sm py-1 px-2 sm:px-3 rounded-full transition duration-300 ease-in-out transform hover:scale-105 w-full sm:w-auto"
                             onClick={() => {
                               HandleClickTime(time, day);
                             }}
@@ -469,12 +469,12 @@ const WelcomeComponent = () => {
               className: "bg-gray-800 text-gray-200 rounded-lg",
             }}
           >
-            <form onSubmit={createMeeting} className="p-6">
-              <DialogTitle className="text-2xl font-bold mb-4">
+            <form onSubmit={createMeeting} className="p-4 sm:p-6">
+              <DialogTitle className="text-xl sm:text-2xl font-bold mb-4">
                 Ajouter un leçon
               </DialogTitle>
               <DialogContent>
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">
                       Description
@@ -490,7 +490,7 @@ const WelcomeComponent = () => {
                       }}
                     />
                   </div>
-                  <div className="flex w-full flex-col gap-2.5">
+                  <div className="flex w-full flex-col gap-2">
                     <label className="block text-sm font-medium mb-2">
                       Créneau Horaire
                     </label>
@@ -504,21 +504,21 @@ const WelcomeComponent = () => {
                       timeIntervals={15}
                       timeCaption="time"
                       dateFormat="MMMM d, yyyy h:mm aa"
-                      className="w-full rounded-md p-2 bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full rounded-md p-2 bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                     />
                   </div>
                 </div>
               </DialogContent>
-              <DialogActions>
+              <DialogActions className="p-4">
                 <Button
                   onClick={handleClose}
-                  className="bg-gray-600 hover:bg-gray-700 text-white"
+                  className="bg-gray-600 hover:bg-gray-700 text-white text-sm sm:text-base"
                 >
                   Annuler
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                  className="bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base"
                 >
                   Ajouter
                 </Button>
@@ -537,13 +537,13 @@ const WelcomeComponent = () => {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle className="text-2xl font-bold">
+            <DialogTitle className="text-xl sm:text-2xl font-bold">
               Meeting Link
             </DialogTitle>
             <DialogContent>
-              <DialogContentText className="text-gray-300">
+              <DialogContentText className="text-gray-300 text-sm sm:text-base">
                 Réunion créée avec succès
-                <p className="mt-2 p-2 bg-gray-700 rounded">
+                <p className="mt-2 p-2 bg-gray-700 rounded break-all">
                   Meeting Link: {meetingLink}
                 </p>
               </DialogContentText>
@@ -555,7 +555,7 @@ const WelcomeComponent = () => {
                   setCallDetails(undefined);
                   setMeetingState(undefined);
                 }}
-                className="bg-blue-500 hover:bg-blue-600 text-white"
+                className="bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base"
               >
                 Copier le lien
               </Button>

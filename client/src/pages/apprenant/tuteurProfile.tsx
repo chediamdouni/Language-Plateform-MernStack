@@ -301,42 +301,46 @@ const TuteurProfile = () => {
     });
 
     return (
-      <div className="mx-auto flex justify-center p-5">
-        <table className="w-full text-sm border-t-4 text-left rtl:text-right dark:text-gray-400">
-          <thead className="text-md uppercase dark:text-gray-400">
-            <tr>
-              {days.map((day) => (
-                <th key={day}>{day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {getUniqueTimes(availability).map((time) => (
-              <tr key={time}>
+      <div className="mx-auto flex justify-center p-5 overflow-x-auto">
+        <div className="min-w-full">
+          <table className="w-full text-sm border-t-4 text-left rtl:text-right dark:text-gray-400">
+            <thead className="text-md uppercase dark:text-gray-400">
+              <tr>
                 {days.map((day) => (
-                  <td
-                    className="px-2 py-4 cursor-pointer"
-                    key={`${day}-${time}`}
-                  >
-                    {slotsByDay[day] &&
-                      slotsByDay[day].find(
-                        (slot) => slot.startTime === time
-                      ) && (
-                        <span
-                          className="underline bg-slate-200 p-2 rounded-lg"
-                          onClick={() => {
-                            HandleClickTime(time, day);
-                          }}
-                        >
-                          {time}
-                        </span>
-                      )}
-                  </td>
+                  <th key={day} className="px-2 py-3 whitespace-nowrap">
+                    {window.innerWidth <= 640 ? day.slice(0, 3) : day}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {getUniqueTimes(availability).map((time) => (
+                <tr key={time}>
+                  {days.map((day) => (
+                    <td
+                      className="px-2 py-4 cursor-pointer whitespace-nowrap"
+                      key={`${day}-${time}`}
+                    >
+                      {slotsByDay[day] &&
+                        slotsByDay[day].find(
+                          (slot) => slot.startTime === time
+                        ) && (
+                          <span
+                            className="underline bg-slate-200 p-2 rounded-lg hover:bg-slate-300 transition-colors duration-200"
+                            onClick={() => {
+                              HandleClickTime(time, day);
+                            }}
+                          >
+                            {time}
+                          </span>
+                        )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   };
@@ -472,40 +476,52 @@ const TuteurProfile = () => {
 
                 {/* Section des statistiques des élèves */}
                 <section className="mb-12">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                  <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-6 text-center">
                     Statistiques des élèves
                   </h2>
-                  <div className="grid grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     <motion.div
                       whileHover={{ scale: 1.05 }}
-                      className="bg-white rounded-xl shadow-lg p-6 text-center"
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-white rounded-xl shadow-lg p-4 md:p-6 text-center transform transition-all duration-300 hover:shadow-xl border border-purple-100"
                     >
-                      <div className="text-3xl font-bold text-purple-600 mb-2">
+                      <div className="flex items-center justify-center mb-3">
+                        <BsFillPersonFill className="text-2xl md:text-3xl text-purple-500" />
+                      </div>
+                      <div className="text-2xl md:text-3xl font-bold text-purple-600 mb-2">
                         152
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm md:text-base text-gray-600">
                         Élèves inscrits
                       </div>
                     </motion.div>
                     <motion.div
                       whileHover={{ scale: 1.05 }}
-                      className="bg-white rounded-xl shadow-lg p-6 text-center"
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-white rounded-xl shadow-lg p-4 md:p-6 text-center transform transition-all duration-300 hover:shadow-xl border border-purple-100"
                     >
-                      <div className="text-3xl font-bold text-purple-600 mb-2">
+                      <div className="flex items-center justify-center mb-3">
+                        <BsStarFill className="text-2xl md:text-3xl text-purple-500" />
+                      </div>
+                      <div className="text-2xl md:text-3xl font-bold text-purple-600 mb-2">
                         98%
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm md:text-base text-gray-600">
                         Taux de satisfaction
                       </div>
                     </motion.div>
                     <motion.div
                       whileHover={{ scale: 1.05 }}
-                      className="bg-white rounded-xl shadow-lg p-6 text-center"
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-white rounded-xl shadow-lg p-4 md:p-6 text-center transform transition-all duration-300 hover:shadow-xl border border-purple-100 sm:col-span-2 lg:col-span-1"
                     >
-                      <div className="text-3xl font-bold text-purple-600 mb-2">
+                      <div className="flex items-center justify-center mb-3">
+                        <IoIosSchool className="text-2xl md:text-3xl text-purple-500" />
+                      </div>
+                      <div className="text-2xl md:text-3xl font-bold text-purple-600 mb-2">
                         1,280
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm md:text-base text-gray-600">
                         Heures enseignées
                       </div>
                     </motion.div>
@@ -568,29 +584,36 @@ const TuteurProfile = () => {
                     {show ? "Afficher moins" : "Afficher plus"}
                   </button>
                 </section>
-                <section id="Resume" className="p-4">
-                  <p className="text-2xl font-bold my-4">Resumé</p>
-                  <div className="p-4 mt-4">
-                    <div className="border-b-4 w-64 text-xl font-semibold mb-4">
-                      Expérience Professionnel
-                    </div>
-                    <div className="p-5">
-                      Topica Native - An Online English School Serving
-                      Vietnamese English Learners English Language Teacher
+                <section id="Resume" className="bg-white rounded-xl shadow-sm p-6 mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Résumé</h2>
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-xl font-semibold text-purple-700 pb-2 border-b-2 border-purple-200 mb-4">
+                        Expérience Professionnelle
+                      </h3>
+                      <div className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition duration-300">
+                        <p className="text-gray-800 leading-relaxed">
+                          Topica Native - An Online English School Serving
+                          Vietnamese English Learners English Language Teacher
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </section>
-                <section id="Specialite" className="p-4">
-                  <p className="text-2xl font-bold my-4">Specialité</p>
-                  <div className="p-4">
-                    <div className="text-xl font-semibold mb-3">
-                      Conversational English
-                    </div>
-                    <div className="p-2">
-                      I have been teaching 1 on on private lessons for 4 years.
-                      this can be about anything! family, hobbies, business
-                      meeting. If your not sure, lets book some time to figure
-                      out what you need
+
+                <section id="Specialite" className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Spécialité</h2>
+                  <div className="space-y-4">
+                    <div className="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition duration-300">
+                      <h3 className="text-xl font-semibold text-purple-700 mb-4">
+                        Conversational English
+                      </h3>
+                      <p className="text-gray-700 leading-relaxed">
+                        I have been teaching 1 on 1 private lessons for 4 years.
+                        This can be about anything! Family, hobbies, business
+                        meetings. If you're not sure, let's book some time to figure
+                        out what you need.
+                      </p>
                     </div>
                   </div>
                 </section>

@@ -32,7 +32,7 @@ const profileMenuItems = [
     icon: UserCircleIcon,
   },
   {
-    label: "Edit Profile",
+    label: "Edit Profile", 
     icon: Cog6ToothIcon,
   },
   {
@@ -169,7 +169,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
   }, [isSignedIn, loading, navigate]);
 
   return (
-    <div className=" font-Korto-Medium">
+    <div className="font-Korto-Medium">
       <header className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
@@ -197,7 +197,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
               <Popover className="relative">
                 {({ open }) => (
                   <>
-                    <Popover.Button className="p-1 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <Popover.Button className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
                       <svg
                         className="h-6 w-6 text-gray-500"
                         fill="none"
@@ -221,21 +221,23 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                       leaveFrom="opacity-100 translate-y-0"
                       leaveTo="opacity-0 translate-y-1"
                     >
-                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                        <div className="p-4">
-                          <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      <Popover.Panel className="absolute right-0 mt-2 w-[90vw] md:w-80 bg-white rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transform origin-top">
+                        <div className="p-6">
+                          <h3 className="text-xl font-semibold text-gray-900 mb-4">
                             Messages
                           </h3>
-                          <p className="text-sm text-gray-500 mb-4">
-                            Les conversations avec les tuteurs seront affichées
-                            ici.
-                          </p>
-                          <button
-                            onClick={() => navigate("/inbox")}
-                            className="w-full bg-blue-600 text-white rounded-md px-4 py-2 hover:bg-blue-700 transition duration-300 ease-in-out"
-                          >
-                            Voir tous les messages
-                          </button>
+                          <div className="space-y-4">
+                            <p className="text-sm text-gray-600">
+                              Les conversations avec les tuteurs seront affichées
+                              ici.
+                            </p>
+                            <button
+                              onClick={() => navigate("/inbox")}
+                              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg px-4 py-3 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                            >
+                              Voir tous les messages
+                            </button>
+                          </div>
                         </div>
                       </Popover.Panel>
                     </Transition>
@@ -246,7 +248,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
               <Popover className="relative">
                 {({ open }) => (
                   <>
-                    <Popover.Button className="p-1 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                    <Popover.Button className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
                       <svg
                         className="h-6 w-6 text-gray-500"
                         fill="none"
@@ -270,18 +272,20 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                       leaveFrom="opacity-100 translate-y-0"
                       leaveTo="opacity-0 translate-y-1"
                     >
-                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                        <div className="p-4">
-                          <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      <Popover.Panel className="absolute right-0 mt-2 w-[90vw] md:w-80 bg-white rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                        <div className="p-6">
+                          <h3 className="text-xl font-semibold text-gray-900 mb-4">
                             Leçons à venir
                           </h3>
-                          <RequestsList />
-                          <button
-                            onClick={() => navigate("/apprenant")}
-                            className="w-full mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-md px-4 py-2 hover:from-blue-600 hover:to-indigo-600 transition duration-300 ease-in-out"
-                          >
-                            + Réserver une leçon
-                          </button>
+                          <div className="space-y-4">
+                            <RequestsList />
+                            <button
+                              onClick={() => navigate("/apprenant")}
+                              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg px-4 py-3 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                            >
+                              + Réserver une leçon
+                            </button>
+                          </div>
                         </div>
                       </Popover.Panel>
                     </Transition>
@@ -292,7 +296,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
               <Popover className="relative">
                 {({ open }) => (
                   <>
-                    <Popover.Button className="p-1 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <Popover.Button className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
                       <svg
                         className="h-6 w-6 text-gray-500"
                         fill="none"
@@ -316,17 +320,19 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
                       leaveFrom="opacity-100 translate-y-0"
                       leaveTo="opacity-0 translate-y-1"
                     >
-                      <Popover.Panel className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                        <div className="p-4">
-                          <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      <Popover.Panel className="absolute right-0 mt-2 w-[90vw] md:w-80 bg-white rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                        <div className="p-6">
+                          <h3 className="text-xl font-semibold text-gray-900 mb-4">
                             Notifications
                           </h3>
-                          <p className="text-sm text-gray-500 mb-4">
-                            Vous n'avez pas de nouvelles notifications.
-                          </p>
-                          <button className="w-full bg-blue-600 text-white rounded-md px-4 py-2 hover:bg-blue-700 transition duration-300 ease-in-out">
-                            Voir toutes les notifications
-                          </button>
+                          <div className="space-y-4">
+                            <p className="text-sm text-gray-600">
+                              Vous n'avez pas de nouvelles notifications.
+                            </p>
+                            <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg px-4 py-3 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                              Voir toutes les notifications
+                            </button>
+                          </div>
                         </div>
                       </Popover.Panel>
                     </Transition>
@@ -345,7 +351,7 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
       {/* Floating Chatbot Button */}
       <div className="fixed right-4 bottom-4 z-50">
         <motion.button
-          className="bg-blue-500 text-white rounded-full p-4 shadow-lg hover:bg-blue-600 transition-colors duration-300"
+          className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={toggleChatbot}
@@ -374,10 +380,10 @@ const ApprenantLayout: React.FC<Props> = (props: Props) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed right-4 bottom-20 bg-white rounded-lg shadow-xl p-4 w-80 z-50"
+            className="fixed right-4 bottom-20 bg-white rounded-xl shadow-2xl p-6 w-[90vw] md:w-80 z-50"
           >
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 transition-colors duration-200"
               onClick={toggleChatbot}
             >
               <svg

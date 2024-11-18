@@ -16,6 +16,10 @@ import {
 import "stream-chat-react/dist/css/v2/index.css";
 import styled from "styled-components";
 
+interface ContainerProps {
+  isMobileListVisible?: boolean;
+}
+
 const ChatContainer = styled.div`
   display: flex;
   height: calc(100vh - 80px);
@@ -25,13 +29,25 @@ const ChatContainer = styled.div`
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   border-radius: 16px;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 0;
+    height: 100vh;
+    border-radius: 0;
+  }
 `;
 
-const ChannelListContainer = styled.div`
+const ChannelListContainer = styled.div<ContainerProps>`
   width: 320px;
   background-color: #f8fafc;
   border-right: 1px solid #e2e8f0;
   
+  @media (max-width: 768px) {
+    width: 100%;
+    display: ${props => props.isMobileListVisible ? 'block' : 'none'};
+  }
+
   /* Customizing the channel list */
   .str-chat__channel-list-messenger {
     background: transparent;
@@ -58,12 +74,17 @@ const ChannelListContainer = styled.div`
   }
 `;
 
-const ChannelContainer = styled.div`
+const ChannelContainer = styled.div<ContainerProps>`
   flex: 1;
   display: flex;
   flex-direction: column;
   background: #ffffff;
   height: 100%;
+
+  @media (max-width: 768px) {
+    display: ${props => props.isMobileListVisible ? 'none' : 'flex'};
+    width: 100%;
+  }
 `;
 
 const CustomChannelHeader = styled(ChannelHeader)`
@@ -77,6 +98,11 @@ const CustomChannelHeader = styled(ChannelHeader)`
     font-weight: 600;
     font-size: 1.1rem;
   }
+
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+    height: 60px;
+  }
 `;
 
 const CustomMessageList = styled(MessageList)`
@@ -85,6 +111,10 @@ const CustomMessageList = styled(MessageList)`
   flex: 1;
   overflow-y: auto;
   
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
+
   .str-chat__message-simple {
     margin: 8px 0;
     
@@ -126,6 +156,10 @@ const CustomMessageInput = styled(MessageInput)`
   padding: 15px;
   flex-shrink: 0;
   
+  @media (max-width: 768px) {
+    padding: 8px;
+  }
+
   .str-chat__input-flat {
     background: #f8fafc;
     border-radius: 12px;
@@ -173,9 +207,24 @@ const LoadingContainer = styled.div`
   background-color: #f8fafc;
 `;
 
+const BackButton = styled.button`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: block;
+    padding: 8px;
+    background: #0ea5e9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin: 8px;
+  }
+`;
+
 const Inbox: React.FC = () => {
   const { user, streamToken } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isMobileListVisible, setIsMobileListVisible] = React.useState(true);
 
   useEffect(() => {
     if (!user) {
@@ -189,6 +238,10 @@ const Inbox: React.FC = () => {
 
   const chatClient = useClient({ user, streamToken });
 
+  const toggleMobileView = () => {
+    setIsMobileListVisible(!isMobileListVisible);
+  };
+
   if (!chatClient) {
     return (
       <LoadingContainer>
@@ -197,19 +250,33 @@ const Inbox: React.FC = () => {
     );
   }
 
+  const CustomList = (props: any) => {
+    return (
+      <div onClick={() => setIsMobileListVisible(false)}>
+        {props.children}
+      </div>
+    );
+  };
+
   return (
     <ChatContainer>
       <Chat client={chatClient} theme="str-chat__theme-light">
-        <ChannelListContainer>
+        <ChannelListContainer isMobileListVisible={isMobileListVisible}>
           <ChannelList 
             filters={filters} 
             sort={sort as any}
             options={{ state: true, presence: true, limit: 10 }}
+            List={CustomList}
           />
         </ChannelListContainer>
-        <ChannelContainer>
+        <ChannelContainer isMobileListVisible={isMobileListVisible}>
           <Channel>
             <CustomWindow>
+              {!isMobileListVisible && (
+                <BackButton onClick={toggleMobileView}>
+                  ← Back to channels
+                </BackButton>
+              )}
               <CustomChannelHeader />
               <CustomMessageList />
               <CustomMessageInput />
